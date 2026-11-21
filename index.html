@@ -1,0 +1,999 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Đấu trường Động học</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;700;800;900&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'},options:{enableMenu:false},
+ startup:{typeset:false,ready(){MathJax.startup.defaultReady();window.__mjReady=true;if(window.__typeset)window.__typeset();}}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+/* Giao diện sáng, nhiều màu cho máy chiếu: thanh trên (vòng + điểm) · sân khấu · thanh điều khiển. Mỗi vòng một màu chủ đạo (--rc, --rc2). */
+:root{
+  --bg:#F5F3FF; --stage:#FFFFFF; --ink:#1A1F3A; --ink2:#454B6B; --muted:#6E7391; --line:#DCDDEB; --soft:#EEEDF8;
+  --brand:#1B2A6B; --gold:#FACC15; --ok:#16A34A; --ok-bg:#DCFCE7; --bad:#E11D48; --bad-bg:#FFE4E6;
+  --t0:#7C3AED; --t1:#0D9488; --t2:#EA580C; --t3:#2563EB;
+  --oA:#F43F5E; --oB:#3B82F6; --oC:#F59E0B; --oD:#22C55E;
+  --cL:#F26B3A; --cL2:#FFB13B; --cR:#2F7DE1; --cR2:#06B6D4;
+  --display:'Lexend','Be Vietnam Pro',system-ui,sans-serif; --body:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;color:var(--ink);font:clamp(15px,1.05vw,20px)/1.5 var(--body);
+  background:radial-gradient(1100px 600px at 0% 0%,#FFE4D3 0,transparent 60%),radial-gradient(900px 600px at 100% 0%,#DCE9FF 0,transparent 55%),radial-gradient(1000px 700px at 50% 110%,#E3F9EC 0,transparent 60%),var(--bg);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+mjx-container{color:inherit}
+.app{max-width:1640px;margin:0 auto;padding-block:12px 18px;display:flex;flex-direction:column;gap:12px;min-height:100%}
+
+/* thanh trên */
+.top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:linear-gradient(110deg,#1B2A6B,#4B2A8C 55%,#9D2C7A);color:#fff;border-radius:18px;padding:10px 14px;box-shadow:0 8px 24px #4B2A8C33}
+.logo{font-family:var(--display);font-weight:900;font-size:1.25em;white-space:nowrap}
+.logo small{display:block;font:600 .6em/1.2 var(--body);opacity:.8;letter-spacing:.06em;text-transform:uppercase}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{border:0;background:rgba(255,255,255,.08);color:#E4E6F7;border-radius:12px;padding:6px 11px;font-weight:700;font-size:.86em;display:flex;gap:6px;align-items:center}
+.tabs button i{font-style:normal;width:1.55em;height:1.55em;border-radius:50%;display:grid;place-items:center;background:var(--rc);color:#fff;font-size:.85em}
+.tabs button[aria-current="page"]{background:#fff;color:var(--brand);box-shadow:0 0 0 3px var(--rc)}
+.tabs button:not([aria-current]):hover{background:rgba(255,255,255,.2)}
+#board{margin-left:auto}
+.board4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;min-width:min(100%,660px)}
+.team{background:#fff;color:var(--ink);border-radius:14px;padding:6px 10px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:0 8px;border-left:8px solid var(--tc);position:relative}
+.team .nm{font-weight:800;font-size:.85em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tc)}
+.team .sc{grid-row:span 3;font-family:var(--display);font-weight:900;font-size:2em;line-height:1;color:var(--tc);font-variant-numeric:tabular-nums}
+.team .sub{font-size:.7em;color:var(--muted);font-weight:600}
+.team .adj{display:flex;gap:4px}
+.team .adj button{border:1px solid var(--line);background:var(--soft);border-radius:6px;padding:0 7px;font-size:.72em;line-height:1.5}
+.team.turn{box-shadow:0 0 0 4px var(--gold),0 0 18px var(--gold);animation:turn 1.4s ease-in-out infinite}
+@keyframes turn{50%{box-shadow:0 0 0 4px var(--gold),0 0 30px var(--gold)}}
+.team.bump .sc,.clsb.bump .cl-s{animation:bump .7s ease}
+@keyframes bump{30%{transform:scale(1.45)}}
+.team .star{position:absolute;right:6px;top:-9px;font-size:.78em;background:var(--gold);color:var(--brand);border-radius:8px;padding:0 6px;font-weight:800}
+.clsb{display:flex;align-items:center;gap:14px;background:#fff;color:var(--ink);border-radius:16px;padding:6px 16px;font-weight:800}
+.cl-l{font-size:.8em;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.cl-s{font:900 2.1em/1 var(--display);background:linear-gradient(90deg,#F26B3A,#E0457B,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent;min-width:2ch;display:inline-block}
+.okc{color:var(--ok)}.bdc{color:var(--bad)}
+.clsb .okc,.clsb .bdc,.clsb .run{font-size:1.15em;border-radius:12px;padding:2px 10px}
+.clsb .okc{background:var(--ok-bg)}.clsb .bdc{background:var(--bad-bg)}
+.clsb .run{background:#FFEDD5;color:#C2410C;animation:bump 1s ease}
+
+/* sân khấu */
+.stage{flex:1;background:var(--stage);border-radius:22px;padding:clamp(14px,2vw,30px);border:1px solid var(--line);border-top:8px solid var(--rc);display:flex;flex-direction:column;gap:14px;min-height:0;box-shadow:0 10px 30px #1B2A6B14}
+.rhead{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px}
+.rnum{font-family:var(--display);font-weight:900;color:#fff;background:linear-gradient(120deg,var(--rc),var(--rc2));border-radius:12px;padding:3px 14px;font-size:.95em;box-shadow:0 4px 12px color-mix(in srgb,var(--rc) 40%,transparent)}
+.rhead h1{font-family:var(--display);font-weight:900;font-size:clamp(22px,2.1vw,40px);margin:0;letter-spacing:-.01em;color:var(--rc)}
+.rhead .rule{color:var(--muted);font-size:.9em;flex-basis:100%}
+.qcount{margin-left:auto;font-weight:800;color:var(--rc);font-variant-numeric:tabular-nums}
+.prog{width:clamp(120px,14vw,240px);height:12px;border-radius:8px;background:var(--soft);overflow:hidden}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--rc),var(--rc2));border-radius:8px;transition:width .6s}
+.qbox{font-size:clamp(20px,1.65vw,34px);line-height:1.5;font-weight:600;max-width:64ch;margin:0}
+.qbox.sm{font-size:clamp(18px,1.4vw,28px);margin:0 0 8px}
+.qbox.eq{margin:0 0 8px}
+.qq{margin:0 0 8px;font-weight:800;font-size:1.05em;color:var(--rc)}
+.ctx{color:var(--ink2);font-size:.95em;margin:0}
+
+/* phương án */
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.opt{display:flex;gap:14px;align-items:center;width:100%;text-align:left;border:2px solid color-mix(in srgb,var(--oc) 40%,#fff);border-radius:16px;padding:12px 16px;font-size:clamp(17px,1.35vw,28px);
+  background:color-mix(in srgb,var(--oc) 8%,#fff);box-shadow:0 4px 0 color-mix(in srgb,var(--oc) 30%,#fff);min-width:0;transition:transform .15s,box-shadow .15s;position:relative}
+button.opt:not(:disabled):hover{transform:translateY(-3px);box-shadow:0 7px 0 color-mix(in srgb,var(--oc) 40%,#fff)}
+button.opt:not(:disabled):active{transform:translateY(2px);box-shadow:0 1px 0 color-mix(in srgb,var(--oc) 40%,#fff)}
+button.opt:disabled{cursor:default}
+.opt .lt{flex:none;width:2.1em;height:2.1em;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:900;background:var(--oc);box-shadow:0 3px 0 color-mix(in srgb,var(--oc) 60%,#000)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg);box-shadow:0 0 0 5px #16A34A33;animation:glow 1.3s ease 2}
+.opt.right .lt{background:var(--ok)}
+.opt.right::after{content:'✔';position:absolute;right:12px;top:6px;font-size:1.3em;color:var(--ok);font-weight:900}
+@keyframes glow{50%{box-shadow:0 0 0 12px #16A34A22}}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg);opacity:.72;box-shadow:none}
+.opt.wrong .lt{background:var(--bad)}
+.opt.wrong::after{content:'✘';position:absolute;right:12px;top:6px;font-size:1.3em;color:var(--bad);font-weight:900}
+.opt.dim{opacity:.38;box-shadow:none}
+.opt .who{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.opt .ot{min-width:0}
+.chip{border-radius:20px;padding:0 9px;font-size:.6em;font-weight:800;color:#fff;background:var(--tc);white-space:nowrap}
+.why{border-left:6px solid var(--ok);background:var(--ok-bg);border-radius:0 14px 14px 0;padding:10px 16px;font-size:clamp(16px,1.2vw,24px);animation:slidein .5s ease}
+.why b.h{color:var(--ok)}
+.why.ask{border-left-color:var(--gold);background:#FEF9C3}.why.ask b.h{color:#A16207}
+@keyframes slidein{from{opacity:0;transform:translateY(10px)}}
+
+/* thẻ chọn của các đội */
+.picks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.pk{border:3px solid var(--tc);border-radius:14px;padding:6px 8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:color-mix(in srgb,var(--tc) 6%,#fff)}
+.pk .tn{font-weight:800;color:var(--tc);font-size:.85em;margin-right:auto}
+.pk button{width:2.1em;height:2.1em;border-radius:50%;border:2px solid color-mix(in srgb,var(--oc) 50%,#fff);background:#fff;font-family:var(--display);font-weight:900;font-size:.85em;color:var(--oc)}
+.pk button[aria-pressed="true"]{background:var(--oc);border-color:var(--oc);color:#fff;transform:scale(1.1)}
+.pk.ok{background:var(--ok-bg)}.pk.no{background:var(--bad-bg)}
+
+/* điều khiển */
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 10px;box-shadow:0 6px 18px #1B2A6B10}
+.btn{border:2px solid var(--line);background:#fff;border-radius:12px;padding:7px 14px;font-weight:800}
+.btn:hover{border-color:var(--brand)}
+.btn.pri{background:linear-gradient(120deg,#1B2A6B,#4B2A8C);border-color:transparent;color:#fff}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--brand)}
+.btn.call{background:linear-gradient(120deg,#F26B3A,#E0457B);border-color:transparent;color:#fff}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.timer{font-family:var(--display);font-weight:900;font-size:1.6em;font-variant-numeric:tabular-nums;min-width:3.2em;text-align:center;color:var(--brand)}
+.timer.low{color:var(--bad);animation:bump .5s infinite}
+.sp{flex:1}
+.hint{color:var(--muted);font-size:.85em;margin:0}
+
+/* bảng số liệu */
+.dtw{overflow-x:auto}
+.dt{border-collapse:separate;border-spacing:0;font-size:clamp(17px,1.35vw,28px);font-variant-numeric:tabular-nums;border-radius:14px;overflow:hidden;border:2px solid color-mix(in srgb,var(--rc) 35%,#fff)}
+.dt th,.dt td{padding:6px 18px;text-align:center;white-space:nowrap;border-bottom:1px solid var(--line)}
+.dt th{background:color-mix(in srgb,var(--rc) 14%,#fff);font-weight:700;color:var(--ink)}
+.dt tr:nth-child(even) td{background:color-mix(in srgb,var(--rc) 4%,#fff)}
+.v3{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:22px;align-items:start}
+.v3 .opts{grid-template-columns:minmax(0,1fr)}
+.v3.nt{grid-template-columns:minmax(0,1fr)}.v3.nt .opts{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* vòng 2: lật thẻ, hai phía hai màu */
+.mem2{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1}
+.side{border-radius:20px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px}
+.side.sL{background:linear-gradient(180deg,#FFE9DC,#FFF6EF)}.side.sR{background:linear-gradient(180deg,#DFEBFF,#F1F7FF)}
+.side h3{margin:0;font:800 1em var(--display)}.side.sL h3{color:var(--cL)}.side.sR h3{color:var(--cR)}
+.side .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;flex:1}
+.card{position:relative;border:0;border-radius:16px;min-height:clamp(84px,9.5vh,150px);padding:0;background:transparent;perspective:900px}
+.card .in{position:absolute;inset:0;transition:transform .5s cubic-bezier(.3,1.4,.5,1);transform-style:preserve-3d}
+.card.up .in{transform:rotateY(180deg)}
+.card .f,.card .b{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;display:grid;place-items:center;padding:8px 10px;text-align:center}
+.card .b{color:#fff;font-family:var(--display);font-weight:900;font-size:clamp(26px,2.6vw,48px);text-shadow:0 3px 0 #0003;box-shadow:0 5px 0 #0002}
+.card.sL .b{background:radial-gradient(circle at 20% 20%,#ffffff33 0 10%,transparent 11%) 0 0/28px 28px,linear-gradient(135deg,var(--cL2),var(--cL) 60%,#E0457B)}
+.card.sR .b{background:radial-gradient(circle at 20% 20%,#ffffff33 0 10%,transparent 11%) 0 0/28px 28px,linear-gradient(135deg,var(--cR2),var(--cR) 60%,#5B5BF0)}
+.card:not(.up):hover .b{filter:brightness(1.08);transform:translateY(-2px)}
+.card .f{transform:rotateY(180deg);border:3px solid var(--kc);font-size:clamp(14px,1.18vw,24px);padding-top:18px;line-height:1.35;overflow:hidden}
+.card.sL{--kc:var(--cL)}.card.sR{--kc:var(--cR)}
+.card.sL .f{background:#FFF5EE}.card.sR .f{background:#F0F6FF}
+.card .f .tag{position:absolute;left:8px;top:4px;font:900 .75em var(--display);color:#fff;background:var(--kc);border-radius:8px;padding:0 7px}
+.card.done .f{border-color:var(--ok);box-shadow:inset 0 0 0 3px #16A34A44}
+.card.done .f::before{content:'✔';position:absolute;right:8px;top:2px;color:var(--ok);font-weight:900}
+.card.done .f::after{content:attr(data-team);position:absolute;right:8px;bottom:4px;font-size:.62em;font-weight:800;color:#fff;background:var(--tc);border-radius:10px;padding:0 8px}
+.card.done:not([data-team]) .f::after{display:none}
+.card.miss .f{background:var(--bad-bg);border-color:var(--bad)}
+.card.pulse .in{animation:pulse .8s ease}
+@keyframes pulse{40%{transform:rotateY(180deg) scale(1.08)}}
+.card .f mjx-container>svg{max-width:100%;height:auto}
+.card .f.sm{font-size:clamp(12px,.88vw,18px)}
+
+/* vòng 3: phân nhóm */
+.pnq{color:var(--rc)}
+.pnw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);gap:16px;flex:1;align-items:stretch}
+.bin{border-radius:22px;padding:12px;min-height:42vh;display:flex;flex-direction:column;gap:8px;border:3px dashed;text-align:left;transition:transform .2s}
+.bin.b0{background:linear-gradient(180deg,#FFE4D6,#FFF6F0);border-color:var(--cL)}
+.bin.b1{background:linear-gradient(180deg,#DCE9FF,#F2F7FF);border-color:var(--cR)}
+.bin:not([aria-disabled]):hover{transform:scale(1.015)}
+.bin .bh{display:block;text-align:center;color:#fff;border-radius:14px;padding:8px 10px;font:800 clamp(17px,1.35vw,26px)/1.3 var(--display)}
+.bin.b0 .bh{background:linear-gradient(120deg,var(--cL2),var(--cL))}.bin.b1 .bh{background:linear-gradient(120deg,var(--cR2),var(--cR))}
+.bin .drop{display:block;text-align:center;font-weight:800;min-height:1.4em;animation:bump 1s infinite}
+.bin.b0 .drop{color:var(--cL)}.bin.b1 .drop{color:var(--cR)}
+.placed{display:flex;gap:6px;align-items:center;justify-content:space-between;background:#fff;border-radius:12px;padding:6px 10px;font-size:clamp(14px,1vw,20px);animation:slidein .5s ease}
+.bin.b0 .placed{border-left:6px solid var(--cL)}.bin.b1 .placed{border-left:6px solid var(--cR)}
+.pile{display:flex;flex-direction:column;gap:8px;justify-content:center}
+.itm{border:2px solid #CBD0E6;background:#fff;border-radius:14px;padding:10px 14px;font-size:clamp(15px,1.15vw,23px);text-align:left;box-shadow:0 4px 0 #CBD0E6;transition:transform .15s}
+.itm:hover{transform:translateY(-2px)}
+.itm.sel{border-color:#8B5CF6;background:#F3EEFF;box-shadow:0 0 0 5px #8B5CF655;transform:scale(1.03)}
+
+/* vòng 5: đồ thị */
+.v4{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+.plotw{border:2px solid color-mix(in srgb,var(--rc) 25%,#fff);border-radius:16px;padding:10px 12px;background:#FBFCFF}
+.plotw>svg{width:100%;height:auto;display:block;max-height:38vh}
+.axl{display:flex;justify-content:space-between;gap:10px;font-size:clamp(14px,1.05vw,20px);color:var(--ink2);margin-top:4px}
+.v4 .opts{grid-template-columns:minmax(0,1fr)}
+.v4 .opt{font-size:clamp(15px,1.12vw,23px);padding:8px 12px}
+.v4 .opts.g{grid-template-columns:repeat(2,minmax(0,1fr))}.v4 .opts.g .opt{flex-wrap:wrap;padding:6px 8px;gap:6px;align-items:flex-start}
+.v4 .opts.g .ot{flex:1 1 70%;min-width:0}.mini{width:100%;height:auto;display:block;max-height:15vh}
+
+/* vòng 6 */
+.steps{display:grid;gap:8px}
+.step{display:flex;gap:12px;align-items:center;border:2px solid var(--line);border-left:8px solid var(--oc,var(--line));border-radius:14px;padding:8px 14px;background:#fff;text-align:left;font-size:clamp(16px,1.25vw,26px);width:100%;transition:transform .15s}
+.step:not(:disabled):hover{transform:translateX(4px)}
+.step .lt{flex:none;width:1.9em;height:1.9em;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--oc,#888) 18%,#fff);color:var(--ink);font-family:var(--display);font-weight:900}
+.step .no{margin-left:auto;flex:none;width:1.9em;height:1.9em;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:#fff;font-family:var(--display);font-weight:900;animation:bump .4s}
+.step .no.gr{background:var(--muted)}
+.step.on{background:#F3EEFF}
+.step.ok{border-color:var(--ok);background:var(--ok-bg)}
+.step.ln{border-left-color:var(--rc)}
+.step.badl{border-color:var(--bad);background:var(--bad-bg)}
+.step.wl{opacity:.5;text-decoration:line-through;text-decoration-color:var(--bad)}
+.buzz{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.buzz button{border:3px solid var(--tc);background:#fff;border-radius:12px;padding:6px 14px;font-weight:800;color:var(--tc)}
+.buzz button[aria-pressed="true"]{background:var(--tc);color:#fff}
+.buzz button.tried{opacity:.45}
+.banner{border-radius:14px;padding:10px 16px;font-weight:800;font-size:clamp(17px,1.3vw,26px);animation:slidein .5s ease}
+.banner.ok{background:var(--ok-bg);color:var(--ok)}.banner.bad{background:var(--bad-bg);color:var(--bad)}
+
+/* trang chủ */
+.home{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px}
+.hero h1{font-family:var(--display);font-weight:900;font-size:clamp(38px,4vw,72px);line-height:1;margin:0 0 12px;color:var(--brand);letter-spacing:-.02em}
+.hero h1 span{background:linear-gradient(90deg,#F26B3A,#E0457B,#8B5CF6,#2F7DE1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0 0 12px;max-width:62ch;color:var(--ink2)}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.modes button{border:3px solid var(--line);background:#fff;border-radius:18px;padding:12px 14px;text-align:left;display:flex;flex-direction:column;gap:2px;color:var(--ink);transition:transform .15s}
+.modes button:hover{transform:translateY(-2px)}
+.modes .me{font-size:1.8em;line-height:1.1}
+.modes button b{font:900 1.2em var(--display)}.modes button span:not(.me){font-size:.8em;color:var(--muted)}
+.modes button[aria-pressed="true"]{border-color:transparent;background:linear-gradient(130deg,#4B2A8C,#E0457B);color:#fff;box-shadow:0 8px 20px #E0457B44}
+.modes button[aria-pressed="true"] span:not(.me){color:#FCE7F3}
+.setup1 label{display:flex;flex-direction:column;gap:4px;font-weight:700;color:var(--ink2);max-width:22em}
+.setup1 input{border:2px solid var(--line);border-radius:12px;padding:6px 10px;font:800 1.2em var(--display);width:7em}
+.setup1 .hint{margin-top:8px;max-width:62ch}
+.rounds{display:grid;gap:8px;align-content:start}
+.rnd{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:2px solid color-mix(in srgb,var(--rc) 30%,#fff);border-radius:18px;padding:10px 14px;background:color-mix(in srgb,var(--rc) 6%,#fff);text-align:left;width:100%;transition:transform .15s}
+.rnd:hover{transform:translateX(4px)}
+.rnd b{font-family:var(--display);font-size:1.08em;color:var(--rc)}
+.rnd span{color:var(--muted);font-size:.85em}
+.rnd .n{width:2.3em;height:2.3em;border-radius:12px;background:linear-gradient(130deg,var(--rc),var(--rc2));color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:1.1em}
+.rnd .pts{font-weight:800;color:var(--rc);font-size:.85em;white-space:nowrap}
+.setup{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.setup label{display:flex;flex-direction:column;gap:2px;font-size:.8em;font-weight:700;color:var(--tc)}
+.setup input{border:2px solid var(--line);border-left:8px solid var(--tc);border-radius:12px;padding:6px 10px;font:700 1.1em var(--body);color:var(--ink)}
+.cards4{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:.9em;color:var(--ink2)}
+.cards4 i{font-style:normal;width:1.8em;height:1.8em;border-radius:8px;display:inline-grid;place-items:center;color:#fff;font-weight:900;background:var(--oc)}
+.confirm{background:var(--bad-bg);border-radius:12px;padding:10px 14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* tổng kết */
+.kq{display:flex;flex-direction:column;align-items:center;gap:14px}
+.stars{display:flex;gap:18px}
+.stars span{font-size:clamp(60px,7vw,120px);line-height:1;color:#E2E4F0;animation:starin .7s cubic-bezier(.3,1.6,.5,1) both;animation-delay:var(--d)}
+.stars span.on{color:var(--gold);text-shadow:0 6px 0 #CA8A04,0 0 30px #FACC1588}
+@keyframes starin{from{transform:scale(0) rotate(-90deg);opacity:0}}
+.kmsg{font:800 clamp(20px,1.7vw,32px) var(--display);color:var(--rc);margin:0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;width:100%}
+.stats div{background:#fff;border:2px solid var(--line);border-radius:18px;padding:10px 14px;display:flex;flex-direction:column;animation:slidein .5s ease both}
+.stats b{font:900 2.3em var(--display);color:var(--brand);line-height:1.1}.stats span{font-size:.82em;color:var(--muted);font-weight:600}
+.stats .t-pts{background:linear-gradient(130deg,#FFF1E6,#FCE7F3);border-color:#F9A8D4}.stats .t-pts b{color:#DB2777}
+.stats .t-ok{background:var(--ok-bg);border-color:#86EFAC}.stats .t-ok b{color:var(--ok)}
+.stats .t-bad{background:var(--bad-bg);border-color:#FDA4AF}.stats .t-bad b{color:var(--bad)}
+.ratio{width:100%;height:18px;border-radius:10px;background:var(--bad-bg);overflow:hidden}
+.ratio i{display:block;height:100%;background:linear-gradient(90deg,#22C55E,#16A34A);border-radius:10px;animation:grow 1.2s ease both}
+@keyframes grow{from{width:0!important}}
+.pod{display:flex;gap:14px;align-items:flex-end;justify-content:center;flex-wrap:wrap;padding-top:10px}
+.pod .col{width:clamp(120px,14vw,220px);text-align:center;animation:slidein .6s ease both;animation-delay:var(--d)}
+.pod .bar{border-radius:16px 16px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--tc) 70%,#fff),var(--tc));color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:clamp(26px,2.6vw,48px)}
+.pod .nm{font-weight:800;font-size:1.05em;margin-bottom:6px;color:var(--tc)}
+.pod .rk{font-size:2em}
+.tblw{overflow-x:auto}
+.tbl{border-collapse:separate;border-spacing:0;width:100%;font-size:clamp(15px,1.1vw,22px);border:2px solid var(--line);border-radius:16px;overflow:hidden}
+.tbl th,.tbl td{padding:7px 12px;text-align:center;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--soft)}.tbl td:first-child,.tbl th:first-child{text-align:left}
+.tbl tfoot td{background:#FFF7ED;font-weight:800}
+.tbl .dot{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--rc);color:#fff;font-weight:900;font-size:.85em}
+.stx{color:var(--gold);letter-spacing:2px;text-shadow:0 1px 0 #CA8A04}.stx span{color:#E2E4F0;text-shadow:none}
+.sumh{font:800 1.1em var(--display);margin:6px 0 0;color:var(--bad)}
+.sum{display:flex;flex-direction:column;gap:6px}
+.srow{display:grid;grid-template-columns:9em 1fr auto;gap:12px;align-items:center;text-align:left;background:#fff;border:2px solid var(--line);border-left:8px solid var(--bad);border-radius:12px;padding:8px 12px;color:var(--ink)}
+.srow:hover{border-color:var(--brand)}.sv{font-weight:800;color:var(--brand)}
+.st{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.9em}.sw{font-weight:800;color:var(--bad);font-size:.85em;white-space:nowrap}
+
+/* lớp hiệu ứng */
+#fxc{position:fixed;inset:0;pointer-events:none;z-index:70}
+.flash{position:fixed;inset:0;pointer-events:none;z-index:65;opacity:0}
+.flash.ok.go{animation:fl .8s ease;box-shadow:inset 0 0 0 18px #22C55E88,inset 0 0 120px #22C55E55}
+.flash.bad.go{animation:fl .8s ease;box-shadow:inset 0 0 0 18px #E11D4888,inset 0 0 120px #E11D4855}
+@keyframes fl{20%{opacity:1}}
+.pop{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%) scale(.3);opacity:0;pointer-events:none;z-index:68;background:#fff;border-radius:30px;padding:16px 46px 20px;text-align:center;box-shadow:0 24px 70px #0005;border:7px solid;min-width:min(90vw,420px)}
+.pop.ok{border-color:#22C55E}.pop.bad{border-color:#E11D48}
+.pop.go{animation:popin 1.7s cubic-bezier(.3,1.5,.5,1) forwards}
+.pop.big.go{animation-duration:2.3s}
+@keyframes popin{0%{transform:translate(-50%,-50%) scale(.3) rotate(-8deg);opacity:0}14%{transform:translate(-50%,-50%) scale(1.1) rotate(2deg);opacity:1}24%{transform:translate(-50%,-50%) scale(1)}82%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-60%) scale(.9)}}
+.pe{font-size:clamp(56px,6vw,96px);line-height:1.1}
+.pop.ok .pe{animation:wig .6s ease 2}.pop.bad .pe{animation:shk .5s ease 2}
+.pt{font:900 clamp(34px,3.6vw,64px)/1.1 var(--display)}
+.pop.ok .pt{background:linear-gradient(90deg,#16A34A,#0EA5A0,#2F7DE1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pop.bad .pt{color:#E11D48}
+.pop.big .pt{background:linear-gradient(90deg,#F26B3A,#E0457B,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ps{font-weight:800;font-size:clamp(16px,1.3vw,24px);color:var(--ink2);margin-top:6px}
+@keyframes wig{25%{transform:rotate(-14deg) scale(1.15)}75%{transform:rotate(14deg) scale(1.15)}}
+@keyframes shk{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.shake{animation:shake .55s ease}
+@keyframes shake{15%,55%{transform:translateX(-12px)}35%,75%{transform:translateX(12px)}}
+.card.shake .in{animation:none}
+.fpt{position:fixed;z-index:69;transform:translate(-50%,-50%);font:900 clamp(30px,3vw,54px) var(--display);color:#16A34A;text-shadow:0 3px 0 #fff,0 0 12px #fff;pointer-events:none;animation:flt 1.4s ease forwards}
+@keyframes flt{to{transform:translate(-50%,-260%);opacity:0}}
+#call{position:fixed;inset:0;z-index:80;background:radial-gradient(circle at 50% 45%,#4B2A8Cee,#1B2A6Bf5);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;cursor:pointer;text-align:center}
+#call[hidden]{display:none}
+#call .cl{font:800 clamp(26px,3vw,52px) var(--display);opacity:.9}
+#call .cn{font:900 clamp(140px,24vh,320px)/1 var(--display);background:linear-gradient(90deg,#FFB13B,#F26B3A,#E0457B);-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+#call.done .cn{animation:bump .6s ease}
+#call .cs{font-weight:700;opacity:.75}
+@media (max-width:900px){.home,.v4,.v3,.pnw,.mem2{grid-template-columns:minmax(0,1fr)}.board4{grid-template-columns:repeat(2,minmax(0,1fr));min-width:0}#board{margin-left:0;width:100%}.opts,.picks,.v3.nt .opts{grid-template-columns:minmax(0,1fr)}.bin{min-height:20vh}.modes{grid-template-columns:1fr}.srow{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.pop.go{opacity:1;transform:translate(-50%,-50%)}}
+.nw{white-space:nowrap}
+.vbtn{display:inline-flex;align-items:center;gap:6px;margin-top:8px;border-radius:12px;padding:5px 12px;background:#FF0033;color:#fff;font-weight:800;text-decoration:none;font-size:.9em;box-shadow:0 3px 0 #B00024}
+.vbtn:hover{filter:brightness(1.1)}.vbtn small{font-weight:600;opacity:.9}
+.vlist{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}.vlist .vbtn{margin-top:0}
+.vhead{font:800 1em var(--display);color:#B00024;margin:8px 0 0}
+.vtop{display:grid;grid-template-columns:auto repeat(4,minmax(0,1fr));gap:10px;align-items:stretch;background:#FFF1F2;border:2px solid #FDA4AF;border-radius:18px;padding:10px}
+.vtl{align-self:center;font:900 clamp(16px,1.25vw,24px)/1.2 var(--display);color:#B00024;max-width:9em}
+.vbig{display:flex;align-items:center;gap:10px;background:linear-gradient(120deg,#FF0033,#E0457B);color:#fff;border-radius:16px;padding:10px 14px;font:800 clamp(16px,1.3vw,25px)/1.25 var(--display);text-decoration:none;box-shadow:0 4px 0 #B00024;transition:transform .15s}
+.vbig:hover{transform:translateY(-3px)}
+.vbig i{font-style:normal;flex:none;width:2em;height:2em;border-radius:50%;background:#fff;color:#FF0033;display:grid;place-items:center;font-size:.9em}
+@media (max-width:900px){.vtop{grid-template-columns:minmax(0,1fr)}}
+.card .f>span:last-child{max-width:100%}
+.ctx.big{font-size:clamp(18px,1.45vw,30px);line-height:1.45;color:var(--ink);font-weight:600}
+.qcard{background:linear-gradient(120deg,color-mix(in srgb,var(--rc) 12%,#fff),color-mix(in srgb,var(--rc2) 10%,#fff));border:2px solid color-mix(in srgb,var(--rc) 35%,#fff);border-left:8px solid var(--rc);border-radius:16px;padding:10px 16px;margin-bottom:10px}
+.qcard .qbox.eq{font-size:clamp(24px,2.1vw,42px);margin:4px 0 0;color:var(--brand)}
+.qcard .ctx.big mjx-container,.ctx.big mjx-container{font-size:108%}
+.v3 + .ctx.big,.ctx.big+.v3{margin-top:4px}
+.pop .ps .pf{margin-top:8px;font-size:1.15em;color:var(--ink)}
+.pop{max-width:min(92vw,900px)}
+.rost{max-width:none!important;width:100%}
+.rost textarea{border:2px solid var(--line);border-radius:12px;padding:8px 10px;font:500 .95em/1.45 var(--body);width:100%;resize:vertical;color:var(--ink)}
+.rost textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.rrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+.rrow .sz{flex-direction:row!important;align-items:center;gap:6px;font-size:.85em}
+.rrow .sz input{width:5em;font-size:1em}
+#call.nm .cn{font-size:clamp(56px,9vw,150px);line-height:1.1;max-width:92vw;text-align:center;padding:0 2vw}
+#call .cm{font:800 clamp(22px,2.4vw,40px) var(--display);color:#FDE68A;min-height:1.2em;margin-bottom:6px}
+</style>
+<div class="app">
+  <header class="top">
+    <div class="logo">Đấu trường Động học<small>KTPU · Chương 2</small></div>
+    <nav class="tabs" id="tabs" aria-label="Các vòng"></nav>
+    <div id="board" aria-live="polite"></div>
+  </header>
+  <main class="stage" id="stage"></main>
+  <div class="ctrl" id="ctrl"></div>
+</div>
+<canvas id="fxc" aria-hidden="true"></canvas>
+<div id="flash" class="flash" aria-hidden="true"></div>
+<div id="pop" class="pop" role="status" aria-live="assertive"></div>
+<div id="call" hidden role="dialog" aria-label="Gọi sinh viên"><div class="cl">🎲 Mời sinh viên số</div><div class="cn">?</div><div class="cm"></div><div class="cs">Đang quay…</div></div>
+<script>
+/* ================= NGÂN HÀNG CÂU HỎI – CHƯƠNG 2 (Sách BT KTPU, Bảng 2.1–2.9) ================= */
+const R = String.raw;
+
+/* ---------- Vòng 1: Khởi động ---------- */
+const R1 = [
+ {q:R`Hằng số tốc độ \(k = 0{,}05\ \mathrm{L\cdot mol^{-1}\cdot s^{-1}}\). Phản ứng có bậc:`,o:['Bậc 0','Bậc 1','Bậc 2','Bậc 3'],a:2,
+  why:R`Đơn vị \(k\): \((\text{nồng độ})^{1-n}(\text{thời gian})^{-1}\). \(\mathrm{L\cdot mol^{-1}} = (\mathrm{mol/L})^{-1}\) nên \(1-n=-1\), \(n = 2\) (mục 2.1.4.6).`},
+ {q:R`Hằng số tốc độ \(k = 2{,}5\times10^{-3}\ \mathrm{mol\cdot L^{-1}\cdot min^{-1}}\). Phản ứng có bậc:`,o:['Bậc 0','Bậc 1','Bậc 2','Bậc 3'],a:0,
+  why:R`\(k\) có cùng đơn vị với tốc độ phản ứng: \((\mathrm{mol/L})^{1}\) nên \(1-n = 1\), \(n = 0\).`},
+ {q:R`Hằng số tốc độ \(k = 0{,}12\ \mathrm{min^{-1}}\). Phản ứng có bậc:`,o:['Bậc 0','Bậc 1','Bậc 2','Bậc 3'],a:1,
+  why:R`Không có thừa số nồng độ: \(1-n = 0\), \(n = 1\).`},
+ {q:R`Hằng số tốc độ \(k = 4\ \mathrm{L^{2}\cdot mol^{-2}\cdot s^{-1}}\). Phản ứng có bậc:`,o:['Bậc 0','Bậc 1','Bậc 2','Bậc 3'],a:3,
+  why:R`\((\mathrm{mol/L})^{-2}\) nên \(1-n = -2\), \(n = 3\).`},
+ {q:R`Đúng hay sai: phản ứng bậc 1 có thời gian bán hủy \(t_{1/2}\) <b>không phụ thuộc</b> \(C_\mathrm{Ao}\).`,o:['Đúng','Sai'],a:0,
+  why:R`\(t_{1/2} = \dfrac{\ln 2}{k}\) (Bảng 2.1).`},
+ {q:R`Đúng hay sai: phản ứng bậc 0 có \(t_{1/2}\) <b>tỉ lệ nghịch</b> với \(C_\mathrm{Ao}\).`,o:['Đúng','Sai'],a:1,
+  why:R`\(t_{1/2} = \dfrac{C_\mathrm{Ao}}{2k}\): tỉ lệ <b>thuận</b>. Tỉ lệ nghịch là bậc 2: \(t_{1/2} = \dfrac{1}{kC_\mathrm{Ao}}\).`},
+ {q:R`Phản ứng pha khí A → 2B thực hiện đẳng áp, nhập liệu A nguyên chất. Hệ số thay đổi thể tích \(\varepsilon_\mathrm{A}\) bằng:`,o:['0','0,5','1','2'],a:2,
+  why:R`\(\varepsilon_\mathrm{A} = \dfrac{N_{\text{tổng},X_\mathrm{A}=1}-N_{\text{tổng},X_\mathrm{A}=0}}{N_{\text{tổng},X_\mathrm{A}=0}} = \dfrac{2-1}{1} = 1\) (2.30).`},
+ {q:R`Cũng phản ứng A → 2B nhưng nhập liệu gồm 50 % A và 50 % khí trơ (theo mol). \(\varepsilon_\mathrm{A}\) bằng:`,o:['0','0,5','1','2'],a:1,
+  why:R`Ban đầu 0,5 A + 0,5 trơ = 1 mol; khi \(X_\mathrm{A}=1\): 1 B + 0,5 trơ = 1,5 mol. \(\varepsilon_\mathrm{A} = (1{,}5-1)/1 = 0{,}5\). Khí trơ làm giảm \(\varepsilon_\mathrm{A}\).`},
+ {q:R`Đúng hay sai: đồ thị \(\ln k\) theo \(1/T\) là đường thẳng có hệ số góc \(-E_\mathrm{a}/R\).`,o:['Đúng','Sai'],a:0,
+  why:R`\(\ln k = -\dfrac{E_\mathrm{a}}{RT} + \ln A\) (2.13): \(y = \ln k\), \(x = 1/T\).`},
+ {q:R`Hai phản ứng có cùng \(k\) ở 300 K. Khi tăng nhiệt độ, phản ứng nào có \(k\) tăng nhanh hơn?`,o:[R`Phản ứng có \(E_\mathrm{a}\) lớn hơn`,R`Phản ứng có \(E_\mathrm{a}\) nhỏ hơn`,'Tăng như nhau','Không xác định được'],a:0,
+  why:R`\(\ln\dfrac{k_{T_2}}{k_{T_1}} = -\dfrac{E_\mathrm{a}}{R}\left(\dfrac{1}{T_2}-\dfrac{1}{T_1}\right)\): \(E_\mathrm{a}\) càng lớn, tỉ số càng lớn.`}
+];
+
+/* ---------- Vòng 2: Lật thẻ ghép đôi (3 bảng × 8 cặp) ---------- */
+const R2 = [
+ {name:'Bảng 1 · Phương trình tích phân',pairs:[
+  [R`Bất thuận nghịch <b>bậc 0</b>, pha lỏng: A → B`, R`\(C_\mathrm{Ao}-C_\mathrm{A}=kt\)`],
+  [R`Bậc 1, pha khí A → 2B, <i>V</i> = const, theo áp suất riêng phần`, R`\(\ln\dfrac{p_\mathrm{Ao}}{p_\mathrm{A}}=kt\)`],
+  [R`Bậc 2: A + B → R + S, \(C_\mathrm{Ao}=C_\mathrm{Bo}\)`, R`\(\dfrac{1}{C_\mathrm{A}}-\dfrac{1}{C_\mathrm{Ao}}=kt\)`],
+  [R`Bậc 2: A + B → R + S, \(C_\mathrm{Ao}\neq C_\mathrm{Bo}\)`, R`\(\ln\dfrac{C_\mathrm{Ao}C_\mathrm{B}}{C_\mathrm{Bo}C_\mathrm{A}}=C_\mathrm{Ao}(M-1)kt\)`],
+  [R`Thuận nghịch bậc 1, pha lỏng: A ⇄ R`, R`\(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}}=(k_1+k_2)t\)`],
+  [R`Thuận nghịch bậc 2: A + B ⇄ 2R hoặc 2A ⇄ R + S (\(C_\mathrm{Ao}=C_\mathrm{Bo}\); \(C_\mathrm{Ro}=C_\mathrm{So}=0\))`, R`\(\ln\dfrac{X_\mathrm{Ae}-(2X_\mathrm{Ae}-1)X_\mathrm{A}}{X_\mathrm{Ae}-X_\mathrm{A}}=2k_1\!\left(\dfrac{1}{X_\mathrm{Ae}}-1\right)\!C_\mathrm{Ao}t\)`],
+  [R`Bất thuận nghịch <b>bậc <i>n</i></b> (<i>n</i> ≠ 1), <i>V</i> = const`, R`\(\dfrac{1}{C_\mathrm{A}^{\,n-1}}-\dfrac{1}{C_\mathrm{Ao}^{\,n-1}}=(n-1)kt\)`],
+  [R`Bậc 1, thể tích thay đổi \(V=V_\mathrm{o}(1+\varepsilon_\mathrm{A}X_\mathrm{A})\): biểu diễn <i>V</i> theo <i>t</i>`, R`\(-\ln\!\left(1-\dfrac{\Delta V}{\varepsilon_\mathrm{A}V_\mathrm{o}}\right)=kt\)`]]},
+ {name:'Bảng 2 · Theo độ chuyển hóa, áp suất tổng, thời gian bán hủy',pairs:[
+  [R`Bậc 1, theo \(X_\mathrm{A}\), <i>V</i> = const`, R`\(-\ln(1-X_\mathrm{A})=kt\)`],
+  [R`Bậc 2 (\(C_\mathrm{Ao}=C_\mathrm{Bo}\)), theo \(X_\mathrm{A}\)`, R`\(\dfrac{1}{C_\mathrm{Ao}}\dfrac{X_\mathrm{A}}{1-X_\mathrm{A}}=kt\)`],
+  [R`Bậc 0, theo \(X_\mathrm{A}\), <i>V</i> = const`, R`\(C_\mathrm{Ao}X_\mathrm{A}=kt\)`],
+  [R`Bậc 1 pha khí, bình kín, đo <b>áp suất tổng</b> <i>P</i>`, R`\(P-P_\mathrm{o}=\dfrac{\Delta n}{a}\,p_\mathrm{Ao}\left(1-e^{-kt}\right)\)`],
+  [R`Bậc 0, thể tích thay đổi, theo \(X_\mathrm{A}\)`, R`\(\dfrac{C_\mathrm{Ao}}{\varepsilon_\mathrm{A}}\ln(1+\varepsilon_\mathrm{A}X_\mathrm{A})=kt\)`],
+  [R`A + 2B → sản phẩm, <b>bậc 3</b>, \(M = C_\mathrm{Bo}/C_\mathrm{Ao}=2\)`, R`\(\dfrac{1}{C_\mathrm{A}^{2}}-\dfrac{1}{C_\mathrm{Ao}^{2}}=8kt\)`],
+  [R`Thời gian bán hủy, bậc 0`, R`\(t_{1/2}=\dfrac{C_\mathrm{Ao}}{2k}\)`],
+  [R`Thời gian bán hủy, bậc <i>n</i> (<i>n</i> ≠ 1)`, R`\(t_{1/2}=\dfrac{2^{\,n-1}-1}{(n-1)kC_\mathrm{Ao}^{\,n-1}}\)`]]},
+ {name:'Bảng 3 · Phương trình động học vi phân',pairs:[
+  [R`Bậc 2: A + B → sp, \(C_\mathrm{Ao}\neq C_\mathrm{Bo}\), theo \(X_\mathrm{A}\)`, R`\(\dfrac{dX_\mathrm{A}}{dt}=kC_\mathrm{Ao}(1-X_\mathrm{A})(M-X_\mathrm{A})\)`],
+  [R`A + 2B → sp, bậc 2, theo \(X_\mathrm{A}\)`, R`\(\dfrac{dX_\mathrm{A}}{dt}=kC_\mathrm{Ao}(1-X_\mathrm{A})(M-2X_\mathrm{A})\)`],
+  [R`Thuận nghịch bậc 1, theo \(X_\mathrm{A}\)`, R`\(\dfrac{dX_\mathrm{A}}{dt}=(k_1+k_2)(X_\mathrm{Ae}-X_\mathrm{A})\)`],
+  [R`Thuận nghịch bậc 2: A + B ⇄ R + S`, R`\(-\dfrac{dC_\mathrm{A}}{dt}=k_1C_\mathrm{A}C_\mathrm{B}-k_2C_\mathrm{R}C_\mathrm{S}\)`],
+  [R`Bậc 2 pha khí, theo áp suất riêng phần`, R`\(-\dfrac{dp_\mathrm{A}}{dt}=k'p_\mathrm{A}^{2},\ \ k'=\dfrac{k}{RT}\)`],
+  [R`Bậc 0 pha khí, theo áp suất riêng phần`, R`\(-\dfrac{dp_\mathrm{A}}{dt}=kRT\)`],
+  [R`Bậc 1, thể tích thay đổi, theo \(X_\mathrm{A}\)`, R`\(\dfrac{C_\mathrm{Ao}}{1+\varepsilon_\mathrm{A}X_\mathrm{A}}\dfrac{dX_\mathrm{A}}{dt}=kC_\mathrm{Ao}\dfrac{1-X_\mathrm{A}}{1+\varepsilon_\mathrm{A}X_\mathrm{A}}\)`],
+  [R`Bậc <i>n</i>, <i>V</i> = const, theo \(X_\mathrm{A}\)`, R`\(\dfrac{dX_\mathrm{A}}{dt}=kC_\mathrm{Ao}^{\,n-1}(1-X_\mathrm{A})^{n}\)`]]}
+];
+
+/* ---------- Vòng 3: Thám tử số liệu ---------- */
+const M = {TP:'Phương pháp tích phân',VP:'Phương pháp vi phân',BH:'Phương pháp thời gian bán hủy',TD:'Phương pháp tốc độ đầu',CL:'Phương pháp cô lập (dùng dư một chất)',AR:'Phương trình Arrhenius'};
+const R3 = [
+ {ctx:'Phản ứng pha lỏng A → sản phẩm trong bình gián đoạn. Một thí nghiệm duy nhất, cần tìm <i>n</i> và <i>k</i>.',
+  head:[R`\(t\) (min)`,R`\(C_\mathrm{A}\) (mol/L)`],rows:[[0,'1,000'],[5,'0,607'],[10,'0,368'],[15,'0,223'],[20,'0,135'],[30,'0,050']],
+  o:[M.TP,M.BH,M.TD,M.AR],a:0,
+  why:R`Chỉ có \(C_\mathrm{A}\) theo \(t\) của một thí nghiệm: thử \(n = 0, 1, 2\) bằng PT tích phân (vẽ \(C_\mathrm{A}\), \(\ln C_\mathrm{A}\), \(1/C_\mathrm{A}\) theo \(t\)). Ở đây \(\ln C_\mathrm{A}\) theo \(t\) thẳng: bậc 1, \(k = 0{,}1\ \mathrm{min^{-1}}\).`},
+ {ctx:'Nhiều thí nghiệm với nồng độ đầu khác nhau; mỗi thí nghiệm chỉ ghi thời gian để A còn một nửa.',
+  head:[R`\(C_\mathrm{Ao}\) (mol/L)`,R`\(t_{1/2}\) (min)`],rows:[['0,5','4,0'],['1,0','2,0'],['2,0','1,0'],['4,0','0,5']],
+  o:[M.TP,M.AR,M.CL,M.BH],a:3,
+  why:R`Vẽ \(\ln t_{1/2}\) theo \(\ln C_\mathrm{Ao}\): hệ số góc \(1-n = -1\), suy ra \(n = 2\); \(k = 1/(t_{1/2}C_\mathrm{Ao}) = 0{,}5\ \mathrm{L\cdot mol^{-1}\cdot min^{-1}}\).`},
+ {ctx:'Đo được tốc độ phản ứng ứng với từng nồng độ A (ví dụ trong thiết bị dòng liên tục hoặc từ tiếp tuyến đường cong).',
+  head:[R`\(C_\mathrm{A}\) (mol/L)`,R`\((-r_\mathrm{A})\) (mol·L⁻¹·min⁻¹)`],rows:[['0,2','0,008'],['0,4','0,032'],['0,6','0,072'],['0,8','0,128'],['1,0','0,200']],
+  o:[M.BH,M.VP,M.TP,M.AR],a:1,
+  why:R`Có sẵn \((-r_\mathrm{A})\) theo \(C_\mathrm{A}\): \(\ln(-r_\mathrm{A}) = \ln k + n\ln C_\mathrm{A}\). Hệ số góc \(n = 2\), \(k = 0{,}2\ \mathrm{L\cdot mol^{-1}\cdot min^{-1}}\).`},
+ {ctx:R`Phản ứng A + B → sản phẩm. Thí nghiệm dùng \(C_\mathrm{Bo} = 2{,}0\ \mathrm{mol/L}\), \(C_\mathrm{Ao} = 0{,}020\ \mathrm{mol/L}\); theo dõi \(C_\mathrm{A}\).`,
+  head:[R`\(t\) (min)`,R`\(C_\mathrm{A}\) (mol/L)`],rows:[[0,'0,0200'],[10,'0,0121'],[20,'0,0074'],[30,'0,0045'],[40,'0,0027']],
+  o:[M.TD,M.CL,M.BH,M.AR],a:1,
+  why:R`B dư 100 lần nên \(C_\mathrm{B}\approx\) const: \((-r_\mathrm{A}) = k'C_\mathrm{A}^{\alpha}\) với \(k' = kC_\mathrm{Bo}^{\beta}\). Tìm \(\alpha\) bằng PT tích phân (ở đây \(\alpha = 1\)), rồi đổi \(C_\mathrm{Bo}\) để tìm \(\beta\).`},
+ {ctx:'Phản ứng A + B → sản phẩm. Mỗi thí nghiệm chỉ đo tốc độ ngay khi bắt đầu.',
+  head:['Thí nghiệm',R`\(C_\mathrm{Ao}\) (mol/L)`,R`\(C_\mathrm{Bo}\) (mol/L)`,R`\((-r_\mathrm{A})_\mathrm{o}\) (mol·L⁻¹·s⁻¹)`],rows:[[1,'0,10','0,10','2,0·10⁻⁴'],[2,'0,20','0,10','4,0·10⁻⁴'],[3,'0,10','0,20','8,0·10⁻⁴']],
+  o:[M.AR,M.VP,M.TD,M.BH],a:2,
+  why:R`Thí nghiệm 1 và 2: \(C_\mathrm{Ao}\) gấp đôi, tốc độ gấp đôi nên bậc theo A bằng 1. Thí nghiệm 1 và 3: \(C_\mathrm{Bo}\) gấp đôi, tốc độ gấp 4 nên bậc theo B bằng 2.`},
+ {ctx:'Cùng một phản ứng, xác định hằng số tốc độ ở nhiều nhiệt độ.',
+  head:[R`\(T\) (K)`,R`\(k\) (min⁻¹)`],rows:[[300,'1,00·10⁻³'],[310,'1,91·10⁻³'],[320,'3,50·10⁻³'],[330,'6,19·10⁻³']],
+  o:[M.TP,M.AR,M.CL,M.TD],a:1,
+  why:R`Vẽ \(\ln k\) theo \(1/T\): hệ số góc \(-E_\mathrm{a}/R \approx -6\,014\ \mathrm{K}\), suy ra \(E_\mathrm{a}\approx 50\ \mathrm{kJ/mol}\).`},
+ {ctx:'Phản ứng pha khí A → 2B trong bình kín (<i>V</i> = const), nạp A nguyên chất. Chỉ đo được áp suất tổng.',
+  head:[R`\(t\) (min)`,R`\(P\) (atm)`],rows:[[0,'1,000'],[5,'1,393'],[10,'1,632'],[20,'1,865'],[30,'1,950']],
+  o:[M.BH,M.TD,M.AR,'Phương pháp tích phân, biến số là áp suất tổng P'],a:3,
+  why:R`\(p_\mathrm{A} = p_\mathrm{Ao}-\dfrac{a}{\Delta n}(P-P_\mathrm{o}) = 2P_\mathrm{o}-P\). Vẽ \(\ln p_\mathrm{A}\) theo \(t\): thẳng, bậc 1, \(k = 0{,}1\ \mathrm{min^{-1}}\).`},
+ {ctx:R`Cùng \(C_\mathrm{Ao}\), đo thời gian bán hủy ở hai nhiệt độ. Cần tìm năng lượng hoạt hóa.`,
+  head:[R`\(T\) (K)`,R`\(t_{1/2}\) (min)`],rows:[[300,40],[320,10]],
+  o:[M.BH,'Phương trình Arrhenius (dùng tỉ số thời gian bán hủy)',M.VP,M.CL],a:1,
+  why:R`Cùng \(C_\mathrm{Ao}\) thì \(k\) tỉ lệ nghịch với \(t_{1/2}\) (với mọi bậc): \(\ln\dfrac{40}{10} = -\dfrac{E_\mathrm{a}}{R}\left(\dfrac{1}{320}-\dfrac{1}{300}\right)\), \(E_\mathrm{a}\approx 55{,}3\ \mathrm{kJ/mol}\). (Tương tự Ví dụ 2.9.)`}
+];
+
+/* ---------- Vòng 4: Đường thẳng bí ẩn ---------- */
+const lin = (n,f)=>Array.from({length:n},(_,i)=>f(i));
+const R4 = [
+ {eq:R`\(C_\mathrm{A} = C_\mathrm{Ao}e^{-kt}\)`,ctx:'Bất thuận nghịch bậc 1, <i>V</i> = const.',
+  o:[R`\(\ln C_\mathrm{A}\) theo \(t\); hệ số góc \(-k\)`,R`\(C_\mathrm{A}\) theo \(t\); hệ số góc \(-k\)`,R`\(1/C_\mathrm{A}\) theo \(t\); hệ số góc \(k\)`,R`\(\ln C_\mathrm{A}\) theo \(\ln t\); hệ số góc \(-k\)`],a:0,
+  why:R`Lấy ln hai vế: \(\ln C_\mathrm{A} = \ln C_\mathrm{Ao} - kt\). Tung độ gốc \(\ln C_\mathrm{Ao}\).`,
+  raw:{xl:R`\(t\)`,yl:R`\(C_\mathrm{A}\)`,pts:lin(8,i=>[i*4,Math.exp(-0.1*i*4)])},
+  lin:{xl:R`\(t\)`,yl:R`\(\ln C_\mathrm{A}\)`,f:(x,y)=>[x,Math.log(y)]}},
+ {eq:R`\(-\dfrac{dC_\mathrm{A}}{dt} = kC_\mathrm{A}^{2}\)`,ctx:R`Bất thuận nghịch bậc 2, \(C_\mathrm{Ao}=C_\mathrm{Bo}\).`,
+  o:[R`\(\ln C_\mathrm{A}\) theo \(t\); hệ số góc \(-k\)`,R`\(1/C_\mathrm{A}\) theo \(t\); hệ số góc \(k\); tung độ gốc \(1/C_\mathrm{Ao}\)`,R`\(1/C_\mathrm{A}\) theo \(1/t\); hệ số góc \(k\)`,R`\(C_\mathrm{A}^2\) theo \(t\); hệ số góc \(-k\)`],a:1,
+  why:R`Tích phân: \(\dfrac{1}{C_\mathrm{A}} = \dfrac{1}{C_\mathrm{Ao}} + kt\) (Bảng 2.1).`,
+  raw:{xl:R`\(t\)`,yl:R`\(C_\mathrm{A}\)`,pts:lin(8,i=>[i*2,1/(1+0.5*i*2)])},
+  lin:{xl:R`\(t\)`,yl:R`\(1/C_\mathrm{A}\)`,f:(x,y)=>[x,1/y]}},
+ {eq:R`\((-r_\mathrm{A}) = kC_\mathrm{A}^{\,n}\)`,ctx:'Phương pháp vi phân: đã có các cặp số liệu tốc độ – nồng độ.',
+  o:[R`\((-r_\mathrm{A})\) theo \(C_\mathrm{A}\); hệ số góc \(k\)`,R`\(\ln(-r_\mathrm{A})\) theo \(C_\mathrm{A}\); hệ số góc \(n\)`,R`\(\ln(-r_\mathrm{A})\) theo \(\ln C_\mathrm{A}\); hệ số góc \(n\); tung độ gốc \(\ln k\)`,R`\(\ln C_\mathrm{A}\) theo \(\ln(-r_\mathrm{A})\); hệ số góc \(n\)`],a:2,
+  why:R`\(\ln(-r_\mathrm{A}) = \ln k + n\ln C_\mathrm{A}\) (2.5). Nếu vẽ ngược trục thì hệ số góc là \(1/n\).`,
+  raw:{xl:R`\(C_\mathrm{A}\)`,yl:R`\((-r_\mathrm{A})\)`,pts:lin(8,i=>{const c=0.2+i*0.12;return [c,0.2*c*c];})},
+  lin:{xl:R`\(\ln C_\mathrm{A}\)`,yl:R`\(\ln(-r_\mathrm{A})\)`,f:(x,y)=>[Math.log(x),Math.log(y)]}},
+ {eq:R`\(t_{1/2} = \dfrac{2^{\,n-1}-1}{(n-1)kC_\mathrm{Ao}^{\,n-1}}\)`,ctx:'Phương pháp thời gian bán hủy: nhiều thí nghiệm với các <i>C</i><sub>Ao</sub> khác nhau.',
+  o:[R`\(\ln t_{1/2}\) theo \(\ln C_\mathrm{Ao}\); hệ số góc \(n-1\)`,R`\(t_{1/2}\) theo \(C_\mathrm{Ao}\); hệ số góc \(1-n\)`,R`\(\ln t_{1/2}\) theo \(C_\mathrm{Ao}\); hệ số góc \(1-n\)`,R`\(\ln t_{1/2}\) theo \(\ln C_\mathrm{Ao}\); hệ số góc \(1-n\)`],a:3,
+  why:R`\(\ln t_{1/2} = (1-n)\ln C_\mathrm{Ao} + \ln\dfrac{2^{\,n-1}-1}{k(n-1)}\) (2.9), vì \(C_\mathrm{Ao}^{-(n-1)} = C_\mathrm{Ao}^{\,1-n}\). Suy ra \(n = 1 - \tan\alpha\).`,
+  raw:{xl:R`\(C_\mathrm{Ao}\)`,yl:R`\(t_{1/2}\)`,pts:lin(7,i=>{const c=0.5+i*0.6;return [c,1/(0.5*c)];})},
+  lin:{xl:R`\(\ln C_\mathrm{Ao}\)`,yl:R`\(\ln t_{1/2}\)`,f:(x,y)=>[Math.log(x),Math.log(y)]}},
+ {eq:R`\(\mathrm{A}\rightleftarrows\mathrm{R}\), \(\ -\dfrac{dC_\mathrm{A}}{dt} = k_1C_\mathrm{A}-k_2C_\mathrm{R}\)`,ctx:R`Thuận nghịch bậc 1, \(C_\mathrm{Ro}=0\); đã biết \(C_\mathrm{Ae}\).`,
+  o:[R`\(\ln\dfrac{C_\mathrm{Ao}}{C_\mathrm{A}}\) theo \(t\); hệ số góc \(k_1\)`,R`\(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}}\) theo \(t\); hệ số góc \(k_1\)`,R`\(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}}\) theo \(t\); hệ số góc \(k_1+k_2\)`,R`\(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}}\) theo \(t\); hệ số góc \(k_1-k_2\)`],a:2,
+  why:R`Bảng 2.6: \(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}} = k_1\!\left(1+\dfrac{1}{K_C}\right)\!t = (k_1+k_2)t\). Biết \(K_C = k_1/k_2\) mới tách được \(k_1\), \(k_2\).`,
+  raw:{xl:R`\(t\)`,yl:R`\(C_\mathrm{A}\)`,pts:lin(8,i=>[i*2,1/3+(2/3)*Math.exp(-0.3*i*2)])},
+  lin:{xl:R`\(t\)`,yl:R`\(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}}\)`,f:(x,y)=>[x,Math.log((1-1/3)/(y-1/3))]}},
+ {eq:R`\(-\dfrac{dC_\mathrm{A}}{dt} = kC_\mathrm{A}C_\mathrm{B}\)`,ctx:R`A + B → sản phẩm, \(C_\mathrm{Ao}\neq C_\mathrm{Bo}\), \(M = C_\mathrm{Bo}/C_\mathrm{Ao}\).`,
+  o:[R`\(1/C_\mathrm{A}\) theo \(t\); hệ số góc \(k\)`,R`\(\ln\dfrac{C_\mathrm{B}}{C_\mathrm{A}}\) theo \(t\); hệ số góc \((C_\mathrm{Bo}-C_\mathrm{Ao})k\); tung độ gốc \(\ln M\)`,R`\(\ln\dfrac{C_\mathrm{B}}{C_\mathrm{A}}\) theo \(t\); hệ số góc \(k\)`,R`\(\ln(C_\mathrm{A}C_\mathrm{B})\) theo \(t\); hệ số góc \((C_\mathrm{Bo}-C_\mathrm{Ao})k\)`],a:1,
+  why:R`Bảng 2.4: \(\ln\dfrac{C_\mathrm{Ao}C_\mathrm{B}}{C_\mathrm{Bo}C_\mathrm{A}} = (C_\mathrm{Bo}-C_\mathrm{Ao})kt\), tức \(\ln\dfrac{C_\mathrm{B}}{C_\mathrm{A}} = \ln M + (C_\mathrm{Bo}-C_\mathrm{Ao})kt\).`,
+  raw:{xl:R`\(t\)`,yl:R`\(C_\mathrm{A}\)`,pts:lin(8,i=>{const r=Math.log(2)+0.3*i*1.2;return [i*1.2,1/(Math.exp(r)-1)];})},
+  lin:{xl:R`\(t\)`,yl:R`\(\ln(C_\mathrm{B}/C_\mathrm{A})\)`,f:(x,y)=>[x,Math.log((y+1)/y)]}},
+ {eq:R`\(k = A\,e^{-E_\mathrm{a}/(RT)}\)`,ctx:'Xác định năng lượng hoạt hóa từ <i>k</i> ở nhiều nhiệt độ.',
+  o:[R`\(\ln k\) theo \(T\); hệ số góc \(-E_\mathrm{a}/R\)`,R`\(k\) theo \(1/T\); hệ số góc \(-E_\mathrm{a}/R\)`,R`\(\ln k\) theo \(1/T\); hệ số góc \(+E_\mathrm{a}/R\)`,R`\(\ln k\) theo \(1/T\); hệ số góc \(-E_\mathrm{a}/R\); tung độ gốc \(\ln A\)`],a:3,
+  why:R`\(\ln k = -\dfrac{E_\mathrm{a}}{R}\cdot\dfrac{1}{T} + \ln A\) (2.13). Đường thẳng đi xuống.`,
+  raw:{xl:R`\(T\)`,yl:R`\(k\)`,pts:lin(7,i=>{const T=290+i*10;return [T,1e-3*Math.exp(-6014*(1/T-1/300))];})},
+  lin:{xl:R`\(1/T\)`,yl:R`\(\ln k\)`,f:(x,y)=>[1/x,Math.log(y)]}},
+ {eq:R`\(P - P_\mathrm{o} = p_\mathrm{Ao}\left(1-e^{-kt}\right)\)`,ctx:'Pha khí A → 2B, bình kín, nạp A nguyên chất (<i>p</i><sub>Ao</sub> = <i>P</i><sub>o</sub>); chỉ đo áp suất tổng <i>P</i>.',
+  o:[R`\(\ln P\) theo \(t\); hệ số góc \(-k\)`,R`\(\ln(2P_\mathrm{o}-P)\) theo \(t\); hệ số góc \(-k\)`,R`\(\ln(P-P_\mathrm{o})\) theo \(t\); hệ số góc \(k\)`,R`\(P-P_\mathrm{o}\) theo \(t\); hệ số góc \(k\)`],a:1,
+  why:R`\(p_\mathrm{A} = p_\mathrm{Ao}-\dfrac{a}{\Delta n}(P-P_\mathrm{o}) = 2P_\mathrm{o}-P\), nên \(\ln(2P_\mathrm{o}-P) = \ln P_\mathrm{o} - kt\).`,
+  raw:{xl:R`\(t\)`,yl:R`\(P\)`,pts:lin(8,i=>[i*4,2-Math.exp(-0.1*i*4)])},
+  lin:{xl:R`\(t\)`,yl:R`\(\ln(2P_\mathrm{o}-P)\)`,f:(x,y)=>[x,Math.log(2-y)]}},
+ {eq:R`\(\mathrm{A}+\mathrm{B}\rightleftarrows 2\mathrm{R}\)`,ctx:R`Thuận nghịch bậc 2, \(C_\mathrm{Ao}=C_\mathrm{Bo}\), \(C_\mathrm{Ro}=0\); đã biết \(X_\mathrm{Ae}\).`,
+  o:[R`\(\ln\dfrac{X_\mathrm{Ae}-(2X_\mathrm{Ae}-1)X_\mathrm{A}}{X_\mathrm{Ae}-X_\mathrm{A}}\) theo \(t\); hệ số góc \(2k_1\!\left(\dfrac{1}{X_\mathrm{Ae}}-1\right)\!C_\mathrm{Ao}\)`,R`Cùng biểu thức đó theo \(t\); hệ số góc \(k_1+k_2\)`,R`\(\dfrac{1}{1-X_\mathrm{A}}\) theo \(t\); hệ số góc \(k_1C_\mathrm{Ao}\)`,R`\(\ln(1-X_\mathrm{A})\) theo \(t\); hệ số góc \(-2k_1\)`],a:0,
+  why:R`Bảng 2.6, PT (2.55). Từ hệ số góc tính \(k_1\); rồi \(k_2 = k_1/K_C\).`,
+  raw:{xl:R`\(t\)`,yl:R`\(X_\mathrm{A}\)`,pts:lin(8,i=>{const e=Math.exp(0.25*i*2);return [i*2,0.8*(1-e)/((2*0.8-1)-e)];})},
+  lin:{xl:R`\(t\)`,yl:R`\(\ln\dfrac{X_\mathrm{Ae}-(2X_\mathrm{Ae}-1)X_\mathrm{A}}{X_\mathrm{Ae}-X_\mathrm{A}}\)`,f:(x,y)=>[x,Math.log((0.8-(0.6)*y)/(0.8-y))]}}
+];
+
+/* ---------- Vòng 5: Về đích ---------- */
+const R5 = [
+ {type:'order',title:'Sắp thứ tự: phương pháp tích phân (giả thiết bậc 2)',steps:[
+   R`Giả thiết bậc: \(-\dfrac{dC_\mathrm{A}}{dt} = kC_\mathrm{A}^{2}\)`,
+   R`Tách biến: \(-\dfrac{dC_\mathrm{A}}{C_\mathrm{A}^{2}} = k\,dt\)`,
+   R`Lấy tích phân: \(\dfrac{1}{C_\mathrm{A}}-\dfrac{1}{C_\mathrm{Ao}} = kt\)`,
+   R`Vẽ \(1/C_\mathrm{A}\) theo \(t\): nếu thẳng thì giả thiết đúng`,
+   R`\(k\) = hệ số góc của đường thẳng`]},
+ {type:'error',title:'Tìm dòng sai đầu tiên: phương pháp thời gian bán hủy',lines:[
+   R`\(t_{1/2} = \dfrac{2^{\,n-1}-1}{(n-1)kC_\mathrm{Ao}^{\,n-1}}\)`,
+   R`\(\ln t_{1/2} = \ln\dfrac{2^{\,n-1}-1}{(n-1)k} + (n-1)\ln C_\mathrm{Ao}\)`,
+   R`Vẽ \(\ln t_{1/2}\) theo \(\ln C_\mathrm{Ao}\) được đường thẳng`,
+   R`Hệ số góc \(= n-1\), suy ra \(n = 1 + \tan\alpha\)`],bad:1,
+  fix:R`\(C_\mathrm{Ao}^{-(n-1)} = C_\mathrm{Ao}^{\,1-n}\), nên \(\ln t_{1/2} = \ln\dfrac{2^{\,n-1}-1}{(n-1)k} + (1-n)\ln C_\mathrm{Ao}\) và \(n = 1-\tan\alpha\) (2.9).`},
+ {type:'order',title:'Sắp thứ tự: phương pháp vi phân',steps:[
+   R`Đo \(C_\mathrm{A}\) theo \(t\), vẽ đường cong \(C_\mathrm{A}\) – \(t\)`,
+   R`Lấy tiếp tuyến tại nhiều điểm: \((-r_\mathrm{A}) = -dC_\mathrm{A}/dt\)`,
+   R`Lấy ln: \(\ln(-r_\mathrm{A}) = \ln k + n\ln C_\mathrm{A}\)`,
+   R`Vẽ \(\ln(-r_\mathrm{A})\) theo \(\ln C_\mathrm{A}\): hệ số góc \(= n\)`,
+   R`\(k = (-r_\mathrm{A})_i/C_{\mathrm{A},i}^{\,n}\)`]},
+ {type:'error',title:'Tìm dòng sai đầu tiên: phản ứng thuận nghịch bậc 1 A ⇄ R',lines:[
+   R`\(-\dfrac{dC_\mathrm{A}}{dt} = k_1C_\mathrm{A}-k_2C_\mathrm{R}\), với \(C_\mathrm{R} = C_\mathrm{Ao}-C_\mathrm{A}\)`,
+   R`Tại cân bằng: \(k_1C_\mathrm{Ae} = k_2(C_\mathrm{Ao}-C_\mathrm{Ae})\), tức \(k_2C_\mathrm{Ao} = (k_1+k_2)C_\mathrm{Ae}\)`,
+   R`\(-\dfrac{dC_\mathrm{A}}{dt} = (k_1+k_2)(C_\mathrm{A}-C_\mathrm{Ae})\)`,
+   R`\(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}} = k_1t\)`],bad:3,
+  fix:R`Tích phân dòng 3 cho \(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}} = (k_1+k_2)t\). Hệ số góc là \(k_1+k_2\); dùng \(K_C = k_1/k_2\) để tách.`},
+ {type:'order',title:'Sắp thứ tự: phương pháp thời gian bán hủy',steps:[
+   R`Đo \(t_{1/2}\) ứng với nhiều \(C_\mathrm{Ao}\) khác nhau`,
+   R`Lấy ln: \(\ln t_{1/2} = (1-n)\ln C_\mathrm{Ao} + \ln\dfrac{2^{\,n-1}-1}{k(n-1)}\)`,
+   R`Vẽ \(\ln t_{1/2}\) theo \(\ln C_\mathrm{Ao}\)`,
+   R`Hệ số góc \(\tan\alpha = 1-n\), suy ra \(n = 1-\tan\alpha\)`,
+   R`Thế \(n\) vào tung độ gốc (hoặc PT 2.8) để tính \(k\)`]},
+ {type:'error',title:'Tìm dòng sai đầu tiên: pha khí A → 2B, đẳng áp, nhập liệu A nguyên chất, bậc 1',lines:[
+   R`\(\varepsilon_\mathrm{A} = \dfrac{2-1}{1} = 1\)`,
+   R`\(V = V_\mathrm{o}(1+\varepsilon_\mathrm{A}X_\mathrm{A})\)`,
+   R`\(C_\mathrm{A} = C_\mathrm{Ao}(1-X_\mathrm{A})\)`,
+   R`\(-\ln(1-X_\mathrm{A}) = kt\)`],bad:2,
+  fix:R`Thể tích thay đổi nên \(C_\mathrm{A} = C_\mathrm{Ao}\dfrac{1-X_\mathrm{A}}{1+\varepsilon_\mathrm{A}X_\mathrm{A}}\) (2.25). Dòng 4 vẫn đúng: với bậc 1, PT theo \(X_\mathrm{A}\) không phụ thuộc \(\varepsilon_\mathrm{A}\) (Bảng 2.2).`},
+ {type:'order',title:'Sắp thứ tự: phản ứng thuận nghịch bậc 1 A ⇄ R (C_Ro = 0)',steps:[
+   R`\(-\dfrac{dC_\mathrm{A}}{dt} = k_1C_\mathrm{A}-k_2C_\mathrm{R}\), với \(C_\mathrm{R} = C_\mathrm{Ao}-C_\mathrm{A}\)`,
+   R`Tại cân bằng: \(k_2C_\mathrm{Ao} = (k_1+k_2)C_\mathrm{Ae}\)`,
+   R`Thay vào: \(-\dfrac{dC_\mathrm{A}}{dt} = (k_1+k_2)(C_\mathrm{A}-C_\mathrm{Ae})\)`,
+   R`Tách biến, tích phân: \(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}} = (k_1+k_2)t\)`,
+   R`Hệ số góc \(= k_1+k_2\); kết hợp \(K_C = k_1/k_2\) để tính \(k_1\), \(k_2\)`]},
+ {type:'error',title:'Tìm dòng sai đầu tiên: phương pháp vi phân',lines:[
+   R`\((-r_\mathrm{A}) = kC_\mathrm{A}^{\,n}\)`,
+   R`\(\ln(-r_\mathrm{A}) = \ln k + n\ln C_\mathrm{A}\)`,
+   R`Từ một cặp số liệu: \(n = \dfrac{\ln(-r_\mathrm{A})_1}{\ln C_{\mathrm{A},1}}\)`,
+   R`\(k = (-r_\mathrm{A})_i/C_{\mathrm{A},i}^{\,n}\)`],bad:2,
+  fix:R`Còn ẩn \(\ln k\) nên một điểm không đủ: \(n = \dfrac{\ln(-r_\mathrm{A})_i-\ln(-r_\mathrm{A})_{i-1}}{\ln C_{\mathrm{A},i}-\ln C_{\mathrm{A},i-1}}\) (2.6), hoặc lấy hệ số góc đồ thị.`},
+ {type:'order',title:'Sắp thứ tự: tính năng lượng hoạt hóa từ hai nhiệt độ',steps:[
+   R`\(k = A\,e^{-E_\mathrm{a}/(RT)}\)`,
+   R`Lấy ln: \(\ln k = \ln A - \dfrac{E_\mathrm{a}}{RT}\)`,
+   R`Viết cho \(T_1\), \(T_2\) rồi trừ vế: \(\ln\dfrac{k_{T_2}}{k_{T_1}} = -\dfrac{E_\mathrm{a}}{R}\left(\dfrac{1}{T_2}-\dfrac{1}{T_1}\right)\)`,
+   R`Rút \(E_\mathrm{a}\) và thế số (\(T\) theo K)`]},
+ {type:'error',title:'Tìm dòng sai đầu tiên: A + 2B → sản phẩm, bậc 2, M = 2',lines:[
+   R`\(M = 2\) nên \(C_\mathrm{B} = 2C_\mathrm{A}\) trong suốt quá trình`,
+   R`\(-\dfrac{dC_\mathrm{A}}{dt} = kC_\mathrm{A}C_\mathrm{B} = 2kC_\mathrm{A}^{2}\)`,
+   R`\(\dfrac{1}{C_\mathrm{A}}-\dfrac{1}{C_\mathrm{Ao}} = 2kt\)`,
+   R`Theo độ chuyển hóa: \(\dfrac{1}{C_\mathrm{Ao}}\dfrac{X_\mathrm{A}}{1-X_\mathrm{A}} = kt\)`],bad:3,
+  fix:R`\(\dfrac{1}{C_\mathrm{A}}-\dfrac{1}{C_\mathrm{Ao}} = \dfrac{1}{C_\mathrm{Ao}}\dfrac{X_\mathrm{A}}{1-X_\mathrm{A}}\), nên vế phải phải là \(2kt\), nhất quán với dòng 3.`}
+];
+
+/* ---------- Video bài giảng trên YouTube (mốc giây = đầu từng cảnh) ---------- */
+const YT={tq:['_GSb8I3_yfc','Phân loại và điểm chung'],tp:['j6UE3lqCqYk','Phương pháp tích phân'],vp:['eyby7akT9Jo','Phương pháp vi phân'],bh:['HYRa9PFIWL8','Phương pháp thời gian bán hủy']};
+const CLIP={
+ tq0:['tq',0,''],tq2:['tq',35,'Phân loại theo số liệu ban đầu'],tq3:['tq',64,'Phân loại theo cách tìm <i>n</i>'],tq4:['tq',83,'Điểm chung: tuyến tính hóa'],
+ tp0:['tp',0,''],tp1:['tp',7,'Số liệu ban đầu'],tp2:['tp',33,'Giả thiết <i>n</i>, lấy tích phân'],tp4:['tp',92,'Vẽ <i>F</i>(<i>C</i><sub>A</sub>) theo <i>t</i>'],tp5:['tp',117,'Kết luận'],
+ vp0:['vp',0,''],vp2:['vp',23,'Xác định <i>r</i> bằng tiếp tuyến'],vp3:['vp',48,'Ví dụ H₂O₂'],vp5:['vp',99,'Tìm <i>n</i> và <i>k</i>'],
+ bh0:['bh',0,''],bh1:['bh',8,'Số liệu ban đầu'],bh2:['bh',39,'Công thức <i>t</i>½'],bh4:['bh',96,'Đồ thị ln <i>t</i>½ theo ln <i>C</i><sub>Ao</sub>']};
+const mmss=t=>Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
+const ytUrl=c=>`https://youtu.be/${YT[c[0]][0]}${c[1]?`?t=${c[1]}`:''}`;
+const vBtn=k=>{const c=CLIP[k];if(!c)return '';return `<a class="vbtn" href="${ytUrl(c)}" target="_blank" rel="noopener">📽 ${c[1]?'Xem lại: ':''}${YT[c[0]][1]}${c[1]?` · ${c[2]} <small>(${mmss(c[1])})</small>`:''}</a>`;};
+const vBtns=a=>a&&a.length?`<div class="vlist">${a.map(vBtn).join('')}</div>`:'';
+const vTop=()=>`<div class="vtop"><span class="vtl">📽 Xem trước video bài giảng</span>${['tq','tp','vp','bh'].map(c=>`<a class="vbig" href="https://youtu.be/${YT[c][0]}" target="_blank" rel="noopener"><i>▶</i><span>${YT[c][1]}</span></a>`).join('')}</div>`;
+const VID={r1:{4:['bh2'],5:['bh2']},r3:{0:['tp4','tq3'],1:['bh1','bh4'],2:['vp5'],3:['tp2'],4:['tq2'],6:['tp2']},
+ r4:{0:['tp4'],1:['tp2'],2:['vp5'],3:['bh2','bh4']},r5:{0:['tp2'],1:['bh2'],2:['vp2'],4:['bh4'],7:['vp5']}};
+
+/* câu hỏi thảo luận (chế độ hoạt động nhóm) */
+const ASK1=[null, null, null, null, 'Viết biểu thức \\(t_{1/2}\\) của phản ứng bậc 1. Biểu thức có chứa \\(C_\\mathrm{Ao}\\) không?', 'So sánh \\(t_{1/2}\\) của bậc 0 và bậc 2: khi \\(C_\\mathrm{Ao}\\) tăng gấp đôi, mỗi trường hợp thay đổi thế nào?', 'Đếm tổng số mol khí khi \\(X_\\mathrm{A}=0\\) và khi \\(X_\\mathrm{A}=1\\).', 'Khí trơ có phản ứng không? Nó làm tổng số mol ban đầu thay đổi thế nào?', 'Lấy ln hai vế của \\(k = A\\,e^{-E_\\mathrm{a}/(RT)}\\): đâu là \\(y\\), đâu là \\(x\\)?', 'Trong PT (2.14), \\(E_\\mathrm{a}\\) đứng ở đâu? \\(E_\\mathrm{a}\\) lớn thì tỉ số \\(k_{T_2}/k_{T_1}\\) thay đổi thế nào?'];
+const ASK3=['Chỉ có một thí nghiệm \\(C_\\mathrm{A}\\) – \\(t\\): phương pháp nào thử được ngay? Thử bậc nào trước?', 'Khi \\(C_\\mathrm{Ao}\\) tăng gấp đôi, \\(t_{1/2}\\) thay đổi thế nào? Điều đó cho biết gì về bậc?', 'Bảng đã có sẵn tốc độ phản ứng: cần biến đổi gì để ra đường thẳng?', '\\(C_\\mathrm{Bo}\\) gấp bao nhiêu lần \\(C_\\mathrm{Ao}\\)? Khi đó \\(C_\\mathrm{B}\\) có thay đổi đáng kể không?', 'So thí nghiệm 1 với 2, rồi 1 với 3: mỗi lần nồng độ chất nào thay đổi?', 'Đại lượng nào thay đổi giữa các thí nghiệm? Phương trình nào liên hệ \\(k\\) với \\(T\\)?', 'Chỉ đo được \\(P\\): làm sao suy ra \\(p_\\mathrm{A}\\)? (PT 2.17)', 'Cùng \\(C_\\mathrm{Ao}\\) thì \\(k\\) và \\(t_{1/2}\\) liên hệ thế nào? Từ đó dùng phương trình nào?'];
+const ASK4=['Lấy ln hai vế: số hạng nào chứa \\(t\\)? Hệ số của nó là gì?', 'Tích phân \\(-dC_\\mathrm{A}/C_\\mathrm{A}^2 = k\\,dt\\) được gì: nghịch đảo hay logarit?', 'Lấy ln của tích \\(kC_\\mathrm{A}^{\\,n}\\): hệ số góc và tung độ gốc là gì?', '\\(C_\\mathrm{Ao}^{-(n-1)}\\) khi lấy ln cho hệ số nào? Vì sao không phải \\(n-1\\)?', 'Ở cân bằng, tốc độ thuận và nghịch thế nào? Vì sao hệ số góc chứa cả \\(k_2\\)?', 'Khi \\(C_\\mathrm{Ao}\\neq C_\\mathrm{Bo}\\), tỉ số nào thay đổi tuyến tính theo \\(t\\)?', 'Lấy ln hai vế của PT Arrhenius: hệ số góc âm hay dương? Vì sao?', 'Từ \\(P\\) đo được, tính \\(p_\\mathrm{A}\\) thế nào (PT 2.17 với \\(a = 1\\), \\(\\Delta n = 1\\))?', 'Trong PT (2.55), đại lượng nào đứng trước \\(t\\)?'];
+R1.forEach((x,i)=>{if(ASK1[i])x.ask=ASK1[i];});R3.forEach((x,i)=>x.ask=ASK3[i]);R4.forEach((x,i)=>x.ask=ASK4[i]);
+
+/* ---------- Vòng Phân nhóm (mỗi bảng 2 nhóm, 8 thẻ) ---------- */
+const PN = [
+ {name:'Dấu hiệu của phản ứng bậc 1 hay bậc 2?',groups:['Bậc 1',R`Bậc 2 (\(C_\mathrm{Ao} = C_\mathrm{Bo}\))`],items:[
+  [R`Đồ thị \(\ln C_\mathrm{A}\) theo \(t\) là đường thẳng`,0,R`\(\ln C_\mathrm{A} = \ln C_\mathrm{Ao} - kt\).`],
+  [R`Đồ thị \(1/C_\mathrm{A}\) theo \(t\) là đường thẳng`,1,R`\(\dfrac{1}{C_\mathrm{A}} = \dfrac{1}{C_\mathrm{Ao}} + kt\).`],
+  [R`\(t_{1/2}\) không phụ thuộc \(C_\mathrm{Ao}\)`,0,R`\(t_{1/2} = \dfrac{\ln 2}{k}\).`],
+  [R`\(t_{1/2}\) tỉ lệ nghịch với \(C_\mathrm{Ao}\)`,1,R`\(t_{1/2} = \dfrac{1}{kC_\mathrm{Ao}}\).`],
+  [R`\(k\) có đơn vị \(\mathrm{min^{-1}}\)`,0,R`\([k] = (\text{nồng độ})^{1-n}(\text{thời gian})^{-1}\); \(1-n = 0\), \(n = 1\).`],
+  [R`\(k\) có đơn vị \(\mathrm{L\cdot mol^{-1}\cdot s^{-1}}\)`,1,R`\((\mathrm{mol/L})^{-1}\): \(1-n = -1\), \(n = 2\).`],
+  [R`\(-\ln(1-X_\mathrm{A}) = kt\)`,0,R`Thay \(C_\mathrm{A} = C_\mathrm{Ao}(1-X_\mathrm{A})\) vào \(\ln\dfrac{C_\mathrm{Ao}}{C_\mathrm{A}} = kt\).`],
+  [R`\(\dfrac{X_\mathrm{A}}{1-X_\mathrm{A}} = kC_\mathrm{Ao}t\)`,1,R`Thay \(C_\mathrm{A} = C_\mathrm{Ao}(1-X_\mathrm{A})\) vào \(\dfrac{1}{C_\mathrm{A}}-\dfrac{1}{C_\mathrm{Ao}} = kt\).`]]},
+ {name:'Đặc điểm của phương pháp tích phân hay phương pháp vi phân?',groups:['Phương pháp tích phân','Phương pháp vi phân'],items:[
+  ['Giả thiết bậc trước, rồi kiểm tra đồ thị có thẳng không',0,R`Chọn \(n\), lấy tích phân \(-\dfrac{dC_\mathrm{A}}{dt} = kC_\mathrm{A}^{\,n}\), vẽ và kiểm tra.`],
+  [R`Lấy tiếp tuyến đường cong \(C_\mathrm{A}\) – \(t\) để có tốc độ phản ứng`,1,R`\((-r_\mathrm{A}) = -\dfrac{dC_\mathrm{A}}{dt}\) tại từng điểm.`],
+  [R`Vẽ \(\ln(-r_\mathrm{A})\) theo \(\ln C_\mathrm{A}\): hệ số góc bằng \(n\)`,1,R`\(\ln(-r_\mathrm{A}) = \ln k + n\ln C_\mathrm{A}\).`],
+  [R`Vẽ \(1/C_\mathrm{A}\) theo \(t\) để kiểm tra bậc 2`,0,R`\(\dfrac{1}{C_\mathrm{A}} - \dfrac{1}{C_\mathrm{Ao}} = kt\).`],
+  [R`Thử lần lượt \(n\) = 0, 1, 2`,0,R`Lần lượt vẽ \(C_\mathrm{A}\), \(\ln C_\mathrm{A}\), \(1/C_\mathrm{A}\) theo \(t\).`],
+  [R`Tìm \(n\) trực tiếp, không cần đoán trước`,1,R`\(n = \tan\alpha\) của đồ thị \(\ln(-r_\mathrm{A})\) – \(\ln C_\mathrm{A}\).`],
+  ['Ít nhạy với sai số của số liệu đo',0,'Lấy tích phân làm trơn sai số; lấy đạo hàm (tiếp tuyến) khuếch đại sai số.'],
+  ['Phương pháp tốc độ đầu là một dạng của phương pháp này',1,R`\(\ln(-r_\mathrm{A})_\mathrm{o} = \ln k + n\ln C_\mathrm{Ao}\).`]]},
+ {name:'Đường thẳng có hệ số góc dương hay âm?',groups:['Hệ số góc dương','Hệ số góc âm'],items:[
+  [R`\(\ln C_\mathrm{A}\) theo \(t\) (bậc 1)`,1,R`\(\ln C_\mathrm{A} = \ln C_\mathrm{Ao} - kt\): hệ số góc \(-k\).`],
+  [R`\(1/C_\mathrm{A}\) theo \(t\) (bậc 2)`,0,R`\(\dfrac{1}{C_\mathrm{A}} = \dfrac{1}{C_\mathrm{Ao}} + kt\): hệ số góc \(k\).`],
+  [R`\(\ln k\) theo \(1/T\) (Arrhenius)`,1,R`\(\ln k = \ln A - \dfrac{E_\mathrm{a}}{R}\cdot\dfrac{1}{T}\): hệ số góc \(-E_\mathrm{a}/R\).`],
+  [R`\(\ln t_{1/2}\) theo \(\ln C_\mathrm{Ao}\), phản ứng bậc 2`,1,R`Hệ số góc \(1-n = -1\).`],
+  [R`\(\ln(-r_\mathrm{A})\) theo \(\ln C_\mathrm{A}\), với \(n > 0\)`,0,R`\(\ln(-r_\mathrm{A}) = \ln k + n\ln C_\mathrm{A}\): hệ số góc \(n\).`],
+  [R`\(C_\mathrm{A}\) theo \(t\) (bậc 0)`,1,R`\(C_\mathrm{A} = C_\mathrm{Ao} - kt\): hệ số góc \(-k\).`],
+  [R`\(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}}\) theo \(t\) (thuận nghịch bậc 1)`,0,R`Hệ số góc \(k_1 + k_2\).`],
+  [R`\(\ln t_{1/2}\) theo \(\ln C_\mathrm{Ao}\), phản ứng bậc 0`,0,R`\(t_{1/2} = \dfrac{C_\mathrm{Ao}}{2k}\): hệ số góc \(1-n = 1\).`]]}
+];
+
+/* ================= ĐIỀU KHIỂN GAME · 2 chế độ: Nhiều đội / Cả lớp ================= */
+const KEY='ktpu-c2-dau-truong-v2';
+const LET=['A','B','C','D','E','F','G','H'];
+const OC=['var(--oA)','var(--oB)','var(--oC)','var(--oD)'];
+const TCOL=['var(--t0)','var(--t1)','var(--t2)','var(--t3)'];
+const RK=['r1','r2','pn','r3','r4','r5'];
+const RD={r1:{n:1,name:'Khởi động',tab:'Khởi động',pts:10,rc:'#F26B3A',rc2:'#FFB13B'},
+  r2:{n:2,name:'Lật thẻ ghép đôi',tab:'Ghép đôi',pts:10,rc:'#8B5CF6',rc2:'#D946EF'},
+  pn:{n:3,name:'Phân nhóm',tab:'Phân nhóm',pts:10,rc:'#E0457B',rc2:'#FF8A4C'},
+  r3:{n:4,name:'Thám tử số liệu',tab:'Thám tử',pts:20,rc:'#0EA5A0',rc2:'#22C55E'},
+  r4:{n:5,name:'Đường thẳng bí ẩn',tab:'Đường thẳng',pts:20,rc:'#2F7DE1',rc2:'#06B6D4'},
+  r5:{n:6,name:'Về đích',tab:'Về đích',pts:30,rc:'#E3A008',rc2:'#F26B3A'}};
+const VIEWS=['home',...RK,'kq','end'];
+const TDEF={r1:20,r2:20,pn:20,r3:45,r4:40,r5:60};
+const BK=r=>({r1:R1,r3:R3,r4:R4,r5:R5})[r];
+const $=s=>document.querySelector(s);
+const LOP=()=>S.mode==='lop';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NB=s=>String(s).split(/(\\\(.*?\\\))/s).map((p,k)=>k%2?`<span class="nw">${p}</span>`:p.replace(/ ([=→⇄⇌+≠−<>]) /g,'\u00A0$1\u00A0').replace(/\S+(?:\u00A0[=→⇄⇌+≠−<>]\u00A0\S+)+/g,m=>`<span class="nw">${m}</span>`)).join('');
+function fit(){document.querySelectorAll('.card .f').forEach(el=>{el.style.fontSize='';let fs=parseFloat(getComputedStyle(el).fontSize),k=0;while(el.scrollHeight>el.clientHeight+1&&fs>10&&k++<20){fs-=1;el.style.fontSize=fs+'px';}});}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const half=r=>Math.round(RD[r].pts/2);
+
+function freshRound(r){return {r1:{i:0,q:{}},r3:{i:0,q:{}},r4:{i:0,q:{}},r5:{i:0,q:{},starUsed:[false,false,false,false]},
+  r2:{b:0,decks:{},m:{},turn:0,open:false},pn:{b:0,ord:{},m:{},turn:0,sel:null}}[r];}
+const fst=()=>({ok:0,bad:0,pts:0,run:0,best:0});
+function fresh(){const s={mode:'lop',teams:[0,1,2,3].map(i=>({name:'Đội '+(i+1)})),size:40,roster:[],called:[],view:'home',kq:'r1',mute:false,sc:{},st:{}};
+  RK.forEach(r=>{s[r]=freshRound(r);s.sc[r]=[0,0,0,0];s.st[r]=fst();});return s;}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh();}catch(_){S=fresh();}
+if(!S.pn||!S.st||!S.sc)S=fresh();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(_){}}
+const HIST=[];function snap(){HIST.push(JSON.stringify(S));if(HIST.length>60)HIST.shift();}
+function undo(){if(!HIST.length)return;S=JSON.parse(HIST.pop());save();render();}
+const CR=()=>RK.includes(S.view)?S.view:(S.view==='kq'?S.kq:null);
+const tot=t=>RK.reduce((a,r)=>a+S.sc[r][t],0);
+
+/* ---------- âm thanh ---------- */
+let AC=null;
+function tone(fr,dur,type='sine',vol=.12,delay=0,to=null){if(S.mute)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;const t=AC.currentTime+delay;o.frequency.setValueAtTime(fr,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+dur);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+dur+.02);}catch(_){}}
+const sGood=big=>{[523,659,784,1047].forEach((f,k)=>tone(f,.2,'triangle',.14,k*.075));tone(1568,.4,'sine',.07,.32);tone(2093,.3,'sine',.05,.42);
+  if(big)[784,988,1175,1568,1976].forEach((f,k)=>tone(f,.25,'square',.045,.55+k*.09));};
+const sBad=()=>{tone(330,.22,'sawtooth',.08,0,247);tone(247,.5,'sawtooth',.08,.22,140);tone(90,.35,'square',.05,.22);};
+const sTick=()=>tone(1200,.04,'square',.035);
+const sSel=()=>tone(660,.07,'triangle',.07,0,990);
+const sFlip=()=>tone(420,.09,'triangle',.07,0,700);
+const sWin=()=>{[[523,0],[523,.14],[523,.28],[698,.42],[880,.62],[784,.78],[1047,.98]].forEach(([f,d])=>tone(f,.28,'triangle',.13,d));[262,330,392].forEach(f=>tone(f,1.2,'sine',.05,.98));};
+const sEnd=()=>{tone(440,.2,'triangle');tone(440,.2,'triangle',.12,.3);tone(330,.5,'triangle',.12,.6);};
+
+/* ---------- hiệu ứng ---------- */
+const PAL=['#F26B3A','#FFB13B','#22C55E','#2F7DE1','#8B5CF6','#E0457B','#06B6D4','#FACC15'];
+const FX={parts:[],run:false};
+function confetti(x,y,n=120,pow=1){if(RM())return;const c=$('#fxc');c.width=innerWidth;c.height=innerHeight;
+  for(let k=0;k<n;k++){const a=Math.random()*Math.PI*2,v=(4+Math.random()*10)*pow;
+    FX.parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-7*pow,s:6+Math.random()*8,r:Math.random()*6,vr:(Math.random()-.5)*.35,c:pick(PAL),sh:k%3,life:0});}
+  if(!FX.run){FX.run=true;requestAnimationFrame(fxLoop);}}
+function fxLoop(){const c=$('#fxc'),g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);
+  FX.parts=FX.parts.filter(p=>p.y<c.height+40&&p.life<260);
+  FX.parts.forEach(p=>{p.life++;p.vy+=.32;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;g.save();g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;
+    if(p.sh===0)g.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);else if(p.sh===1){g.beginPath();g.arc(0,0,p.s/2.6,0,7);g.fill();}
+    else{g.beginPath();for(let i=0;i<5;i++){const a=i*1.2566-1.5708;g.lineTo(Math.cos(a)*p.s/1.6,Math.sin(a)*p.s/1.6);g.lineTo(Math.cos(a+.628)*p.s/3.4,Math.sin(a+.628)*p.s/3.4);}g.fill();}
+    g.restore();});
+  if(FX.parts.length)requestAnimationFrame(fxLoop);else{FX.run=false;g.clearRect(0,0,c.width,c.height);}}
+const PRAISE=[['🎉','Chính xác!'],['🌟','Tuyệt vời!'],['🚀','Xuất sắc!'],['🏆','Quá đỉnh!'],['💯','Chuẩn luôn!'],['👏','Hoan hô!']];
+const OOPS=[['🤔','Chưa đúng rồi!'],['😅','Suýt nữa thôi!'],['💡','Nghĩ thêm chút nhé!'],['🙈','Ối, chưa phải!']];
+let popT=null;
+function pop(kind,sub,big){const d=$('#pop'),[e,t]=kind==='ok'?pick(PRAISE):pick(OOPS);
+  d.className='pop '+kind+(big?' big':'');d.innerHTML=`<div class="pe">${e}</div><div class="pt">${t}</div>${sub?`<div class="ps">${sub}</div>`:''}`;
+  void d.offsetWidth;d.classList.add('go');const m=/\\\(/.test(sub||'');if(m)tset(d);clearTimeout(popT);popT=setTimeout(()=>d.classList.remove('go'),big||m?3200:1700);}
+function flash(kind){const f=$('#flash');f.className='flash '+kind;void f.offsetWidth;f.classList.add('go');}
+function shake(el){if(!el||RM())return;el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');}
+function floatTxt(el,txt){if(!el)return;const r=el.getBoundingClientRect(),s=document.createElement('span');s.className='fpt';s.textContent=txt;
+  s.style.left=(r.left+r.width/2)+'px';s.style.top=(r.top+r.height/2)+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),1400);}
+const ctr=el=>{const r=el?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0};return [r.left+r.width/2,r.top+r.height/2];};
+function good(el,sub,{big=false,pts=''}={}){sGood(big);const [x,y]=ctr(el);confetti(x,y,big?240:120,big?1.25:1);if(big)setTimeout(()=>confetti(innerWidth*.2,innerHeight*.35,90),250),setTimeout(()=>confetti(innerWidth*.8,innerHeight*.35,90),450);
+  pop('ok',sub,big);flash('ok');if(pts)floatTxt(el,pts);}
+function bad(el,sub){sBad();shake(el);pop('bad',sub);flash('bad');}
+function celebrate(){sWin();if(RM())return;[.15,.5,.85].forEach((x,k)=>setTimeout(()=>confetti(innerWidth*x,innerHeight*.3,140,1.3),k*280));}
+
+/* ---------- gọi sinh viên ngẫu nhiên ---------- */
+const RL=()=>Array.isArray(S.roster)?S.roster:[];
+function callSV(){const L=RL(),n=L.length||Math.max(1,+S.size||40);let pool=Array.from({length:n},(_,i)=>i+1).filter(x=>!S.called.includes(x));if(!pool.length){S.called=[];pool=Array.from({length:n},(_,i)=>i+1);}
+  const res=pick(pool),box=$('#call'),cn=box.querySelector('.cn'),cl=box.querySelector('.cl');box.hidden=false;box.classList.remove('done');box.classList.toggle('nm',!!L.length);
+  cl.textContent=L.length?'🎲 Mời bạn':'🎲 Mời sinh viên số';box.querySelector('.cs').textContent='Đang quay…';let k=0;
+  const cm=box.querySelector('.cm');const show=x=>{if(!L.length){cn.textContent=x;cm.textContent='';return;}const t=L[x-1],m=t.match(/^(?:\d{1,3}[.)]\s*)?(\d{5,})\s*[–-]?\s*(.+)$/);cn.textContent=m?m[2]:t;cm.textContent=m?'MSSV '+m[1]:'';};
+  const spin=setInterval(()=>{show(1+Math.floor(Math.random()*n));sTick();if(++k>=(RM()?1:22)){clearInterval(spin);show(res);box.classList.add('done');
+    S.called.push(res);save();box.querySelector('.cs').textContent=`${L.length?`STT ${res} · `:''}Đã gọi ${S.called.length}/${n} bạn · bấm vào đây để đóng`;sGood();confetti(innerWidth/2,innerHeight*.45,90);}},75);}
+function setRoster(txt){S.roster=txt.split(/\r?\n/).map(x=>x.replace(/\t+/g,' – ').replace(/\s+/g,' ').trim()).filter(Boolean);S.called=[];save();
+  const c=$('#rcount');if(c)c.textContent=S.roster.length?`${S.roster.length} sinh viên · gọi theo tên`:'Chưa có danh sách · gọi theo số thứ tự';const z=$('#size');if(z)z.disabled=!!S.roster.length;}
+
+/* ---------- MathJax ---------- */
+function tset(el){if(!window.__mjReady||!window.MathJax||!MathJax.typesetPromise)return Promise.resolve();
+  try{MathJax.typesetClear&&MathJax.typesetClear([el]);}catch(_){}return MathJax.typesetPromise([el]).catch(()=>{});}
+window.__typeset=()=>tset(document.body);
+
+/* ---------- đồng hồ ---------- */
+const TM={left:0,total:0,run:false,h:null};
+function tStart(sec){if(sec)TM.left=TM.total=sec;if(TM.left<=0)TM.left=TM.total;TM.run=true;clearInterval(TM.h);
+  TM.h=setInterval(()=>{TM.left--;if(TM.left<=0){TM.left=0;TM.run=false;clearInterval(TM.h);sEnd();}else if(TM.left<=5)tone(880,.06,'square',.04);paintTimer();},1000);paintTimer();}
+function tPause(){TM.run=false;clearInterval(TM.h);paintTimer();}
+function tReset(sec){tPause();TM.left=TM.total=sec;paintTimer();}
+function paintTimer(){const el=$('#tm');if(!el)return;const m=Math.floor(TM.left/60),s=TM.left%60;el.textContent=m+':'+String(s).padStart(2,'0');
+  el.classList.toggle('low',TM.left<=5&&TM.total>0);const b=$('#tmb');if(b)b.textContent=TM.run?'⏸ Tạm dừng':'⏱ Bắt đầu giờ';}
+const timerBtns=()=>`<span class="timer" id="tm"></span><button class="btn" id="tmb"></button>`;
+const callBtn=()=>LOP()?`<button class="btn call" id="callsv" title="Phím G">🎲 Gọi sinh viên</button>`:'';
+const undoBtn=()=>`<button class="btn" id="undo" ${HIST.length?'':'disabled'}>↶ Hoàn tác</button>`;
+
+/* ---------- khung chung ---------- */
+function renderTabs(){$('#tabs').innerHTML=VIEWS.filter(v=>v!=='kq').map(v=>{const d=RD[v];
+  return `<button data-go="${v}" ${S.view===v||(S.view==='kq'&&S.kq===v)?'aria-current="page"':''} style="--rc:${d?d.rc:'#FACC15'}">${d?`<i>${d.n}</i>${d.tab}`:v==='home'?'🏠 Bắt đầu':'🏁 Tổng kết'}</button>`;}).join('');}
+function renderBoard(bump=[]){const r=CR(),b=$('#board');
+  if(LOP()){if(!r){const T=RK.reduce((a,x)=>a+S.st[x].pts,0);b.innerHTML=`<div class="clsb"><span class="cl-l">Điểm cả lớp</span><b class="cl-s">${T}</b></div>`;return;}
+    const st=S.st[r];b.innerHTML=`<div class="clsb${bump.length?' bump':''}"><span class="cl-l">Điểm vòng ${RD[r].n}</span><b class="cl-s">${st.pts}</b>
+      <span class="okc" title="Số lần đúng">✔ ${st.ok}</span><span class="bdc" title="Số lần sai">✘ ${st.bad}</span>${st.run>=2?`<span class="run">🔥 ${st.run}</span>`:''}</div>`;return;}
+  const turnT=r==='r2'?S.r2.turn:r==='pn'?S.pn.turn:-1;
+  b.innerHTML=`<div class="board4">${S.teams.map((t,i)=>`<div class="team${i===turnT?' turn':''}${bump.includes(i)?' bump':''}" style="--tc:${TCOL[i]}">
+   ${S.r5.starUsed[i]?'':`<span class="star" title="Còn ngôi sao hy vọng">★</span>`}
+   <span class="nm">${esc(t.name)}</span><span class="sc">${r?S.sc[r][i]:tot(i)}</span>
+   <span class="sub">${r?`Tổng ${tot(i)}`:'Tổng điểm'}</span>
+   ${r?`<span class="adj"><button data-adj="${i}:-10" aria-label="Trừ 10 điểm ${esc(t.name)}">−10</button><button data-adj="${i}:10" aria-label="Cộng 10 điểm ${esc(t.name)}">+10</button></span>`:''}</div>`).join('')}</div>`;}
+function go(v){if(!VIEWS.includes(v))v='home';S.view=v;save();tReset(TDEF[CR()]||0);
+  if(location.hash.slice(1)!==v){try{history.replaceState(null,'','#'+v);}catch(_){location.hash=v;}}render();if(v==='kq'||v==='end')celebrate();}
+function render(){renderTabs();renderBoard();const st=$('#stage'),r=CR();
+  st.style.setProperty('--rc',r?RD[r].rc:'#4B2A8C');st.style.setProperty('--rc2',r?RD[r].rc2:'#E0457B');
+  ({home:vHome,r1:()=>vMC('r1'),r3:()=>vMC('r3'),r4:()=>vMC('r4'),r2:vMem,pn:vPN,r5:vFinal,kq:vKQ,end:vEnd}[S.view]||vHome)();
+  tset(st).then(fit);fit();paintTimer();}
+function head(r,cnt,done,total,rule){const d=RD[r];const pc=total?Math.round(100*done/total):0;
+  return `<div class="rhead"><span class="rnum">Vòng ${d.n}</span><h1>${d.name}</h1><span class="qcount">${cnt}</span>
+   <span class="prog" title="Tiến độ vòng"><i style="width:${pc}%"></i></span><span class="rule">${rule}</span></div>`;}
+
+/* ---------- Trang chủ ---------- */
+const DESC={r1:'Đơn vị của k, t½, ε_A, Arrhenius, Đúng/Sai',r2:'Phản ứng (cam) ↔ phương trình động học (xanh), 3 bảng',pn:'Bậc 1 hay 2, tích phân hay vi phân, hệ số góc',r3:'Nhìn bảng số liệu, chọn phương pháp xử lý',r4:'Biến đổi tuyến tính, đồ thị tự “duỗi thẳng”',r5:'Sắp thứ tự bước thiết lập, tìm dòng sai'};
+const cntQ=r=>r==='r2'?R2.reduce((a,b)=>a+b.pairs.length,0):r==='pn'?PN.reduce((a,b)=>a+b.items.length,0):BK(r).length;
+function vHome(){const lop=LOP();
+  $('#stage').innerHTML=`<div class="home"><div class="hero"><h1>Đấu trường<br><span>Động học</span></h1>
+    <p>Sáu trò chơi về phương trình động học và cách xử lý số liệu động học, theo chương 2 sách bài tập Kỹ thuật phản ứng. Mỗi vòng tính điểm riêng và có tổng kết đúng / sai.</p>
+    <div class="modes" role="group" aria-label="Chế độ chơi">
+     <button data-mode="lop" aria-pressed="${lop}"><span class="me">🙋</span><b>Cả lớp</b><span>Giáo viên gọi sinh viên phát biểu rồi bấm đáp án; hiệu ứng đúng / sai; điểm chung của lớp</span></button>
+     <button data-mode="thi" aria-pressed="${!lop}"><span class="me">🏁</span><b>Nhiều đội thi</b><span>4 đội giơ thẻ A–D hoặc giành quyền; trang cộng điểm từng đội theo từng vòng</span></button></div>
+    ${lop?`<div class="setup1"><label class="rost">Danh sách lớp (dán vào, mỗi dòng một sinh viên; dán thẳng từ Excel được)
+      <textarea id="roster" rows="5" placeholder="2001230001 Nguyễn Văn An&#10;2001230002 Trần Thị Bình&#10;…">${esc(RL().join('\n'))}</textarea></label>
+      <div class="rrow"><span id="rcount" class="hint">${RL().length?`${RL().length} sinh viên · gọi theo tên`:'Chưa có danh sách · gọi theo số thứ tự'}</span>
+      <label class="sz">hoặc sĩ số <input id="size" type="number" min="1" max="300" value="${S.size}" ${RL().length?'disabled':''}></label>
+      <button class="btn" id="recall">↻ Gọi lại từ đầu</button></div>
+      <p class="hint">Bấm <b>🎲 Gọi sinh viên</b> (phím G): trang quay tên (hoặc số thứ tự nếu chưa dán danh sách), không gọi trùng cho đến khi gọi hết lớp. Sinh viên trả lời, giáo viên bấm vào phương án sinh viên chọn (hoặc phím A–D).
+      Đúng ngay: +điểm đủ; đúng sau khi đã có bạn sai: +nửa số điểm. Đúng liên tiếp tạo <b>🔥 chuỗi</b>. Nút <b>💡 Gợi ý</b> mở câu hỏi gợi mở.</p></div>`
+     :`<div class="setup">${S.teams.map((t,i)=>`<label style="--tc:${TCOL[i]}">Đội ${i+1}<input data-tn="${i}" value="${esc(t.name)}" maxlength="22"></label>`).join('')}</div>
+      <p class="hint">Vòng 1, 4, 5: mỗi đội giơ thẻ, giáo viên bấm chữ cái từng đội rồi <b>Công bố</b>. Vòng 2, 3: các đội lần lượt chơi, đúng thì chơi tiếp, sai thì chuyển lượt. Vòng 6: giành quyền trả lời, có ngôi sao hy vọng.</p>
+      <div class="cards4">Thẻ mỗi đội: ${LET.slice(0,4).map((l,i)=>`<i style="--oc:${OC[i]}">${l}</i>`).join('')}</div>`}
+   </div>
+   <div class="rounds">${RK.map(r=>{const d=RD[r],st=S.st[r],has=st.ok+st.bad;return `<button class="rnd" data-go="${r}" style="--rc:${d.rc};--rc2:${d.rc2}"><span class="n">${d.n}</span>
+     <span><b>${d.name}</b><br><span>${DESC[r]}</span></span><span class="pts">${has?`✔ ${st.ok} · ✘ ${st.bad}`:`${cntQ(r)} ${r==='r2'?'cặp':'câu'} · ${d.pts} đ`}</span></button>`;}).join('')}
+    <p class="vhead">📽 Video bài giảng (xem trước giờ học)</p>${vBtns(['tq0','tp0','vp0','bh0'])}
+    <div id="rst"></div></div></div>`;
+  $('#ctrl').innerHTML=`<button class="btn pri" data-go="r1">▶ Bắt đầu vòng 1</button>${callBtn()}<span class="sp"></span>
+   <button class="btn" id="mute">${S.mute?'🔇 Bật âm thanh':'🔊 Tắt âm thanh'}</button><button class="btn" id="resetAsk">Chơi lại tất cả</button>`;}
+
+/* ---------- Trắc nghiệm (vòng 1, 4, 5) ---------- */
+function qs(r,i){const o=S[r].q;if(!o[i])o[i]={pick:[null,null,null,null],tried:[],done:false,hint:false};return o[i];}
+function vMC(r){const B=BK(r),i=Math.min(S[r].i,B.length-1),it=B[i],q=qs(r,i),lop=LOP(),fin=q.done;
+  const opt=(o,k)=>{const right=fin&&k===it.a,wrong=q.tried.includes(k)||(fin&&!lop&&k!==it.a&&q.pick.includes(k));
+    const who=!lop&&fin?S.teams.map((t,ti)=>q.pick[ti]===k?`<span class="chip" style="--tc:${TCOL[ti]}">${esc(t.name)}</span>`:'').join(''):'';
+    const tag=lop?'button':'div';
+    return `<${tag} class="opt${right?' right':''}${wrong?' wrong':''}${fin&&!right&&!wrong?' dim':''}" ${lop?`data-ans="${k}" ${fin||q.tried.includes(k)?'disabled':''}`:''} style="--oc:${OC[k]}">
+      <span class="lt">${LET[k]}</span><span class="ot">${typeof o==='string'?o:mini(it,o.g,k)}</span><span class="who">${who}</span></${tag}>`;};
+  let body='';
+  if(r==='r3')body=`<p class="ctx big">${it.ctx}</p><div class="v3${it.head?'':' nt'}">${it.head?`<div class="dtw"><table class="dt"><thead><tr>${it.head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${it.rows.map(rw=>`<tr>${rw.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:''}
+    <div><p class="qbox sm">${it.qq||'Nên xử lý số liệu này bằng:'}</p><div class="opts">${it.o.map(opt).join('')}</div></div></div>`;
+  else if(r==='r4')body=`<div class="v4"><div><div class="qcard"><p class="ctx big">${it.ctx}</p><p class="qbox eq">${it.eq}</p></div>
+    <div class="plotw"><svg id="plot" viewBox="0 0 600 340" role="img" aria-label="Đồ thị số liệu"></svg>
+    <div class="axl"><span id="ylab">Trục tung: ${fin?it.lin.yl:it.raw.yl}</span><span id="xlab">Trục hoành: ${fin?it.lin.xl:it.raw.xl}</span></div></div></div>
+    <div><p class="qq">Vẽ đồ thị nào để được đường thẳng?</p><div class="opts${typeof it.o[0]==='string'?'':' g'}">${it.o.map(opt).join('')}</div></div></div>`;
+  else body=`<p class="qbox">${it.q}</p><div class="opts">${it.o.map(opt).join('')}</div>`;
+  const done=Object.values(S[r].q).filter(x=>x.done).length;
+  const rule=lop?`Gọi sinh viên trả lời, bấm vào phương án bạn ấy chọn. Đúng ngay: +${RD[r].pts}; đúng sau lượt sai: +${half(r)}.`:`Mỗi đội giơ thẻ A–D; bấm chữ cái từng đội rồi Công bố. Đúng: +${RD[r].pts} điểm.`;
+  $('#stage').innerHTML=head(r,`Câu ${i+1}/${B.length}`,done,B.length,rule)+(r==='r3'?vTop():'')+body+
+   (q.hint&&it.ask&&!fin?`<div class="why ask"><b class="h">💡 Gợi ý.</b> ${it.ask}</div>`:'')+
+   (fin?`<div class="why"><b class="h">Đáp án ${LET[it.a]}.</b> ${it.why}${vBtns((VID[r]||{})[i])}</div>`:'')+
+   (lop?'':`<div class="picks">${S.teams.map((t,ti)=>`<div class="pk${fin&&q.pick[ti]!==null?(q.pick[ti]===it.a?' ok':' no'):''}" style="--tc:${TCOL[ti]}"><span class="tn">${esc(t.name)}</span>
+     ${it.o.map((_,k)=>`<button data-pick="${ti}:${k}" aria-pressed="${q.pick[ti]===k}" style="--oc:${OC[k]}" ${fin?'disabled':''} aria-label="${esc(t.name)} chọn ${LET[k]}">${LET[k]}</button>`).join('')}</div>`).join('')}</div>`);
+  $('#ctrl').innerHTML=`${timerBtns()}${callBtn()}${lop&&it.ask&&!fin?`<button class="btn" id="hint">💡 Gợi ý</button>`:''}${r==='r3'?`<a class="vbtn" style="margin-top:0" href="${ytUrl(CLIP.tq0)}" target="_blank" rel="noopener">📽 Video phân loại phương pháp</a>`:''}<span class="sp"></span>
+   <button class="btn" data-nav="-1" ${i===0?'disabled':''}>‹ Câu trước</button>
+   <button class="btn gold" id="reveal" ${fin?'disabled':''}>${lop?'Xem đáp án':'Công bố'}</button>
+   <button class="btn pri" data-nav="1">${i===B.length-1?'Kết thúc vòng 🏁':'Câu tiếp ›'}</button>${undoBtn()}`;
+  if(r==='r4')requestAnimationFrame(()=>drawPlot(it,fin?1:0));}
+function answer(k){const r=S.view;if(!['r1','r3','r4'].includes(r)||!LOP())return;const it=BK(r)[S[r].i],q=qs(r,S[r].i);if(q.done||q.tried.includes(k)||k>=it.o.length)return;snap();const st=S.st[r];
+  if(k===it.a){const first=!q.tried.length,p=first?RD[r].pts:half(r);q.done=true;st.ok++;st.pts+=p;if(first){st.run++;st.best=Math.max(st.best,st.run);}else st.run=0;
+    save();tPause();render();renderBoard([0]);const el=$(`[data-ans="${k}"]`);good(el,st.run>=3&&first?`🔥 Chuỗi ${st.run} câu đúng liên tiếp!`:(first?'Trả lời đúng ngay lần đầu':'Sửa sai thành công'),{big:first&&st.run>=3,pts:'+'+p});
+    if(r==='r4')animPlot(it);}
+  else{q.tried.push(k);st.bad++;st.run=0;save();render();bad($(`[data-ans="${k}"]`),'Mời bạn khác trả lời');}}
+function reveal(){const r=S.view;if(!['r1','r3','r4'].includes(r))return;const it=BK(r)[S[r].i],q=qs(r,S[r].i);if(q.done)return;snap();q.done=true;tPause();
+  if(LOP()){q.shown=true;S.st[r].run=0;save();render();if(r==='r4')animPlot(it);return;}
+  const win=[];q.pick.forEach((p,t)=>{if(p===null)return;if(p===it.a){S.sc[r][t]+=RD[r].pts;win.push(t);S.st[r].ok++;}else S.st[r].bad++;});
+  save();render();renderBoard(win);if(r==='r4')animPlot(it);const el=$('.opt.right');
+  if(win.length)good(el,win.map(t=>esc(S.teams[t].name)).join(', ')+` +${RD[r].pts}`,{big:win.length===4,pts:'+'+RD[r].pts});
+  else{sBad();pop('bad','Chưa đội nào đúng');flash('bad');}}
+
+/* ---------- đồ thị vòng 4 ---------- */
+function norm(pts){const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  return pts.map(([x,y])=>[(x-x0)/((x1-x0)||1),(y-y0)/((y1-y0)||1)]);}
+function drawPlot(it,t){const svg=$('#plot');if(!svg)return;
+  const A=norm(it.raw.pts),B=norm(it.raw.pts.map(([x,y])=>it.lin.f(x,y)));
+  const W=600,H=340,L=46,Rr=20,T=18,Bt=34,pw=W-L-Rr,ph=H-T-Bt;
+  const P=A.map((a,k)=>[a[0]*(1-t)+B[k][0]*t,a[1]*(1-t)+B[k][1]*t]).map(([u,v])=>[L+16+u*(pw-32),T+12+(1-v)*(ph-24)]);
+  let s=`<line x1="${L}" y1="${H-Bt}" x2="${W-Rr}" y2="${H-Bt}" stroke="#13213A" stroke-width="2.5"/><line x1="${L}" y1="${H-Bt}" x2="${L}" y2="${T}" stroke="#13213A" stroke-width="2.5"/>
+   <path d="M${W-Rr},${H-Bt} l-10,-5 v10z M${L},${T} l-5,10 h10z" fill="#13213A"/>`;
+  s+=`<polyline points="${P.map(p=>p.join(',')).join(' ')}" fill="none" stroke="${t>=1?'#1E8E4F':'#2E86AB'}" stroke-width="${t>=1?4:3}" stroke-linejoin="round" ${t>=1?'stroke-dasharray="0"':''}/>`;
+  s+=P.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="7" fill="#fff" stroke="#14325C" stroke-width="3"/>`).join('');
+  svg.innerHTML=s;}
+function animPlot(it){const t0=performance.now(),D=1300;
+  const xl=$('#xlab'),yl=$('#ylab');if(xl&&yl){xl.innerHTML='Trục hoành: '+it.lin.xl;yl.innerHTML='Trục tung: '+it.lin.yl;tset($('.axl'));}
+  const reduce=RM();
+  const step=now=>{let t=reduce?1:Math.max(0,Math.min(1,(now-t0)/D));t=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;drawPlot(it,t);if(t<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
+
+
+/* ---------- Vòng 2: lật thẻ, hai phía hai màu ---------- */
+function deck(b){if(!S.r2.decks[b]){const n=R2[b].pairs.length,sh=()=>{const a=Array.from({length:n},(_,i)=>i);for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+  S.r2.decks[b]={L:sh(),R:sh()};S.r2.m[b]={};save();}return S.r2.decks[b];}
+let UP=[],LOCK=false;
+function vMem(){const b=S.r2.b,B=R2[b],d=deck(b),m=S.r2.m[b]||{},lop=LOP();UP=[];LOCK=false;
+  const done=R2.reduce((a,_,k)=>a+Object.keys(S.r2.m[k]||{}).length,0),all=cntQ('r2'),tags=B.tags||['Trường hợp','Phương trình'];
+  const card=(side,pos,p)=>{const own=m[p],isDone=own!==undefined,txt=B.pairs[p][side==='L'?0:1],lab=side==='L'?pos+1:LET[pos];
+    return `<button class="card s${side}${isDone||S.r2.open?' up':''}${isDone?' done':''}" data-card="${side}:${pos}" ${isDone&&!lop?`data-team="${esc(S.teams[own].name)}" style="--tc:${TCOL[own]}"`:''} aria-label="Thẻ ${lab}">
+     <span class="in"><span class="b">${lab}</span><span class="f"><span class="tag">${lab}</span><span>${NB(txt)}</span></span></span></button>`;};
+  const rule=lop?`Gọi sinh viên ghép một thẻ cam với một thẻ xanh (ví dụ “3 – E”) và giải thích. Đúng: +${RD.r2.pts}.`:`Đội đến lượt gọi một thẻ cam và một thẻ xanh. Đúng: +${RD.r2.pts} và chơi tiếp; sai thì chuyển lượt. Đang đến lượt: <b style="color:${TCOL[S.r2.turn]}">${esc(S.teams[S.r2.turn].name)}</b>`;
+  $('#stage').innerHTML=head('r2',`${B.name} · ${Object.keys(m).length}/${B.pairs.length} cặp`,done,all,rule)+
+   (Object.keys(m).length===B.pairs.length?`<div class="banner ok">🎊 Đã ghép xong ${B.name}!</div>`:'')+
+   `<div class="mem2"><div class="side sL"><h3>🟧 ${tags[0]}</h3><div class="grid">${d.L.map((p,pos)=>card('L',pos,p)).join('')}</div></div>
+    <div class="side sR"><h3>🟦 ${tags[1]}</h3><div class="grid">${d.R.map((p,pos)=>card('R',pos,p)).join('')}</div></div></div>`;
+  $('#ctrl').innerHTML=`${timerBtns()}${callBtn()}<span class="hint">Bảng:</span>${R2.map((x,k)=>`<button class="btn${k===b?' pri':''}" data-board="${k}">${k+1}</button>`).join('')}
+   ${lop?'':`<button class="btn" id="turn">Chuyển lượt</button>`}<button class="btn" id="openall">${S.r2.open?'Úp thẻ lại':'Mở tất cả'}</button>
+   <span class="sp"></span><button class="btn" id="reshuf">Xáo lại</button>${undoBtn()}<button class="btn pri" id="endr">Kết thúc vòng 🏁</button>`;}
+function flip(key){if(LOCK||S.r2.open)return;const [side,pos]=key.split(':'),b=S.r2.b,d=deck(b),p=d[side][+pos],m=S.r2.m[b];if(m[p]!==undefined)return;
+  const el=document.querySelector(`[data-card="${key}"]`);const same=UP.findIndex(u=>u.side===side);
+  if(same>=0){const old=UP[same];if(old.key===key)return;document.querySelector(`[data-card="${old.key}"]`)?.classList.remove('up');UP.splice(same,1);}
+  el.classList.add('up');sFlip();UP.push({side,p,key});if(UP.length<2)return;
+  const [a,c]=UP,els=UP.map(u=>document.querySelector(`[data-card="${u.key}"]`)),lop=LOP(),st=S.st.r2;snap();
+  if(a.p===c.p){m[a.p]=S.r2.turn;st.ok++;if(lop){st.pts+=RD.r2.pts;st.run++;st.best=Math.max(st.best,st.run);}else S.sc.r2[S.r2.turn]+=RD.r2.pts;
+    els.forEach(e=>e.classList.add('done','pulse'));save();renderBoard([S.r2.turn]);
+    good(els[1],(lop?(st.run>=3?`🔥 Chuỗi ${st.run} cặp đúng!`:'Ghép đúng một cặp'):`${esc(S.teams[S.r2.turn].name)} +${RD.r2.pts}`)+`<div class="pf">${R2[b].pairs[a.p][1]}</div>`,{big:lop&&st.run>=3,pts:'+'+RD.r2.pts});
+    UP=[];setTimeout(render,1400);}
+  else{LOCK=true;st.bad++;st.run=0;els.forEach(e=>e.classList.add('miss'));bad(els[1],lop?'Mời bạn khác thử':'Chuyển lượt cho đội sau');
+    if(!lop)S.r2.turn=(S.r2.turn+1)%4;save();renderBoard();
+    setTimeout(()=>{els.forEach(e=>e.classList.remove('up','miss'));UP=[];LOCK=false;render();},1900);}}
+
+/* ---------- Vòng 3: Phân nhóm ---------- */
+function pnOrd(b){if(!S.pn.ord[b]){const a=PN[b].items.map((_,i)=>i);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}S.pn.ord[b]=a;S.pn.m[b]={};save();}return S.pn.ord[b];}
+function vPN(){const b=S.pn.b,B=PN[b],ord=pnOrd(b),m=S.pn.m[b]||{},lop=LOP();
+  const done=PN.reduce((a,_,k)=>a+Object.keys(S.pn.m[k]||{}).length,0),left=ord.filter(i=>m[i]===undefined);
+  const placed=g=>ord.filter(i=>m[i]!==undefined&&B.items[i][1]===g).map(i=>`<span class="placed"><span>${NB(B.items[i][0])}</span>${!lop?`<span class="chip" style="--tc:${TCOL[m[i]]}">${esc(S.teams[m[i]].name)}</span>`:''}</span>`).join('');
+  const bin=g=>`<button class="bin b${g}" data-bin="${g}" ${S.pn.sel===null?'aria-disabled="true"':''}><span class="bh">${B.groups[g]}</span><span class="drop">${S.pn.sel===null?'':'⬇ Xếp vào đây'}</span>${placed(g)}</button>`;
+  const rule=lop?`Gọi sinh viên: chọn một thẻ ở giữa, rồi bấm vào nhóm bạn ấy nói. Đúng: +${RD.pn.pts}.`:`Đội đến lượt chọn thẻ và nhóm. Đúng: +${RD.pn.pts} và chơi tiếp; sai thì chuyển lượt. Đang đến lượt: <b style="color:${TCOL[S.pn.turn]}">${esc(S.teams[S.pn.turn].name)}</b>`;
+  $('#stage').innerHTML=head('pn',`Bảng ${b+1}/${PN.length} · ${Object.keys(m).length}/${B.items.length} thẻ`,done,cntQ('pn'),rule)+
+   `<p class="qbox sm pnq">${B.name}</p><div class="pnw">${bin(0)}
+    <div class="pile">${left.length?left.map(i=>`<button class="itm${S.pn.sel===i?' sel':''}" data-itm="${i}">${NB(B.items[i][0])}</button>`).join(''):`<div class="banner ok">🎊 Đã xếp xong bảng ${b+1}!</div>`}</div>
+    ${bin(1)}</div>${S.pn.last&&S.pn.last.b===b?(()=>{const L=B.items[S.pn.last.i];return `<div class="why"><b class="h">✔ ${NB(L[0])} → ${B.groups[L[1]]}.</b> ${L[2]||''}</div>`;})():''}`;
+  $('#ctrl').innerHTML=`${timerBtns()}${callBtn()}<span class="hint">Bảng:</span>${PN.map((x,k)=>`<button class="btn${k===b?' pri':''}" data-pnb="${k}">${k+1}</button>`).join('')}
+   ${lop?'':`<button class="btn" id="pnturn">Chuyển lượt</button>`}<span class="sp"></span><button class="btn" id="pnshuf">Xáo lại</button>${undoBtn()}<button class="btn pri" id="endr">Kết thúc vòng 🏁</button>`;}
+function pnDrop(g){const b=S.pn.b,i=S.pn.sel;if(i===null){const e=$('.pile');shake(e);tone(300,.12,'triangle',.06);return;}
+  const it=PN[b].items[i],lop=LOP(),st=S.st.pn;snap();
+  if(it[1]===g){S.pn.m[b][i]=S.pn.turn;S.pn.sel=null;st.ok++;if(lop){st.pts+=RD.pn.pts;st.run++;st.best=Math.max(st.best,st.run);}else S.sc.pn[S.pn.turn]+=RD.pn.pts;
+    S.pn.last={b,i};save();render();renderBoard([S.pn.turn]);good($(`[data-bin="${g}"]`),(lop&&st.run>=3?`🔥 Chuỗi ${st.run}!<br>`:'')+(it[2]||''),{big:lop&&st.run>=3,pts:'+'+RD.pn.pts});}
+  else{st.bad++;st.run=0;if(!lop)S.pn.turn=(S.pn.turn+1)%4;S.pn.sel=null;save();render();bad($(`[data-itm="${i}"]`),lop?'Mời bạn khác thử':'Chuyển lượt cho đội sau');}}
+
+/* ---------- Vòng 6: Về đích ---------- */
+function q5(i){const o=S.r5.q;if(!o[i]){const it=R5[i];let ord=null;if(it.type==='order'){ord=it.steps.map((_,k)=>k);
+   do{for(let a=ord.length-1;a>0;a--){const j=Math.floor(Math.random()*(a+1));[ord[a],ord[j]]=[ord[j],ord[a]];}}while(ord.every((v,k)=>v===k));}
+  o[i]={ord,buzz:null,star:null,picks:[],res:null,tried:[],rev:false,wl:[],fails:0};}return o[i];}
+function vFinal(){const i=Math.min(S.r5.i,R5.length-1),it=R5[i],q=q5(i),lop=LOP(),busy=q.res==='ok'||q.rev,active=lop||q.buzz!==null;
+  const starRow=S.teams.map((t,ti)=>{const used=S.r5.starUsed[ti]&&q.star!==ti;return `<button data-star="${ti}" aria-pressed="${q.star===ti}" ${used||busy||q.tried.length?'disabled':''} style="--tc:${TCOL[ti]}">★ ${esc(t.name)}</button>`;}).join('');
+  const buzzRow=S.teams.map((t,ti)=>`<button data-buzz="${ti}" aria-pressed="${q.buzz===ti}" class="${q.tried.includes(ti)?'tried':''}" ${q.tried.includes(ti)||busy?'disabled':''} style="--tc:${TCOL[ti]}">${esc(t.name)}</button>`).join('');
+  let body='';
+  if(it.type==='order'){const showOK=busy;
+    body=`<p class="hint">${lop?'Gọi sinh viên đọc thứ tự các chữ cái; giáo viên bấm lần lượt theo lời bạn ấy.':'Đội giành quyền đọc thứ tự các chữ cái; giáo viên bấm lần lượt.'} Bấm đủ ${it.steps.length} bước thì trang tự kiểm tra.</p>
+     <div class="steps">${(showOK?it.steps.map((_,k)=>k):q.ord).map((sk,pos)=>{const n=q.picks.indexOf(sk),lt=LET[q.ord.indexOf(sk)];
+      return `<button class="step${showOK?' ok':''}${n>=0&&!showOK?' on':''}" data-step="${sk}" ${!active||busy?'disabled':''} style="--oc:${PAL[q.ord.indexOf(sk)%PAL.length]}"><span class="lt">${showOK?(pos+1):lt}</span><span>${it.steps[sk]}</span>${!showOK&&n>=0?`<span class="no">${n+1}</span>`:''}${showOK?`<span class="no gr">${lt}</span>`:''}</button>`;}).join('')}</div>${busy&&VID.r5[i]?`<div class="why"><b class="h">Xem lại cách làm.</b>${vBtns(VID.r5[i])}</div>`:''}`;}
+  else{body=`<p class="hint">${lop?'Gọi sinh viên chỉ ra dòng sai đầu tiên; giáo viên bấm vào dòng đó, sau đó bạn ấy nêu cách sửa.':'Đội giành quyền chỉ ra số thứ tự dòng sai đầu tiên; giáo viên bấm vào dòng đó.'}</p>
+     <div class="steps">${it.lines.map((ln,k)=>`<button class="step ln${busy&&k===it.bad?' badl':''}${q.wl.includes(k)?' wl':''}" data-line="${k}" ${!active||busy||q.wl.includes(k)?'disabled':''}><span class="lt">${k+1}</span><span>${ln}</span></button>`).join('')}</div>
+     ${busy?`<div class="why"><b class="h">Sửa dòng ${it.bad+1}:</b> ${it.fix}${vBtns(VID.r5[i])}</div>`:''}`;}
+  const ban=lop?'':q.res==='ok'?`<div class="banner ok">🏆 ${esc(S.teams[q.last].name)} ${q.lastPts>0?'+':''}${q.lastPts} điểm.</div>`
+    :q.res==='bad'?`<div class="banner bad">${esc(S.teams[q.last].name)} ${q.lastPts} điểm. Đội khác có thể giành quyền trả lời (+${RD.r5.pts/2|0}).</div>`:'';
+  const rule=lop?`${esc(it.title)}. Đúng ngay: +${RD.r5.pts}; đúng sau lượt sai: +${half('r5')}.`:`${esc(it.title)}. Đúng: +${RD.r5.pts}; sai: −10. Ngôi sao hy vọng (mỗi đội một lần): đúng ×2, sai −${RD.r5.pts}. Giành quyền sau khi đội khác sai: +${half('r5')}.`;
+  const done=Object.values(S.r5.q).filter(x=>x.res==='ok'||x.rev).length;
+  $('#stage').innerHTML=head('r5',`Câu ${i+1}/${R5.length}`,done,R5.length,rule)+(lop?'':`<div class="buzz"><span class="hint">Ngôi sao:</span>${starRow}</div><div class="buzz"><span class="hint">Đội trả lời:</span>${buzzRow}</div>`)+ban+body;
+  $('#ctrl').innerHTML=`${timerBtns()}${callBtn()}<span class="sp"></span>
+   <button class="btn" data-nav="-1" ${i===0?'disabled':''}>‹ Câu trước</button><button class="btn" id="clr" ${busy||!q.picks.length?'disabled':''}>Xóa thứ tự đang bấm</button>
+   <button class="btn gold" id="show5" ${busy?'disabled':''}>Xem đáp án</button>
+   <button class="btn pri" data-nav="1">${i===R5.length-1?'Kết thúc vòng 🏁':'Câu tiếp ›'}</button>${undoBtn()}`;}
+function judge5(ok,sel){const i=S.r5.i,q=q5(i),t=q.buzz,st=S.st.r5;snap();
+  if(LOP()){if(ok){const first=!q.fails,p=first?RD.r5.pts:half('r5');q.res='ok';st.ok++;st.pts+=p;if(first){st.run++;st.best=Math.max(st.best,st.run);}else st.run=0;tPause();save();render();renderBoard([0]);good($('.steps'),first?'Đúng ngay lần đầu':'Sửa sai thành công',{big:true,pts:'+'+p});}
+    else{q.fails++;st.bad++;st.run=0;q.picks=[];if(sel!==undefined)q.wl.push(sel);save();render();bad(sel!==undefined?$(`[data-line="${sel}"]`):$('.steps'),'Mời bạn khác thử');}return;}
+  const first=q.tried.length===0,star=q.star===t&&first;
+  let d=ok?(first?RD.r5.pts:half('r5'))*(star?2:1):(first?(star?-RD.r5.pts:-10):0);
+  if(star)S.r5.starUsed[t]=true;S.sc.r5[t]+=d;ok?st.ok++:st.bad++;q.last=t;q.lastPts=d;
+  if(ok){q.res='ok';tPause();save();render();renderBoard([t]);good($('.steps'),`${esc(S.teams[t].name)} ${d>0?'+':''}${d}`,{big:star,pts:(d>0?'+':'')+d});}
+  else{q.res='bad';q.tried.push(t);q.buzz=null;q.picks=[];save();render();renderBoard([t]);bad($('.steps'),`${esc(S.teams[t].name)} ${d}`);}}
+
+/* ---------- Tổng kết từng vòng ---------- */
+function doneCnt(r){if(r==='r2')return R2.reduce((a,_,k)=>a+Object.keys(S.r2.m[k]||{}).length,0);if(r==='pn')return PN.reduce((a,_,k)=>a+Object.keys(S.pn.m[k]||{}).length,0);
+  if(r==='r5')return Object.values(S.r5.q).filter(x=>x.res==='ok'||x.rev).length;return Object.values(S[r].q).filter(x=>x.done).length;}
+const acc=st=>st.ok+st.bad?Math.round(100*st.ok/(st.ok+st.bad)):0;
+const stars=st=>{const a=acc(st);return st.ok+st.bad?(a>=80?3:a>=60?2:1):0;};
+function vKQ(){const r=S.kq,d=RD[r],st=S.st[r],lop=LOP(),n=stars(st),nx=RK[RK.indexOf(r)+1];
+  const ttl=st.ok+st.bad;
+  const pod=lop?'':`<div class="pod">${S.teams.map((t,i)=>({...t,i,s:S.sc[r][i]})).sort((a,b)=>b.s-a.s).map((t,k)=>`<div class="col" style="--tc:${TCOL[t.i]};--d:${k*.15}s"><div class="rk">${['🥇','🥈','🥉','🎖️'][k]}</div><div class="nm">${esc(t.name)}</div><div class="bar" style="height:${Math.max(60,Math.round(220*Math.max(t.s,0)/Math.max(1,...S.sc[r])))}px">${t.s}</div></div>`).join('')}</div>`;
+  $('#stage').innerHTML=`<div class="rhead"><span class="rnum">Vòng ${d.n}</span><h1>Tổng kết: ${d.name}</h1></div>
+   <div class="kq"><div class="stars">${[0,1,2].map(k=>`<span class="${k<n?'on':''}" style="--d:${k*.25}s">★</span>`).join('')}</div>
+    <p class="kmsg">${!ttl?'Vòng này chưa có lượt trả lời nào.':n===3?'Cả lớp nắm rất chắc phần này!':n===2?'Khá tốt, còn vài chỗ cần xem lại.':'Phần này cần giảng lại.'}</p>
+    <div class="stats">${lop?`<div class="t-pts"><b>${st.pts}</b><span>điểm của lớp</span></div>`:''}<div class="t-ok"><b>${st.ok}</b><span>lần trả lời đúng</span></div><div class="t-bad"><b>${st.bad}</b><span>lần trả lời sai</span></div>
+     <div><b>${acc(st)} %</b><span>tỉ lệ đúng</span></div><div><b>${doneCnt(r)}/${cntQ(r)}</b><span>${r==='r2'?'cặp':'câu'} đã hoàn thành</span></div>${lop?`<div><b>🔥 ${st.best}</b><span>chuỗi đúng dài nhất</span></div>`:''}</div>
+    <div class="ratio"><i style="width:${acc(st)}%"></i></div>${pod}</div>`;
+  $('#ctrl').innerHTML=`<button class="btn" data-go="${r}">‹ Quay lại vòng ${d.n}</button><button class="btn" id="replay">↻ Chơi lại vòng này</button><span class="sp"></span>
+   <button class="btn" data-go="end">🏁 Tổng kết chung</button>${nx?`<button class="btn pri" data-go="${nx}">Sang vòng ${RD[nx].n} ›</button>`:''}`;}
+function vEnd(){const lop=LOP();
+  const rows=RK.map(r=>{const st=S.st[r],d=RD[r];return `<tr><td><span class="dot" style="--rc:${d.rc}">${d.n}</span> ${d.name}</td><td class="okc">${st.ok}</td><td class="bdc">${st.bad}</td><td>${acc(st)} %</td><td class="stx">${'★'.repeat(stars(st))}<span>${'★'.repeat(3-stars(st))}</span></td>
+    ${lop?`<td><b>${st.pts}</b></td>`:S.teams.map((_,t)=>`<td>${S.sc[r][t]}</td>`).join('')}</tr>`;}).join('');
+  const T=RK.reduce((a,r)=>({ok:a.ok+S.st[r].ok,bad:a.bad+S.st[r].bad,pts:a.pts+S.st[r].pts}),{ok:0,bad:0,pts:0});
+  const redo=[];['r1','r3','r4'].forEach(r=>Object.entries(S[r].q).forEach(([i,q])=>{const it=BK(r)[i];if(!it)return;const w=lop?q.tried.length:q.pick.filter(p=>p!==null&&p!==it.a).length;if(w||q.shown)redo.push({r,i:+i,w,txt:r==='r1'?it.q:it.ctx});}));
+  Object.entries(S.r5.q).forEach(([i,q])=>{const w=lop?q.fails:q.tried.length;if(w||(q.rev&&q.res!=='ok'))redo.push({r:'r5',i:+i,w,txt:esc(R5[i].title)});});
+  redo.sort((a,b)=>b.w-a.w);
+  const rk=S.teams.map((t,i)=>({...t,i,s:tot(i)})).sort((a,b)=>b.s-a.s);
+  $('#stage').innerHTML=`<div class="rhead"><span class="rnum">Kết thúc</span><h1>${lop?'Tổng kết cả lớp':'Bảng vàng Đấu trường Động học'}</h1></div>
+   ${lop?`<div class="stats"><div class="t-pts"><b>${T.pts}</b><span>tổng điểm của lớp</span></div><div class="t-ok"><b>${T.ok}</b><span>lần đúng</span></div><div class="t-bad"><b>${T.bad}</b><span>lần sai</span></div><div><b>${acc(T)} %</b><span>tỉ lệ đúng</span></div></div>`
+    :`<div class="pod">${rk.map((t,k)=>`<div class="col" style="--tc:${TCOL[t.i]};--d:${k*.15}s"><div class="rk">${['🥇','🥈','🥉','🎖️'][k]}</div><div class="nm">${esc(t.name)}</div><div class="bar" style="height:${Math.max(60,Math.round(220*Math.max(t.s,0)/Math.max(1,...rk.map(x=>x.s))))}px">${t.s}</div></div>`).join('')}</div>`}
+   <div class="tblw"><table class="tbl"><thead><tr><th>Vòng</th><th>✔ Đúng</th><th>✘ Sai</th><th>Tỉ lệ</th><th>Sao</th>${lop?'<th>Điểm</th>':S.teams.map((t,i)=>`<th style="color:${TCOL[i]}">${esc(t.name)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody>
+    <tfoot><tr><td>Tổng</td><td class="okc">${T.ok}</td><td class="bdc">${T.bad}</td><td>${acc(T)} %</td><td></td>${lop?`<td><b>${T.pts}</b></td>`:S.teams.map((_,i)=>`<td><b>${tot(i)}</b></td>`).join('')}</tr></tfoot></table></div>
+   ${redo.length?`<h2 class="sumh">Câu nên giảng lại (nhiều lần sai xếp trước)</h2><div class="sum">${redo.slice(0,8).map(x=>`<button class="srow" data-jump="${x.r}:${x.i}"><span class="sv">Vòng ${RD[x.r].n} · câu ${x.i+1}</span><span class="st">${x.txt}</span><span class="sw">${x.w?`${x.w} lần sai`:'chưa ai đúng'}</span></button>`).join('')}</div>`:''}
+   <p class="vhead">📽 Video ôn tập</p>${vBtns(['tq0','tp0','vp0','bh0'])}`;
+  $('#ctrl').innerHTML=`<button class="btn" data-go="home">🏠 Về trang đầu</button><span class="sp"></span><button class="btn" id="resetAsk">Chơi lại tất cả</button>`;}
+
+/* ---------- sự kiện ---------- */
+function nav(n){const r=S.view,L=BK(r).length,ni=S[r].i+n;if(ni>=L){S.kq=r;return go('kq');}if(ni<0)return;S[r].i=ni;save();tReset(TDEF[r]);render();}
+document.addEventListener('click',e=>{const call=e.target.closest('#call');if(call){if(call.classList.contains('done'))call.hidden=true;return;}
+  const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.go)return go(d.go);
+  if(d.mode){if(d.mode===S.mode)return;const any=RK.some(r=>S.st[r].ok+S.st[r].bad||S.sc[r].some(x=>x));
+    if(any&&!d.force){$('#cf')?.remove();($('#rst')||$('#stage')).insertAdjacentHTML('afterbegin',`<div class="confirm" id="cf">Đổi chế độ sẽ xóa điểm và tiến độ đang có. <button class="btn pri" data-mode="${d.mode}" data-force="1">Đổi và chơi mới</button><button class="btn" id="resetNo">Giữ chế độ cũ</button></div>`);return;}
+    const keep={teams:S.teams,size:S.size,roster:S.roster,mute:S.mute};S=fresh();Object.assign(S,keep);S.mode=d.mode;HIST.length=0;save();render();return;}
+  if(d.jump){const [r,i]=d.jump.split(':');S[r].i=+i;return go(r);}
+  if(b.id==='callsv')return callSV();
+  if(b.id==='recall'){S.called=[];save();b.textContent='✓ Đã làm mới';setTimeout(()=>{b.textContent='↻ Gọi lại từ đầu';},1200);return;}
+  if(d.adj){snap();const [t,v]=d.adj.split(':').map(Number);S.sc[CR()][t]+=v;save();renderBoard([t]);return;}
+  if(b.id==='undo')return undo();
+  if(b.id==='tmb'){TM.run?tPause():tStart(TM.left>0?0:TDEF[CR()]);return;}
+  if(b.id==='mute'){S.mute=!S.mute;save();b.textContent=S.mute?'🔇 Bật âm thanh':'🔊 Tắt âm thanh';return;}
+  if(b.id==='resetAsk'){const box=$('#rst')||$('#stage');box.insertAdjacentHTML('afterbegin',`<div class="confirm" id="cf">Xóa toàn bộ điểm và tiến độ của cả 6 vòng? <button class="btn pri" id="resetYes">Xóa và chơi lại</button><button class="btn" id="resetNo">Giữ nguyên</button></div>`);return;}
+  if(b.id==='resetNo'){$('#cf')?.remove();return;}
+  if(b.id==='resetYes'){const keep={teams:S.teams,mode:S.mode,size:S.size,roster:S.roster,mute:S.mute};S=fresh();Object.assign(S,keep);HIST.length=0;save();go('home');return;}
+  if(b.id==='replay'){snap();const r=S.kq;S[r]=freshRound(r);S.st[r]=fst();S.sc[r]=[0,0,0,0];if(r==='r5')S.r5.starUsed=[false,false,false,false];save();go(r);return;}
+  if(b.id==='endr'){S.kq=S.view;return go('kq');}
+  if(d.ans!==undefined)return answer(+d.ans);
+  if(b.id==='hint'){const r=S.view,q=qs(r,S[r].i);q.hint=true;save();render();tone(988,.12,'sine',.07);return;}
+  if(d.pick){const [t,k]=d.pick.split(':').map(Number),r=S.view,q=qs(r,S[r].i);if(q.done)return;q.pick[t]=q.pick[t]===k?null:k;save();sSel();
+    b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b&&q.pick[t]===k));return;}
+  if(b.id==='reveal')return reveal();
+  if(d.nav){const n=+d.nav;if(S.view==='r5'){const L=R5.length,ni=S.r5.i+n;if(ni>=L){S.kq='r5';return go('kq');}if(ni<0)return;S.r5.i=ni;save();tReset(TDEF.r5);render();return;}return nav(n);}
+  if(d.card!==undefined)return flip(d.card);
+  if(d.board!==undefined){S.r2.b=+d.board;save();render();return;}
+  if(b.id==='turn'){S.r2.turn=(S.r2.turn+1)%4;save();render();return;}
+  if(b.id==='openall'){S.r2.open=!S.r2.open;save();render();return;}
+  if(b.id==='reshuf'){delete S.r2.decks[S.r2.b];save();render();return;}
+  if(d.pnb!==undefined){S.pn.b=+d.pnb;S.pn.sel=null;save();render();return;}
+  if(d.itm!==undefined){const i=+d.itm;S.pn.sel=S.pn.sel===i?null:i;sSel();save();render();return;}
+  if(d.bin!==undefined)return pnDrop(+d.bin);
+  if(b.id==='pnturn'){S.pn.turn=(S.pn.turn+1)%4;save();render();return;}
+  if(b.id==='pnshuf'){delete S.pn.ord[S.pn.b];S.pn.sel=null;save();render();return;}
+  if(d.star!==undefined){const q=q5(S.r5.i),t=+d.star;q.star=q.star===t?null:t;save();render();return;}
+  if(d.buzz!==undefined){const q=q5(S.r5.i),t=+d.buzz;q.buzz=q.buzz===t?null:t;q.picks=[];q.res=q.res==='bad'?null:q.res;save();render();if(q.buzz!==null){sSel();tStart(TDEF.r5);}return;}
+  if(d.step!==undefined){const i=S.r5.i,it=R5[i],q=q5(i),sk=+d.step;if((!LOP()&&q.buzz===null)||q.picks.includes(sk))return;q.picks.push(sk);sSel();save();
+    if(q.picks.length===it.steps.length)return judge5(q.picks.every((v,k)=>v===k));render();return;}
+  if(d.line!==undefined){const i=S.r5.i,q=q5(i),k=+d.line;if(!LOP()&&q.buzz===null)return;return judge5(k===R5[i].bad,k);}
+  if(b.id==='clr'){const q=q5(S.r5.i);q.picks=[];save();render();return;}
+  if(b.id==='show5'){snap();const q=q5(S.r5.i);q.rev=true;S.st.r5.run=0;tPause();save();render();return;}
+});
+document.addEventListener('input',e=>{const t=e.target.dataset.tn;if(t!==undefined){S.teams[+t].name=e.target.value||('Đội '+(+t+1));save();renderBoard();return;}
+  if(e.target.id==='size'){S.size=Math.max(1,Math.min(300,+e.target.value||40));S.called=[];save();}
+  if(e.target.id==='roster')setRoster(e.target.value);});
+document.addEventListener('keydown',e=>{if(e.target.closest('input'))return;const k=e.key.toLowerCase();
+  if(!$('#call').hidden&&(k==='escape'||k==='enter'||k===' ')){$('#call').hidden=true;e.preventDefault();return;}
+  if(k==='arrowright')document.querySelector('[data-nav="1"]')?.click();
+  else if(k==='arrowleft')document.querySelector('[data-nav="-1"]')?.click();
+  else if(k==='enter'&&['r1','r3','r4'].includes(S.view)){e.preventDefault();reveal();}
+  else if(LOP()&&['a','b','c','d'].includes(k)&&['r1','r3','r4'].includes(S.view))answer(k.charCodeAt(0)-97);
+  else if(k==='g'&&LOP())callSV();
+  else if(k==='t')$('#tmb')?.click();});
+addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(VIEWS.includes(v)&&v!==S.view)go(v);});
+{const h=location.hash.slice(1);if(VIEWS.includes(h))S.view=h;}
+tReset(TDEF[CR()]||0);render();
+
+</script>
+
+</body></html>
