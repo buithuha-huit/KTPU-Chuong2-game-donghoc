@@ -316,6 +316,12 @@ button.opt:disabled{cursor:default}
 .ctx.big{font-size:clamp(18px,1.45vw,30px);line-height:1.45;color:var(--ink);font-weight:600}
 .qcard{background:linear-gradient(120deg,color-mix(in srgb,var(--rc) 12%,#fff),color-mix(in srgb,var(--rc2) 10%,#fff));border:2px solid color-mix(in srgb,var(--rc) 35%,#fff);border-left:8px solid var(--rc);border-radius:16px;padding:10px 16px;margin-bottom:10px}
 .qcard .qbox.eq{font-size:clamp(24px,2.1vw,42px);margin:4px 0 0;color:var(--brand)}
+.q6{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 20px;margin:6px 0 12px;animation:q6in .5s ease-out}
+.q6 .q6t{flex:none;background:var(--rc);color:#fff;font-weight:800;font-size:clamp(18px,1.5vw,26px);padding:8px 16px;border-radius:999px;letter-spacing:.02em;box-shadow:0 3px 0 color-mix(in srgb,var(--rc) 60%,#000)}
+.q6 .q6q{flex:1 1 320px;font-size:clamp(24px,2.3vw,40px);font-weight:800;color:var(--brand);line-height:1.25}
+.q6 .q6q small{display:block;font-size:.5em;font-weight:600;color:var(--muted);margin-top:4px}
+@keyframes q6in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.q6{animation:none}}
 .qcard .ctx.big mjx-container,.ctx.big mjx-container{font-size:108%}
 .v3 + .ctx.big,.ctx.big+.v3{margin-top:4px}
 .pop .ps .pf{margin-top:8px;font-size:1.15em;color:var(--ink)}
@@ -328,6 +334,23 @@ button.opt:disabled{cursor:default}
 .rrow .sz input{width:5em;font-size:1em}
 #call.nm .cn{font-size:clamp(56px,9vw,150px);line-height:1.1;max-width:92vw;text-align:center;padding:0 2vw}
 #call .cm{font:800 clamp(22px,2.4vw,40px) var(--display);color:#FDE68A;min-height:1.2em;margin-bottom:6px}
+
+/* ---- làm bài ở nhà ---- */
+.login{max-width:560px;margin:4vh auto;background:#fff;border-radius:22px;padding:26px 28px;box-shadow:0 10px 40px rgba(30,20,80,.15);border-top:8px solid #4B2A8C}
+.login h1{font:800 clamp(26px,3vw,38px) var(--display);margin:0 0 4px;color:#4B2A8C}
+.login p{margin:4px 0 14px;color:var(--muted)}
+.login label{display:block;font-weight:700;margin:12px 0 4px}
+.login input{width:100%;box-sizing:border-box;font:inherit;font-size:1.1em;padding:10px 12px;border:2px solid #D6D3E8;border-radius:12px}
+.login input:focus{outline:none;border-color:#4B2A8C}
+.login .err{color:#B91C1C;font-weight:700;min-height:1.3em;margin:8px 0 0}
+.login button{margin-top:14px;width:100%;font-size:1.15em}
+.svcard{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:#F5F3FF;border:2px solid #DDD6FE;border-radius:16px;padding:12px 16px;margin:12px 0}
+.svcard b{font-size:1.15em;color:#4B2A8C}.svcard .sp{flex:1}
+.svcard + .hint{max-width:62ch}
+.gsbox{width:100%;box-sizing:border-box;border-radius:14px;padding:12px 16px;font-weight:600;border:2px solid #D6D3E8;background:#FAFAFF}
+.gsbox.ok{border-color:#86EFAC;background:#F0FDF4;color:#166534}.gsbox.wait{border-color:#FDE68A;background:#FFFBEB;color:#92400E}.gsbox.bad{border-color:#FCA5A5;background:#FEF2F2;color:#991B1B}
+.gsbox code{font-size:1.2em;letter-spacing:.08em;background:#fff;padding:2px 8px;border-radius:8px;border:1px solid currentColor}
+.gsbox .btn{margin-left:8px}
 </style>
 <div class="app">
   <header class="top">
@@ -605,6 +628,12 @@ const PN = [
 
 /* ================= ĐIỀU KHIỂN GAME · 2 chế độ: Nhiều đội / Cả lớp ================= */
 const KEY='ktpu-c2-dau-truong-v2';
+/* ---- Chế độ LÀM BÀI Ở NHÀ: link ?nha=<mã triển khai Apps Script>[&bai=<tên đợt>] ---- */
+const GAME='KTPU-C2 Đấu trường Động học';
+const GS_URL='https://script.google.com/macros/s/AKfycbw9J5bx5x6UhP26abUrmKzSHryfJ8UZ1-g-JCUsqzXwZHKlVYzWUcN-g2oVEu8jRslsLw/exec';                       /* (tùy chọn) dán URL …/exec vào đây thì link chỉ cần ?nha=1 */
+const QP=new URLSearchParams(location.search),NHA_ID=(QP.get('nha')||'').trim(),NHA=!!NHA_ID,BAI=(QP.get('bai')||'').trim();
+const GS=/^https:\/\/script\.google(usercontent)?\.com\//.test(NHA_ID)?NHA_ID:NHA_ID.length>20?`https://script.google.com/macros/s/${NHA_ID}/exec`:GS_URL;
+const SKEY=NHA?KEY+'-nha':KEY;
 const LET=['A','B','C','D','E','F','G','H'];
 const OC=['var(--oA)','var(--oB)','var(--oC)','var(--oD)'];
 const TCOL=['var(--t0)','var(--t1)','var(--t2)','var(--t3)'];
@@ -632,9 +661,10 @@ function freshRound(r){return {r1:{i:0,q:{}},r3:{i:0,q:{}},r4:{i:0,q:{}},r5:{i:0
 const fst=()=>({ok:0,bad:0,pts:0,run:0,best:0});
 function fresh(){const s={mode:'lop',teams:[0,1,2,3].map(i=>({name:'Đội '+(i+1)})),size:40,roster:[],called:[],view:'home',kq:'r1',mute:false,sc:{},st:{}};
   RK.forEach(r=>{s[r]=freshRound(r);s.sc[r]=[0,0,0,0];s.st[r]=fst();});return s;}
-let S;try{S=JSON.parse(localStorage.getItem(KEY))||fresh();}catch(_){S=fresh();}
+let S;try{S=JSON.parse(localStorage.getItem(SKEY))||fresh();}catch(_){S=fresh();}
 if(!S.pn||!S.st||!S.sc)S=fresh();
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(_){}}
+if(NHA)S.mode='lop';
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(S));}catch(_){}}
 const HIST=[];function snap(){HIST.push(JSON.stringify(S));if(HIST.length>60)HIST.shift();}
 function undo(){if(!HIST.length)return;S=JSON.parse(HIST.pop());save();render();}
 const CR=()=>RK.includes(S.view)?S.view:(S.view==='kq'?S.kq:null);
@@ -709,7 +739,7 @@ function tReset(sec){tPause();TM.left=TM.total=sec;paintTimer();}
 function paintTimer(){const el=$('#tm');if(!el)return;const m=Math.floor(TM.left/60),s=TM.left%60;el.textContent=m+':'+String(s).padStart(2,'0');
   el.classList.toggle('low',TM.left<=5&&TM.total>0);const b=$('#tmb');if(b)b.textContent=TM.run?'⏸ Tạm dừng':'⏱ Bắt đầu giờ';}
 const timerBtns=()=>`<span class="timer" id="tm"></span><button class="btn" id="tmb"></button>`;
-const callBtn=()=>LOP()?`<button class="btn call" id="callsv" title="Phím G">🎲 Gọi sinh viên</button>`:'';
+const callBtn=()=>LOP()&&!NHA?`<button class="btn call" id="callsv" title="Phím G">🎲 Gọi sinh viên</button>`:'';
 const undoBtn=()=>`<button class="btn" id="undo" ${HIST.length?'':'disabled'}>↶ Hoàn tác</button>`;
 
 /* ---------- khung chung ---------- */
@@ -725,9 +755,9 @@ function renderBoard(bump=[]){const r=CR(),b=$('#board');
    <span class="nm">${esc(t.name)}</span><span class="sc">${r?S.sc[r][i]:tot(i)}</span>
    <span class="sub">${r?`Tổng ${tot(i)}`:'Tổng điểm'}</span>
    ${r?`<span class="adj"><button data-adj="${i}:-10" aria-label="Trừ 10 điểm ${esc(t.name)}">−10</button><button data-adj="${i}:10" aria-label="Cộng 10 điểm ${esc(t.name)}">+10</button></span>`:''}</div>`).join('')}</div>`;}
-function go(v){if(!VIEWS.includes(v))v='home';S.view=v;save();tReset(TDEF[CR()]||0);
+function go(v){if(!VIEWS.includes(v))v='home';S.view=v;if(NHA&&RK.includes(v)){S.t0??={};S.t0[v]??=Date.now();}save();tReset(TDEF[CR()]||0);
   if(location.hash.slice(1)!==v){try{history.replaceState(null,'','#'+v);}catch(_){location.hash=v;}}render();if(v==='kq'||v==='end')celebrate();}
-function render(){renderTabs();renderBoard();const st=$('#stage'),r=CR();
+function render(){if(NHA&&!S.sv)return vLogin();renderTabs();renderBoard();const st=$('#stage'),r=CR();
   st.style.setProperty('--rc',r?RD[r].rc:'#4B2A8C');st.style.setProperty('--rc2',r?RD[r].rc2:'#E0457B');
   ({home:vHome,r1:()=>vMC('r1'),r3:()=>vMC('r3'),r4:()=>vMC('r4'),r2:vMem,pn:vPN,r5:vFinal,kq:vKQ,end:vEnd}[S.view]||vHome)();
   tset(st).then(fit);fit();paintTimer();}
@@ -886,9 +916,11 @@ function vFinal(){const i=Math.min(S.r5.i,R5.length-1),it=R5[i],q=q5(i),lop=LOP(
      ${busy?`<div class="why"><b class="h">Sửa dòng ${it.bad+1}:</b> ${it.fix}${vBtns(VID.r5[i])}</div>`:''}`;}
   const ban=lop?'':q.res==='ok'?`<div class="banner ok">🏆 ${esc(S.teams[q.last].name)} ${q.lastPts>0?'+':''}${q.lastPts} điểm.</div>`
     :q.res==='bad'?`<div class="banner bad">${esc(S.teams[q.last].name)} ${q.lastPts} điểm. Đội khác có thể giành quyền trả lời (+${RD.r5.pts/2|0}).</div>`:'';
-  const rule=lop?`${esc(it.title)}. Đúng ngay: +${RD.r5.pts}; đúng sau lượt sai: +${half('r5')}.`:`${esc(it.title)}. Đúng: +${RD.r5.pts}; sai: −10. Ngôi sao hy vọng (mỗi đội một lần): đúng ×2, sai −${RD.r5.pts}. Giành quyền sau khi đội khác sai: +${half('r5')}.`;
+  const rule=lop?`Đúng ngay: +${RD.r5.pts}; đúng sau lượt sai: +${half('r5')}.`:`Đúng: +${RD.r5.pts}; sai: −10. Ngôi sao hy vọng (mỗi đội một lần): đúng ×2, sai −${RD.r5.pts}. Giành quyền sau khi đội khác sai: +${half('r5')}.`;
   const done=Object.values(S.r5.q).filter(x=>x.res==='ok'||x.rev).length;
-  $('#stage').innerHTML=head('r5',`Câu ${i+1}/${R5.length}`,done,R5.length,rule)+(lop?'':`<div class="buzz"><span class="hint">Ngôi sao:</span>${starRow}</div><div class="buzz"><span class="hint">Đội trả lời:</span>${buzzRow}</div>`)+ban+body;
+  const [tk,...tp]=it.title.split(':'),tq=esc((x=>x.charAt(0).toUpperCase()+x.slice(1))(tp.join(':').trim())).replace(/C_([A-Za-z]+o)/g,'<i>C</i><sub>$1</sub>');
+  const q6=`<div class="qcard q6"><span class="q6t">${it.type==='order'?'🔢 '+esc(tk):'🔍 '+esc(tk)}</span><div class="q6q">${tq}<small>${it.type==='order'?`Sắp ${it.steps.length} bước dưới đây theo đúng trình tự giải.`:`Trong ${it.lines.length} dòng lời giải dưới đây, dòng nào sai đầu tiên?`}</small></div></div>`;
+  $('#stage').innerHTML=head('r5',`Câu ${i+1}/${R5.length}`,done,R5.length,rule)+(lop?'':`<div class="buzz"><span class="hint">Ngôi sao:</span>${starRow}</div><div class="buzz"><span class="hint">Đội trả lời:</span>${buzzRow}</div>`)+q6+ban+body;
   $('#ctrl').innerHTML=`${timerBtns()}${callBtn()}<span class="sp"></span>
    <button class="btn" data-nav="-1" ${i===0?'disabled':''}>‹ Câu trước</button><button class="btn" id="clr" ${busy||!q.picks.length?'disabled':''}>Xóa thứ tự đang bấm</button>
    <button class="btn gold" id="show5" ${busy?'disabled':''}>Xem đáp án</button>
@@ -952,7 +984,7 @@ document.addEventListener('click',e=>{const call=e.target.closest('#call');if(ca
   if(b.id==='mute'){S.mute=!S.mute;save();b.textContent=S.mute?'🔇 Bật âm thanh':'🔊 Tắt âm thanh';return;}
   if(b.id==='resetAsk'){const box=$('#rst')||$('#stage');box.insertAdjacentHTML('afterbegin',`<div class="confirm" id="cf">Xóa toàn bộ điểm và tiến độ của cả 6 vòng? <button class="btn pri" id="resetYes">Xóa và chơi lại</button><button class="btn" id="resetNo">Giữ nguyên</button></div>`);return;}
   if(b.id==='resetNo'){$('#cf')?.remove();return;}
-  if(b.id==='resetYes'){const keep={teams:S.teams,mode:S.mode,size:S.size,roster:S.roster,mute:S.mute};S=fresh();Object.assign(S,keep);HIST.length=0;save();go('home');return;}
+  if(b.id==='resetYes'){const keep={teams:S.teams,mode:S.mode,size:S.size,roster:S.roster,mute:S.mute,sv:S.sv,sent:S.sent,gq:S.gq};S=fresh();Object.assign(S,keep);HIST.length=0;save();go('home');return;}
   if(b.id==='replay'){snap();const r=S.kq;S[r]=freshRound(r);S.st[r]=fst();S.sc[r]=[0,0,0,0];if(r==='r5')S.r5.starUsed=[false,false,false,false];save();go(r);return;}
   if(b.id==='endr'){S.kq=S.view;return go('kq');}
   if(d.ans!==undefined)return answer(+d.ans);
@@ -988,11 +1020,72 @@ document.addEventListener('keydown',e=>{if(e.target.closest('input'))return;cons
   else if(k==='arrowleft')document.querySelector('[data-nav="-1"]')?.click();
   else if(k==='enter'&&['r1','r3','r4'].includes(S.view)){e.preventDefault();reveal();}
   else if(LOP()&&['a','b','c','d'].includes(k)&&['r1','r3','r4'].includes(S.view))answer(k.charCodeAt(0)-97);
-  else if(k==='g'&&LOP())callSV();
+  else if(k==='g'&&LOP()&&!NHA)callSV();
   else if(k==='t')$('#tmb')?.click();});
+
+/* ================= LÀM BÀI Ở NHÀ → Google Sheet ================= */
+const hash=t=>{let h=5381;for(const c of t)h=(h*33+c.codePointAt(0))>>>0;return h.toString(36).toUpperCase().padStart(7,'0').slice(-6);};
+function vLogin(){$('#tabs').innerHTML='';$('#board').innerHTML='';$('#ctrl').innerHTML='';
+  $('#stage').innerHTML=`<form class="login" id="svf" autocomplete="on"><h1>Đấu trường Động học</h1>
+   <p>Bài tập về nhà${BAI?` · <b>${esc(BAI)}</b>`:''}. Nhập đúng thông tin; kết quả từng vòng sẽ tự gửi cho giáo viên để tính điểm chuyên cần.</p>
+   <label for="sv1">Mã số sinh viên</label><input id="sv1" name="mssv" inputmode="numeric" required maxlength="12" placeholder="2001230001">
+   <label for="sv2">Họ và tên</label><input id="sv2" name="name" required maxlength="60" placeholder="Nguyễn Văn An">
+   <label for="sv3">Lớp</label><input id="sv3" name="lop" required maxlength="20" placeholder="14DHHH01">
+   <p class="err" id="sverr" role="alert"></p><button class="btn pri" type="submit">Vào làm bài ▶</button></form>`;}
+document.addEventListener('submit',e=>{if(e.target.id!=='svf')return;e.preventDefault();
+  const m=$('#sv1').value.replace(/\s/g,''),t=$('#sv2').value.trim().replace(/\s+/g,' '),l=$('#sv3').value.trim().toUpperCase().replace(/\s+/g,'');
+  if(!/^\d{8,12}$/.test(m))return $('#sverr').textContent='Mã số sinh viên gồm 8–12 chữ số.';
+  if(t.split(' ').length<2)return $('#sverr').textContent='Nhập đầy đủ họ và tên.';
+  if(!l)return $('#sverr').textContent='Nhập tên lớp.';
+  S.sv={mssv:m,ten:t,lop:l};save();go('home');});
+function payload(r){const st=S.st[r],d=RD[r],t0=(S.t0||{})[r];
+  const p={game:GAME,bai:BAI,mssv:S.sv.mssv,ten:S.sv.ten,lop:S.sv.lop,vn:d.n,vong:d.name,tong:cntQ(r),xong:doneCnt(r),dung:st.ok,sai:st.bad,tile:acc(st),diem:st.pts,phut:t0?Math.round((Date.now()-t0)/6000)/10:''};
+  p.ma=hash([p.mssv,p.vn,p.xong,p.dung,p.sai,p.diem,BAI].join('|'));return p;}
+function sendRound(r){if(!NHA||!S.sv)return;const p=payload(r);if(!p.dung&&!p.sai&&!p.xong)return;
+  S.sent??={};S.gq??=[];if(S.sent[r]?.ma===p.ma)return;
+  S.gq=S.gq.filter(x=>x.vn!==p.vn);S.gq.push(p);save();flush();}
+let FL=false;
+async function flush(){if(!GS||FL||!(S.gq||[]).length)return paintGS();FL=true;paintGS();
+  for(const p of [...S.gq]){try{await fetch(GS,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(p)});
+      S.gq=S.gq.filter(x=>x!==p&&!(x.vn===p.vn&&x.ma===p.ma));const r=RK[p.vn-1];S.sent[r]={ma:p.ma,at:new Date().toLocaleString('vi-VN')};save();}
+    catch(_){break;}}
+  FL=false;paintGS();}
+function gsMsg(r){const p=S.sv&&payload(r),s=(S.sent||{})[r],w=(S.gq||[]).find(x=>x.vn===RD[r].n);
+  if(!p||(!p.dung&&!p.sai&&!p.xong))return ['','Vòng này chưa có câu trả lời nào nên chưa gửi kết quả.'];
+  if(!GS)return ['wait',`Chụp màn hình gửi giáo viên · mã xác nhận <code>${p.ma}</code> (link chưa gắn Google Sheet).`];
+  if(s&&s.ma===p.ma)return ['ok',`✔ Đã gửi kết quả cho giáo viên lúc ${s.at} · mã xác nhận <code>${s.ma}</code>`];
+  if(w)return FL?['wait','⏳ Đang gửi kết quả…']:['bad',`Chưa gửi được (mất mạng?). <button class="btn" id="gsre">↻ Gửi lại</button>`];
+  return ['wait','⏳ Đang gửi kết quả…'];}
+function paintGS(){const b=$('#gs');if(!b)return;const r=b.dataset.r;
+  if(r){const [c,m]=gsMsg(r);b.className='gsbox '+c;b.innerHTML=m;return;}
+  b.innerHTML='<b>Kết quả đã gửi cho giáo viên</b><br>'+RK.map(x=>{const [c]=gsMsg(x);return `Vòng ${RD[x].n}: ${c==='ok'?'✔ đã gửi':c==='bad'?'✘ chưa gửi được':S.st[x].ok+S.st[x].bad?'⏳ đang gửi':'— chưa làm'}`;}).join(' · ')+
+   ((S.gq||[]).length&&!FL?` <button class="btn" id="gsre">↻ Gửi lại</button>`:'');b.className='gsbox';}
+if(NHA){
+  const _kq=vKQ;vKQ=function(){_kq();$('.kq').insertAdjacentHTML('beforeend',`<div class="gsbox" id="gs" data-r="${S.kq}"></div>`);sendRound(S.kq);paintGS();};
+  const _end=vEnd;vEnd=function(){_end();$('#stage .rhead').insertAdjacentHTML('afterend',`<div class="gsbox" id="gs"></div>`);RK.forEach(sendRound);paintGS();};
+  const _home=vHome;vHome=function(){_home();const h=$('.hero');h.querySelectorAll('.modes,.setup1,.setup,.cards4').forEach(x=>x.remove());
+    h.insertAdjacentHTML('beforeend',`<div class="svcard"><span>👤 <b>${esc(S.sv.ten)}</b> · ${esc(S.sv.mssv)} · Lớp ${esc(S.sv.lop)}${BAI?` · ${esc(BAI)}`:''}</span><span class="sp"></span><button class="btn" id="svchg">Đổi sinh viên</button></div>
+     <p class="hint">Làm lần lượt 6 vòng. Làm hết câu của một vòng rồi bấm <b>Kết thúc vòng 🏁</b>: kết quả vòng đó tự gửi cho giáo viên. Được làm lại (<b>↻ Chơi lại vòng này</b>) để cải thiện; giáo viên lấy kết quả tốt nhất. Bấm <b>Xem đáp án</b> thì câu đó không được tính đúng.</p>`);};
+  document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.id==='gsre'){flush();return;}
+    if(b.id==='svchg'){if(!confirm('Đổi sinh viên sẽ xóa toàn bộ tiến độ làm bài trên máy này. Tiếp tục?'))return;S=fresh();S.mode='lop';save();render();}},true);
+  addEventListener('online',flush);
+  /* đổi lời hướng dẫn dành cho giáo viên thành lời cho sinh viên tự làm */
+  const TX=[['Gọi sinh viên trả lời, bấm vào phương án bạn ấy chọn.','Bấm vào phương án bạn chọn.'],
+    ['Gọi sinh viên ghép một thẻ cam với một thẻ xanh (ví dụ “3 – E”) và giải thích.','Ghép một thẻ cam với một thẻ xanh.'],
+    ['Gọi sinh viên: chọn một thẻ ở giữa, rồi bấm vào nhóm bạn ấy nói.','Chọn một thẻ ở giữa, rồi bấm vào nhóm đúng.'],
+    ['Gọi sinh viên đọc thứ tự các chữ cái; giáo viên bấm lần lượt theo lời bạn ấy.','Bấm lần lượt các bước theo đúng thứ tự.'],
+    ['Gọi sinh viên chỉ ra dòng sai đầu tiên; giáo viên bấm vào dòng đó, sau đó bạn ấy nêu cách sửa.','Bấm vào dòng sai đầu tiên, sau đó tự nêu cách sửa.'],
+    ['Mời bạn khác trả lời','Thử lại nhé'],['Mời bạn khác thử','Thử lại nhé'],['Điểm cả lớp','Tổng điểm của bạn'],['điểm của lớp','điểm của bạn'],
+    ['Cả lớp nắm rất chắc phần này!','Bạn nắm rất chắc phần này!'],['Phần này cần giảng lại.','Bạn nên xem lại video của phần này.'],
+    ['Tổng kết cả lớp','Kết quả của bạn'],['Câu nên giảng lại','Câu nên xem lại'],['chưa ai đúng','chưa đúng']];
+  const fixT=root=>{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){let v=n.nodeValue,o=v;for(const [a,b] of TX)if(v.includes(a))v=v.split(a).join(b);if(v!==o)n.nodeValue=v;}};
+  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(x=>x.nodeType===1?fixT(x):x.nodeType===3&&fixT(x.parentNode||document.body)))).observe(document.body,{childList:true,subtree:true});
+  fixT(document.body);
+}
 addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(VIEWS.includes(v)&&v!==S.view)go(v);});
 {const h=location.hash.slice(1);if(VIEWS.includes(h))S.view=h;}
-tReset(TDEF[CR()]||0);render();
+tReset(TDEF[CR()]||0);render();if(NHA)flush();
 
 </script>
 
