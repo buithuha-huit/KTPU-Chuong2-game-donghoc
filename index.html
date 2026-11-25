@@ -415,11 +415,14 @@ button.opt:disabled{cursor:default}
 .tabs .mi{font-weight:inherit}
 @media (min-width:701px){.tabs>button .mi{margin-right:.3em}}
 @media (max-width:700px){
+ html,body{overflow-x:clip}
+ /* bỏ khoảng trống safe-area đầu/chân trên điện thoại */
+ :root{padding-top:0!important;padding-bottom:0!important}
  body{padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
- .app{padding-block:0 8px;gap:8px}
+ .app{padding-block:0 4px;gap:8px;min-height:0}
  /* thanh trên: 1 dòng tên + điểm, 1 dải menu cuộn ngang; dính đầu trang */
  .top{position:sticky;top:0;z-index:60;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;
-   margin:0 -8px;border-radius:0 0 16px 16px;padding:calc(6px + env(safe-area-inset-top,0px)) 10px 6px}
+   margin:0 -8px;border-radius:0 0 16px 16px;padding:6px 10px}
  .logo{font-size:14px;line-height:1.15;min-width:0;white-space:normal}
  .logo small{display:none}
  #board{grid-column:2;grid-row:1;margin-left:0;width:auto}
@@ -469,7 +472,7 @@ button.opt:disabled{cursor:default}
  .card .f{font-size:13px}.card .b{font-size:24px}
  .bin .bh{font-size:15px}.placed,.itm{font-size:14.5px}
  /* thanh điều khiển dính đáy */
- .ctrl{position:sticky;bottom:0;z-index:50;gap:6px;padding:6px;border-radius:14px;padding-bottom:max(6px,env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px #1B2A6B1f}
+ .ctrl{position:sticky;bottom:0;z-index:50;gap:6px;padding:6px;border-radius:14px;box-shadow:0 -4px 16px #1B2A6B1f}
  .ctrl .btn{font-size:14px;padding:7px 11px;min-height:40px;border-radius:11px}
  .ctrl .hint{display:none}
  .timer{font-size:20px;min-width:2.6em}
@@ -1625,4 +1628,5 @@ tReset(TDEF[CR()]||0);render();if(NHA)flush();
    if(Math.abs(dx)>60&&Math.abs(dx)>1.6*Math.abs(dy)){document.querySelector(`[data-fcn="${dx<0?1:-1}"]`)?.click();}},{passive:true});
  document.addEventListener('click',e=>{const c=e.target.closest('.fcard.isf');if(!c||e.target.closest('button,a,input'))return;
    document.querySelector('[data-fcflip]')?.click();});
-})();</script></body></html>
+})();</script>
+</body></html>
