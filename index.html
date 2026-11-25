@@ -335,6 +335,65 @@ button.opt:disabled{cursor:default}
 #call.nm .cn{font-size:clamp(56px,9vw,150px);line-height:1.1;max-width:92vw;text-align:center;padding:0 2vw}
 #call .cm{font:800 clamp(22px,2.4vw,40px) var(--display);color:#FDE68A;min-height:1.2em;margin-bottom:6px}
 
+/* ---- thẻ ghi nhớ ---- */
+.fcg{display:flex;flex-wrap:wrap;gap:8px}
+.fchipb{border:2px solid var(--line);background:#fff;border-radius:999px;padding:5px 14px;font-weight:800}
+.fchipb small{opacity:.6}.fchipb[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.fcard{flex:1;border-radius:22px;border:3px solid color-mix(in srgb,var(--gc) 45%,#fff);background:linear-gradient(150deg,color-mix(in srgb,var(--gc) 7%,#fff),#fff 60%);padding:clamp(12px,1.6vw,24px);animation:fcin .5s cubic-bezier(.2,1,.3,1);box-shadow:0 10px 30px color-mix(in srgb,var(--gc) 18%,transparent)}
+@keyframes fcin{from{opacity:0;transform:perspective(1400px) rotateY(70deg)}}
+.fcf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;align-items:center;min-height:100%}
+.fchip{display:inline-block;background:var(--gc);color:#fff;font:800 clamp(14px,1vw,19px) var(--display);border-radius:999px;padding:3px 14px}
+.fcq{font:700 clamp(22px,2vw,38px)/1.45 var(--body);color:var(--ink);margin:12px 0}
+.fcq.sm{font-size:clamp(15px,1.05vw,20px);font-weight:600;color:var(--ink2);margin:0 0 8px;padding-bottom:8px;border-bottom:2px dashed var(--line)}
+.fcfig{background:#FBFCFF;border:2px solid #DCE3EE;border-radius:18px;padding:6px}
+.fsv{width:100%;height:auto;display:block;max-height:54vh}
+.nolab .lb{display:none}
+.fcb{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px;align-items:start}
+.fcb.wide{grid-template-columns:minmax(0,1fr)}
+.fcx ul{margin:0 0 10px;padding-left:1.2em;display:grid;gap:8px;font-size:clamp(17px,1.25vw,25px);line-height:1.45}
+.fcx li{animation:slidein .5s ease backwards}
+.fq{background:#fff;border:2px solid var(--gc);border-left:10px solid var(--gc);border-radius:14px;padding:10px 16px;font-size:clamp(18px,1.4vw,28px);overflow-x:auto;margin-bottom:10px}
+.fsteps{display:grid;gap:8px}
+.fst{display:none;background:#fff;border:2px solid #DDD6FE;border-left:10px solid #7C3AED;border-radius:14px;padding:8px 14px;font-size:clamp(18px,1.35vw,27px);overflow-x:auto}
+.fst.on{display:block;animation:slidein .5s ease}
+.fsh{display:block;font:800 .7em var(--display);color:#7C3AED;text-transform:uppercase;letter-spacing:.04em}
+.ftrap{margin-top:10px;background:var(--bad-bg);border:2px solid #FDA4AF;border-radius:14px;padding:8px 14px;font-size:clamp(16px,1.15vw,23px);animation:slidein .5s ease}
+.ftrap b{color:var(--bad)}.ftrap.wait{display:none}
+.ftab{font-size:clamp(16px,1.2vw,24px)}.ftab th{background:color-mix(in srgb,var(--gc) 14%,#fff)}.ftab td{text-align:left!important}
+.fdots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.fdot{width:2.2em;height:2.2em;border-radius:50%;border:2px solid color-mix(in srgb,var(--gc) 50%,#fff);background:#fff;font-weight:800;font-size:.85em;color:var(--gc)}
+.fdot.on{background:var(--gc);color:#fff;transform:scale(1.15)}.fdot.ok{box-shadow:0 0 0 3px var(--ok)}.fdot.no{box-shadow:0 0 0 3px var(--bad)}
+@media (max-width:900px){.fcf,.fcb{grid-template-columns:minmax(0,1fr)}}
+
+/* ---- thẻ ghi nhớ: chữ ngắn, ý chính nổi bật, hiện lần lượt ---- */
+.fcx ul{gap:6px;font-size:clamp(17px,1.25vw,25px)}
+.fcx li b,.fkey b{background:linear-gradient(transparent 58%,color-mix(in srgb,var(--gc) 30%,#FDE68A) 58%);padding:0 2px;border-radius:3px}
+.fkey{font:800 clamp(20px,1.7vw,32px)/1.3 var(--display);color:var(--brand);background:linear-gradient(120deg,color-mix(in srgb,var(--gc) 14%,#fff),#FFFBEB);border:3px solid var(--gc);border-radius:16px;padding:10px 16px;margin:0 0 10px;box-shadow:0 6px 0 color-mix(in srgb,var(--gc) 35%,#fff);animation:fkey .6s cubic-bezier(.2,1.5,.4,1) .15s backwards,fglow 2.4s ease-in-out 1s 2}
+.fkey small{font-size:.6em;color:var(--muted)}
+@keyframes fkey{from{opacity:0;transform:scale(.6) rotate(-2deg)}}
+@keyframes fglow{50%{box-shadow:0 6px 0 color-mix(in srgb,var(--gc) 35%,#fff),0 0 0 8px color-mix(in srgb,var(--gc) 18%,transparent)}}
+.fax{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}
+.fax span{display:flex;flex-direction:column;gap:2px;background:#fff;border:2px solid color-mix(in srgb,var(--gc) 40%,#fff);border-left:8px solid var(--gc);border-radius:12px;padding:6px 12px;font-size:clamp(17px,1.3vw,26px);font-weight:700;animation:fpop .45s cubic-bezier(.2,1.5,.4,1) backwards}
+.fax small{font:800 .62em var(--display);color:var(--gc);text-transform:uppercase;letter-spacing:.04em}
+@keyframes fpop{from{opacity:0;transform:translateY(12px) scale(.8)}}
+.fcb .fq{animation:fpop .45s ease backwards}
+.fcx li{animation:slidein .5s ease backwards}
+@media (prefers-reduced-motion:reduce){.fkey,.fax span,.fcb .fq,.fcx li{animation:none}}
+.fax .fv{font-style:normal;display:block}
+/* ---- thanh menu: Bắt đầu, Hướng dẫn, Thẻ ghi nhớ, Tổng kết khác hẳn các vòng chơi ---- */
+.tabs button[data-go="home"],.tabs button[data-go="hd"],.tabs button[data-go="the"],.tabs button[data-go="end"]{border-radius:999px;padding:6px 14px;font-weight:800;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
+.tabs button[data-go="home"]{background:#FACC15;color:#1B2A6B}
+.tabs button[data-go="hd"]{background:linear-gradient(120deg,#F59E0B,#F26B3A);color:#fff}
+.tabs button[data-go="the"]{background:linear-gradient(120deg,#0EA5A0,#22C55E);color:#fff}
+.tabs button[data-go="end"]{background:rgba(255,255,255,.95);color:#9D2C7A}
+.tabs button[data-go="home"][aria-current],.tabs button[data-go="hd"][aria-current],.tabs button[data-go="the"][aria-current],.tabs button[data-go="end"][aria-current]{box-shadow:0 0 0 3px #fff,0 0 0 6px #FACC15;transform:translateY(-1px)}
+.tabs button[data-go="r1"]{margin-left:18px;position:relative}
+.tabs button[data-go="r1"]::before{content:'🎮 Vòng chơi';position:absolute;left:-14px;top:-11px;font:800 .62em var(--display);color:#FDE68A;white-space:nowrap;transform:translateX(0)}
+.tabs button[data-go="r1"]::after{content:'';position:absolute;left:-11px;top:4px;bottom:4px;width:3px;border-radius:3px;background:rgba(255,255,255,.55)}
+.tabs button[data-go="end"]{margin-left:12px}
+.tabs{padding-top:8px}
+.fcf:not(:has(.fcfig)){grid-template-columns:minmax(0,1fr)}
+.btn.au{background:linear-gradient(120deg,#0EA5A0,#2F7DE1);border-color:transparent;color:#fff;animation:fpop .45s ease}
 /* ---- làm bài ở nhà ---- */
 .login{max-width:560px;margin:4vh auto;background:#fff;border-radius:22px;padding:26px 28px;box-shadow:0 10px 40px rgba(30,20,80,.15);border-top:8px solid #4B2A8C}
 .login h1{font:800 clamp(26px,3vw,38px) var(--display);margin:0 0 4px;color:#4B2A8C}
@@ -351,6 +410,102 @@ button.opt:disabled{cursor:default}
 .gsbox.ok{border-color:#86EFAC;background:#F0FDF4;color:#166534}.gsbox.wait{border-color:#FDE68A;background:#FFFBEB;color:#92400E}.gsbox.bad{border-color:#FCA5A5;background:#FEF2F2;color:#991B1B}
 .gsbox code{font-size:1.2em;letter-spacing:.08em;background:#fff;padding:2px 8px;border-radius:8px;border:1px solid currentColor}
 .gsbox .btn{margin-left:8px}
+/* MOB-KTPU v2 */
+.mtrack{display:contents}.mtrack .mlab{display:none}
+.tabs .mi{font-weight:inherit}
+@media (min-width:701px){.tabs>button .mi{margin-right:.3em}}
+@media (max-width:700px){
+ body{padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+ .app{padding-block:0 8px;gap:8px}
+ /* thanh trên: 1 dòng tên + điểm, 1 dải menu cuộn ngang; dính đầu trang */
+ .top{position:sticky;top:0;z-index:60;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;
+   margin:0 -8px;border-radius:0 0 16px 16px;padding:calc(6px + env(safe-area-inset-top,0px)) 10px 6px}
+ .logo{font-size:14px;line-height:1.15;min-width:0;white-space:normal}
+ .logo small{display:none}
+ #board{grid-column:2;grid-row:1;margin-left:0;width:auto}
+ .top:has(.board4) #board{grid-column:1/-1;grid-row:3;width:100%}
+ /* menu: Home, Thẻ ghi nhớ (Hướng dẫn) là ô cố định; các vòng + Tổng kết nằm trong rãnh tối cuộn ngang */
+ .tabs{grid-column:1/-1;grid-row:2;flex-wrap:nowrap;align-items:stretch;gap:6px;padding:2px 0 0!important}
+ .tabs>button{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+   min-width:52px;min-height:46px;padding:3px 7px!important;border-radius:12px!important;line-height:1.05;font-size:10.5px!important;white-space:nowrap}
+ .tabs>button .mi{font-size:18px;line-height:1}
+ .tabs>button[aria-current]{box-shadow:0 0 0 2px #fff,0 0 0 4px #FACC15!important;transform:none!important}
+ .mtrack .mlab{display:block}
+ .mtrack{flex:1;min-width:0;display:flex;align-items:center;gap:5px;overflow-x:auto;overscroll-behavior-x:contain;
+   background:rgba(8,10,40,.38);box-shadow:inset 0 2px 6px rgba(0,0,0,.35);border-radius:14px;padding:4px 5px;
+   scrollbar-width:none;-webkit-overflow-scrolling:touch}
+ .mtrack::-webkit-scrollbar{display:none}
+ .mtrack .mlab{flex:none;font:800 10px/1.1 var(--display);color:#FDE68A;text-align:center;padding:0 2px}
+ .mtrack button{flex:none;font-size:13px;padding:5px 10px!important;min-height:36px;border-radius:999px!important;white-space:nowrap;margin:0!important}
+ .mtrack button::before,.mtrack button::after{display:none!important}
+ .mtrack button i{width:1.5em;height:1.5em}
+ .mtrack button[aria-current="page"]{box-shadow:0 0 0 2px var(--rc)}
+ .mtrack button[data-go="end"][aria-current]{box-shadow:0 0 0 2px #fff,0 0 0 4px #FACC15;transform:none}
+ /* bảng điểm thu gọn */
+ .clsb{padding:3px 9px;gap:6px;border-radius:12px;font-size:12px}
+ .cl-l{display:none}
+ .cl-s{font-size:22px}
+ .clsb .okc,.clsb .bdc,.clsb .run{font-size:12px;padding:1px 6px;border-radius:8px}
+ .board4{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;min-width:0}
+ .team{padding:3px 6px;border-left-width:5px;border-radius:10px;gap:0 4px}
+ .team .nm{font-size:11px}.team .sc{font-size:20px}.team .sub{display:none}
+ .team .adj button{padding:0 5px;font-size:10px}
+ /* sân khấu & đầu vòng */
+ .stage{border-radius:16px;padding:12px;border-top-width:6px;gap:10px}
+ .rhead{gap:4px 8px}
+ .rnum{font-size:12px;padding:2px 9px;border-radius:9px}
+ .rhead h1{font-size:19px;line-height:1.25}
+ .qcount{font-size:13px}
+ .prog{width:64px;height:8px}
+ .rhead .rule{font-size:13px;line-height:1.4;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;cursor:pointer}
+ .rhead .rule.mob-open{display:block;-webkit-line-clamp:unset}
+ .q6{font-size:15px}
+ .qbox{font-size:18px}.qbox.sm{font-size:16.5px}
+ .opts{gap:8px}
+ .opt{font-size:16.5px;padding:9px 12px;gap:10px;min-height:52px;border-radius:14px}
+ .opt .lt{width:1.9em;height:1.9em}
+ .why{font-size:15px;padding:8px 12px}
+ .dt{font-size:15px}.dt th,.dt td{padding:5px 10px}
+ .card .f{font-size:13px}.card .b{font-size:24px}
+ .bin .bh{font-size:15px}.placed,.itm{font-size:14.5px}
+ /* thanh điều khiển dính đáy */
+ .ctrl{position:sticky;bottom:0;z-index:50;gap:6px;padding:6px;border-radius:14px;padding-bottom:max(6px,env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px #1B2A6B1f}
+ .ctrl .btn{font-size:14px;padding:7px 11px;min-height:40px;border-radius:11px}
+ .ctrl .hint{display:none}
+ .timer{font-size:20px;min-width:2.6em}
+ /* thẻ ghi nhớ */
+ .fcg{flex-wrap:nowrap;overflow-x:auto;gap:6px;scrollbar-width:none;padding-bottom:2px}
+ .fcg::-webkit-scrollbar{display:none}
+ .fchipb{flex:none;font-size:13px;padding:5px 11px;white-space:nowrap}
+ .fcard{border-radius:16px;padding:12px;touch-action:pan-y}
+ .fcq{font-size:19px;margin:8px 0}.fcq.sm{font-size:15px}
+ .fkey{font-size:16px}
+ .fdot{font-size:12px;width:2.1em;height:2.1em}
+ .fcard.isf{cursor:pointer}
+ .fdots{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;padding:2px}
+ .fdots::-webkit-scrollbar{display:none}
+ .fdot{flex:none}
+ .ctrl .sp{display:none}
+ .hero h1{font-size:30px;margin-bottom:8px}
+ .q6{padding:10px 12px;gap:8px;margin:2px 0 8px}
+ .q6 .q6t{font-size:14px;padding:4px 11px}
+ .q6 .q6q{font-size:19px;flex-basis:100%}
+ .vtop{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px;padding:8px;border-radius:14px}
+ .vtl{grid-column:1/-1;max-width:none!important;white-space:nowrap;font-size:15px!important}
+ .vbig{font-size:12.5px!important;padding:6px 8px;gap:7px;border-radius:11px;line-height:1.2}
+ .vbig i{width:1.7em;height:1.7em}
+ .vbtn{font-size:13px}
+ /* mặt sau thẻ ghi nhớ: chữ nhỏ hơn */
+ .fcb .fcq.sm{font-size:13.5px;margin:4px 0 6px}
+ .fcb .fkey{font-size:14.5px;padding:7px 10px;border-width:2px;border-radius:12px;margin-bottom:8px;box-shadow:0 3px 0 color-mix(in srgb,var(--gc) 35%,#fff)}
+ .fcb .fax{gap:6px}
+ .fcb .fax span{font-size:14px;padding:4px 9px;border-left-width:6px;border-radius:10px}
+ .fcb .fq{font-size:15px;padding:7px 10px;border-left-width:7px;border-radius:11px;margin-bottom:8px}
+ .fcb .fcx ul{font-size:14px;gap:4px;line-height:1.4}
+ .fcb .ftab{font-size:13px}
+ .fcb .ftab th,.fcb .ftab td{padding:4px 7px}
+}
+.vbig .vno{display:block;font-size:.72em;opacity:.9;font-weight:700;letter-spacing:.03em}
 </style>
 <div class="app">
   <header class="top">
@@ -583,9 +738,11 @@ const CLIP={
  bh0:['bh',0,''],bh1:['bh',8,'Số liệu ban đầu'],bh2:['bh',39,'Công thức <i>t</i>½'],bh4:['bh',96,'Đồ thị ln <i>t</i>½ theo ln <i>C</i><sub>Ao</sub>']};
 const mmss=t=>Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
 const ytUrl=c=>`https://youtu.be/${YT[c[0]][0]}${c[1]?`?t=${c[1]}`:''}`;
-const vBtn=k=>{const c=CLIP[k];if(!c)return '';return `<a class="vbtn" href="${ytUrl(c)}" target="_blank" rel="noopener">📽 ${c[1]?'Xem lại: ':''}${YT[c[0]][1]}${c[1]?` · ${c[2]} <small>(${mmss(c[1])})</small>`:''}</a>`;};
-const vBtns=a=>a&&a.length?`<div class="vlist">${a.map(vBtn).join('')}</div>`:'';
-const vTop=()=>`<div class="vtop"><span class="vtl">📽 Xem trước video bài giảng</span>${['tq','tp','vp','bh'].map(c=>`<a class="vbig" href="https://youtu.be/${YT[c][0]}" target="_blank" rel="noopener"><i>▶</i><span>${YT[c][1]}</span></a>`).join('')}</div>`;
+const vNo=v=>Object.keys(YT).indexOf(v)+1;
+const vBtn=(k,dup)=>{const c=CLIP[k];if(!c)return '';const t=`Video ${vNo(c[0])} – ${YT[c[0]][1]}${c[1]?` · ${c[2]} (${mmss(c[1])})`:''}`;
+  return `<a class="vbtn" href="${ytUrl(c)}" target="_blank" rel="noopener" title="${t}">📽 Xem lại Video ${vNo(c[0])}${dup&&c[1]?` <small>(${mmss(c[1])})</small>`:''}</a>`;};
+const vBtns=a=>a&&a.length?`<div class="vlist">${a.map(k=>vBtn(k,a.filter(x=>CLIP[x]&&CLIP[k]&&CLIP[x][0]===CLIP[k][0]).length>1)).join('')}</div>`:'';
+const vTop=()=>`<div class="vtop"><span class="vtl">📽 Xem trước video bài giảng</span>${['tq','tp','vp','bh'].map(c=>`<a class="vbig" href="https://youtu.be/${YT[c][0]}" target="_blank" rel="noopener"><i>▶</i><span><small class="vno">Video ${vNo(c)}</small>${YT[c][1]}</span></a>`).join('')}</div>`;
 const VID={r1:{4:['bh2'],5:['bh2']},r3:{0:['tp4','tq3'],1:['bh1','bh4'],2:['vp5'],3:['tp2'],4:['tq2'],6:['tp2']},
  r4:{0:['tp4'],1:['tp2'],2:['vp5'],3:['bh2','bh4']},r5:{0:['tp2'],1:['bh2'],2:['vp2'],4:['bh4'],7:['vp5']}};
 
@@ -645,7 +802,7 @@ const RD={r1:{n:1,name:'Khởi động',tab:'Khởi động',pts:10,rc:'#F26B3A'
   r3:{n:4,name:'Thám tử số liệu',tab:'Thám tử',pts:20,rc:'#0EA5A0',rc2:'#22C55E'},
   r4:{n:5,name:'Đường thẳng bí ẩn',tab:'Đường thẳng',pts:20,rc:'#2F7DE1',rc2:'#06B6D4'},
   r5:{n:6,name:'Về đích',tab:'Về đích',pts:30,rc:'#E3A008',rc2:'#F26B3A'}};
-const VIEWS=['home',...RK,'kq','end'];
+const VIEWS=['home','the',...RK,'kq','end'];
 const TDEF={r1:20,r2:20,pn:20,r3:45,r4:40,r5:60};
 const BK=r=>({r1:R1,r3:R3,r4:R4,r5:R5})[r];
 const $=s=>document.querySelector(s);
@@ -745,7 +902,7 @@ const undoBtn=()=>`<button class="btn" id="undo" ${HIST.length?'':'disabled'}>�
 
 /* ---------- khung chung ---------- */
 function renderTabs(){$('#tabs').innerHTML=VIEWS.filter(v=>v!=='kq').map(v=>{const d=RD[v];
-  return `<button data-go="${v}" ${S.view===v||(S.view==='kq'&&S.kq===v)?'aria-current="page"':''} style="--rc:${d?d.rc:'#FACC15'}">${d?`<i>${d.n}</i>${d.tab}`:v==='home'?'🏠 Bắt đầu':'🏁 Tổng kết'}</button>`;}).join('');}
+  return `<button data-go="${v}" ${S.view===v||(S.view==='kq'&&S.kq===v)?'aria-current="page"':''} style="--rc:${d?d.rc:'#FACC15'}">${d?`<i>${d.n}</i>${d.tab}`:({home:'🏠 Home',the:'🃏 Thẻ ghi nhớ',end:'🏁 Tổng kết'})[v]}</button>`;}).join('');}
 function renderBoard(bump=[]){const r=CR(),b=$('#board');
   if(LOP()){if(!r){const T=RK.reduce((a,x)=>a+S.st[x].pts,0);b.innerHTML=`<div class="clsb"><span class="cl-l">Điểm cả lớp</span><b class="cl-s">${T}</b></div>`;return;}
     const st=S.st[r];b.innerHTML=`<div class="clsb${bump.length?' bump':''}"><span class="cl-l">Điểm vòng ${RD[r].n}</span><b class="cl-s">${st.pts}</b>
@@ -760,7 +917,7 @@ function go(v){if(!VIEWS.includes(v))v='home';S.view=v;if(NHA&&RK.includes(v)){S
   if(location.hash.slice(1)!==v){try{history.replaceState(null,'','#'+v);}catch(_){location.hash=v;}}render();if(v==='kq'||v==='end')celebrate();}
 function render(){if(NHA&&!S.sv)return vLogin();renderTabs();renderBoard();const st=$('#stage'),r=CR();
   st.style.setProperty('--rc',r?RD[r].rc:'#4B2A8C');st.style.setProperty('--rc2',r?RD[r].rc2:'#E0457B');
-  ({home:vHome,r1:()=>vMC('r1'),r3:()=>vMC('r3'),r4:()=>vMC('r4'),r2:vMem,pn:vPN,r5:vFinal,kq:vKQ,end:vEnd}[S.view]||vHome)();
+  ({home:vHome,the:()=>FC2.vFC(),r1:()=>vMC('r1'),r3:()=>vMC('r3'),r4:()=>vMC('r4'),r2:vMem,pn:vPN,r5:vFinal,kq:vKQ,end:vEnd}[S.view]||vHome)();
   tset(st).then(fit);fit();paintTimer();}
 function head(r,cnt,done,total,rule){const d=RD[r];const pc=total?Math.round(100*done/total):0;
   return `<div class="rhead"><span class="rnum">Vòng ${d.n}</span><h1>${d.name}</h1><span class="qcount">${cnt}</span>
@@ -816,7 +973,7 @@ function vMC(r){const B=BK(r),i=Math.min(S[r].i,B.length-1),it=B[i],q=qs(r,i),lo
    (fin?`<div class="why"><b class="h">Đáp án ${LET[it.a]}.</b> ${it.why}${vBtns((VID[r]||{})[i])}</div>`:'')+
    (lop?'':`<div class="picks">${S.teams.map((t,ti)=>`<div class="pk${fin&&q.pick[ti]!==null?(q.pick[ti]===it.a?' ok':' no'):''}" style="--tc:${TCOL[ti]}"><span class="tn">${esc(t.name)}</span>
      ${it.o.map((_,k)=>`<button data-pick="${ti}:${k}" aria-pressed="${q.pick[ti]===k}" style="--oc:${OC[k]}" ${fin?'disabled':''} aria-label="${esc(t.name)} chọn ${LET[k]}">${LET[k]}</button>`).join('')}</div>`).join('')}</div>`);
-  $('#ctrl').innerHTML=`${timerBtns()}${callBtn()}${lop&&it.ask&&!fin?`<button class="btn" id="hint">💡 Gợi ý</button>`:''}${r==='r3'?`<a class="vbtn" style="margin-top:0" href="${ytUrl(CLIP.tq0)}" target="_blank" rel="noopener">📽 Video phân loại phương pháp</a>`:''}<span class="sp"></span>
+  $('#ctrl').innerHTML=`${timerBtns()}${callBtn()}${lop&&it.ask&&!fin?`<button class="btn" id="hint">💡 Gợi ý</button>`:''}${r==='r3'?`<a class="vbtn" style="margin-top:0" href="${ytUrl(CLIP.tq0)}" target="_blank" rel="noopener" title="Video 1 – Phân loại và điểm chung">📽 Video 1</a>`:''}<span class="sp"></span>
    <button class="btn" data-nav="-1" ${i===0?'disabled':''}>‹ Câu trước</button>
    <button class="btn gold" id="reveal" ${fin?'disabled':''}>${lop?'Xem đáp án':'Công bố'}</button>
    <button class="btn pri" data-nav="1">${i===B.length-1?'Kết thúc vòng 🏁':'Câu tiếp ›'}</button>${undoBtn()}`;
@@ -917,7 +1074,7 @@ function vFinal(){const i=Math.min(S.r5.i,R5.length-1),it=R5[i],q=q5(i),lop=LOP(
      ${busy?`<div class="why"><b class="h">Sửa dòng ${it.bad+1}:</b> ${it.fix}${vBtns(VID.r5[i])}</div>`:''}`;}
   const ban=lop?'':q.res==='ok'?`<div class="banner ok">🏆 ${esc(S.teams[q.last].name)} ${q.lastPts>0?'+':''}${q.lastPts} điểm.</div>`
     :q.res==='bad'?`<div class="banner bad">${esc(S.teams[q.last].name)} ${q.lastPts} điểm. Đội khác có thể giành quyền trả lời (+${RD.r5.pts/2|0}).</div>`:'';
-  const rule=lop?`Đúng ngay: +${RD.r5.pts}; đúng sau lượt sai: +${half('r5')}.`:`Đúng: +${RD.r5.pts}; sai: −10. Ngôi sao hy vọng (mỗi đội một lần): đúng ×2, sai −${RD.r5.pts}. Giành quyền sau khi đội khác sai: +${half('r5')}.`;
+  const rule=lop?`Đúng ngay: +${RD.r5.pts}; đúng sau lượt sai: +${half('r5')}.`:`Đúng: +${RD.r5.pts}; sai: −5. Ngôi sao hy vọng (mỗi đội một lần): đúng ×2, sai −${half('r5')}. Giành quyền sau khi đội khác sai: +${half('r5')}.`;
   const done=Object.values(S.r5.q).filter(x=>x.res==='ok'||x.rev).length;
   const [tk,...tp]=it.title.split(':'),tq=esc((x=>x.charAt(0).toUpperCase()+x.slice(1))(tp.join(':').trim())).replace(/C_([A-Za-z]+o)/g,'<i>C</i><sub>$1</sub>');
   const q6=`<div class="qcard q6"><span class="q6t">${it.type==='order'?'🔢 '+esc(tk):'🔍 '+esc(tk)}</span><div class="q6q">${tq}<small>${it.type==='order'?`Sắp ${it.steps.length} bước dưới đây theo đúng trình tự giải.`:`Trong ${it.lines.length} dòng lời giải dưới đây, dòng nào sai đầu tiên?`}</small></div></div>`;
@@ -930,7 +1087,7 @@ function judge5(ok,sel){const i=S.r5.i,q=q5(i),t=q.buzz,st=S.st.r5;snap();
   if(LOP()){if(ok){const first=!q.fails,p=first?RD.r5.pts:half('r5');q.res='ok';st.ok++;st.pts+=p;if(first){st.run++;st.best=Math.max(st.best,st.run);}else st.run=0;tPause();save();render();renderBoard([0]);good($('.steps'),first?'Đúng ngay lần đầu':'Sửa sai thành công',{big:true,pts:'+'+p});}
     else{q.fails++;st.bad++;st.run=0;q.picks=[];if(sel!==undefined)q.wl.push(sel);save();render();bad(sel!==undefined?$(`[data-line="${sel}"]`):$('.steps'),'Mời bạn khác thử');}return;}
   const first=q.tried.length===0,star=q.star===t&&first;
-  let d=ok?(first?RD.r5.pts:half('r5'))*(star?2:1):(first?(star?-RD.r5.pts:-10):0);
+  let d=ok?(first?RD.r5.pts:half('r5'))*(star?2:1):(first?(star?-half('r5'):-5):0);
   if(star)S.r5.starUsed[t]=true;S.sc.r5[t]+=d;ok?st.ok++:st.bad++;q.last=t;q.lastPts=d;
   if(ok){q.res='ok';tPause();save();render();renderBoard([t]);good($('.steps'),`${esc(S.teams[t].name)} ${d>0?'+':''}${d}`,{big:star,pts:(d>0?'+':'')+d});}
   else{q.res='bad';q.tried.push(t);q.buzz=null;q.picks=[];save();render();renderBoard([t]);bad($('.steps'),`${esc(S.teams[t].name)} ${d}`);}}
@@ -1024,6 +1181,352 @@ document.addEventListener('keydown',e=>{if(e.target.closest('input'))return;cons
   else if(k==='g'&&LOP()&&!NHA)callSV();
   else if(k==='t')$('#tmb')?.click();});
 
+/* ================= THẺ GHI NHỚ (flashcard có hình động) – khung dùng chung ================= */
+/* Gói trong một khối riêng để không trùng tên với hàm vẽ của các vòng chơi. Thêm thẻ: thêm một mục vào mảng FC. */
+const FCX=(()=>{
+let FUID=0;
+const FCOL={b:'#2E86AB',o:'#E07A1F',r:'#C0392B',g:'#1E8E4F',p:'#7C3AED',y:'#D49B00'};
+const FINK='#14325C',FLB='#3B8FE0',FLP='#8E44AD';
+const sb=s=>`<tspan baseline-shift="sub" font-size="72%">${s}</tspan>`;
+const sp=s=>`<tspan baseline-shift="super" font-size="72%">${s}</tspan>`;
+const iv=s=>`<tspan font-style="italic">${s}</tspan>`;
+const CA=`${iv('C')}${sb('A')}`,CAo=`${iv('C')}${sb('Ao')}`,XA=`${iv('X')}${sb('A')}`,TAU=iv('τ'),VO=`${iv('υ')}${sb('o')}`;
+const RA=`(−${iv('r')}${sb('A')})`,INVR=`1/${RA}`;
+const stx=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.fs||19}" font-weight="${o.fw||700}" text-anchor="${o.a||'middle'}" fill="${o.c||FINK}" paint-order="stroke" stroke="${o.st||'#fff'}" stroke-width="${o.sw??5}">${t}</text>`;
+const draw=(d,c,w,dur,o={})=>`<path d="${d}" fill="${o.fill||'none'}" stroke="${c}" stroke-width="${w}" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" ${o.extra||''}><animate attributeName="stroke-dashoffset" values="1;0;0" keyTimes="0;.85;1" dur="${dur}s" begin="${o.begin||0}s" repeatCount="${o.rep||'indefinite'}" fill="freeze"/></path>`;
+const draw1=(d,c,w,dur,begin,extra='')=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" stroke-linecap="round" ${extra}><animate attributeName="stroke-dashoffset" from="1" to="0" dur="${dur}s" begin="${begin}s" fill="freeze"/></path>`;
+const fadeIn=(s,b,d=.5)=>`<g opacity="0">${s}<animate attributeName="opacity" from="0" to="1" dur="${d}s" begin="${b}s" fill="freeze"/></g>`;
+const fadeOut=(s,b,d=.5)=>`<g>${s}<animate attributeName="opacity" from="1" to="0" dur="${d}s" begin="${b}s" fill="freeze"/></g>`;
+const stamp=(x,y,t,c,b)=>`<g opacity="0" transform="translate(${x},${y})"><g><rect x="-62" y="-20" width="124" height="38" rx="10" fill="#fff" stroke="${c}" stroke-width="3.5"/>${stx(0,8,t,{fs:20,fw:900,c,sw:0})}
+  <animateTransform attributeName="transform" type="scale" values="2.2;.9;1" keyTimes="0;.7;1" dur=".45s" begin="${b}s" fill="freeze"/></g><animate attributeName="opacity" from="0" to="1" dur=".2s" begin="${b}s" fill="freeze"/></g>`;
+const mix=(a,b,t)=>'#'+[1,3,5].map(i=>Math.round(parseInt(a.substr(i,2),16)*(1-t)+parseInt(b.substr(i,2),16)*t).toString(16).padStart(2,'0')).join('');
+const liq=X=>mix(FLB,FLP,Math.min(1,X));
+const arr=(x1,y1,x2,y2,c=FINK,w=3)=>{const a=Math.atan2(y2-y1,x2-x1),h=11;
+  return `<line x1="${x1}" y1="${y1}" x2="${x2-Math.cos(a)*h*.8}" y2="${y2-Math.sin(a)*h*.8}" stroke="${c}" stroke-width="${w}"/><path d="M${x2},${y2} l${(-h*Math.cos(a)+h*.55*Math.sin(a)).toFixed(1)},${(-h*Math.sin(a)-h*.55*Math.cos(a)).toFixed(1)} l${(-h*1.1*Math.sin(a)).toFixed(1)},${(h*1.1*Math.cos(a)).toFixed(1)}z" fill="${c}"/>`;};
+const flow=(p,c,n,dur,r=5)=>{let s='';for(let k=0;k<n;k++)s+=`<circle r="${r}" fill="${c}" stroke="#fff" stroke-width="1.5"><animateMotion dur="${dur}s" begin="-${(k*dur/n).toFixed(2)}s" repeatCount="indefinite" path="${p}"/></circle>`;return s;};
+const fmt=(v,d)=>String(+(+v).toFixed(d)).replace('.',',');
+const poly=(pts)=>pts.map((q,k)=>(k?'L':'M')+q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ');
+function fax(W,H,L,Rr,T,Bt,sw){return `<line x1="${L}" y1="${H-Bt}" x2="${W-Rr}" y2="${H-Bt}" stroke="#13213A" stroke-width="${sw}"/><line x1="${L}" y1="${H-Bt}" x2="${L}" y2="${T}" stroke="#13213A" stroke-width="${sw}"/>
+   <path d="M${W-Rr},${H-Bt} l-${3*sw},-${2*sw} v${4*sw}z M${L},${T} l-${2*sw},${3*sw} h${4*sw}z" fill="#13213A"/>`;}
+/* bình khuấy nhỏ: x trái, y miệng, rộng w, cao h, màu chất lỏng c */
+function tank(x,y,w,h,c,lab){const cx=x+w/2,b=y+h;let sw='';
+  for(let k=0;k<6;k++){const sg=k%2?1:-1,p=`M${cx},${b-12} C${cx+sg*w*.38},${b-12} ${cx+sg*w*.38},${y+20} ${cx+sg*w*.15},${y+20} C${cx},${y+20} ${cx},${(b+y)/2} ${cx},${b-12}`;
+    sw+=`<circle r="3.2" fill="#fff" opacity=".85"><animateMotion dur="2.2s" begin="-${(k*.37).toFixed(2)}s" repeatCount="indefinite" path="${p}"/></circle>`;}
+  return `<path d="M${x},${y} V${b-14} Q${x},${b} ${x+14},${b} H${x+w-14} Q${x+w},${b} ${x+w},${b-14} V${y}" fill="#fff" stroke="${FINK}" stroke-width="3"/>
+   <path d="M${x+3},${y+12} V${b-14} Q${x+3},${b-3} ${x+14},${b-3} H${x+w-14} Q${x+w-3},${b-3} ${x+w-3},${b-14} V${y+12} Z" fill="${c}"/>${sw}
+   <line x1="${cx}" y1="${y-12}" x2="${cx}" y2="${b-14}" stroke="${FINK}" stroke-width="3.5"/><rect x="${cx-9}" y="${y-22}" width="18" height="12" rx="3" fill="#5B6B86" stroke="${FINK}" stroke-width="1.5"/>
+   <g transform="translate(${cx},${b-14})"><g><rect x="-${w*.3}" y="-4" width="${w*.6}" height="8" rx="3" fill="${FINK}"/><animateTransform attributeName="transform" type="scale" values="1 1;0.12 1;-1 1;0.12 1;1 1" dur=".8s" repeatCount="indefinite"/></g></g>
+   ${lab?stx(cx,b+22,lab,{fs:16}):''}`;}
+/* ống dòng đẩy (như mô hình PFR chương 3): các lát mỏng trôi dọc ống, mỗi lát có các phân tử xếp thẳng hàng, chỉ dao động lên – xuống; màu lát đổi từ X0 đến X1 */
+function tube(x,y,w,h,X0,X1,D,tag=''){const id='tb'+(++FUID);let sl='';const NS=6,ih=h-8,n=Math.max(1,Math.min(5,Math.floor(ih/12))),r=Math.min(4.6,ih/(2*n+1));
+  for(let k=0;k<NS;k++){const b=-(k*D/NS).toFixed(2);let m='';
+    for(let j=0;j<n;j++){const cy=y+4+ih*(j+.5)/n,ph=((j*.37+k*.21)%1*.5).toFixed(2);
+      m+=`<circle cx="6" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}" fill="#fff" stroke="${FINK}" stroke-width="1.1"><animate attributeName="cy" values="${(cy-2.5).toFixed(1)};${(cy+2.5).toFixed(1)};${(cy-2.5).toFixed(1)}" dur=".5s" begin="-${ph}s" repeatCount="indefinite"/></circle>`;}
+    sl+=`<g><animateTransform attributeName="transform" type="translate" values="${x+6},0;${x+w-18},0" dur="${D}s" begin="${b}s" repeatCount="indefinite"/>
+     <rect x="0" y="${y+4}" width="12" height="${ih}" rx="2" fill="${liq(X0)}" stroke="#fff" stroke-width="1.5"><animate attributeName="fill" values="${liq(X0)};${liq(X1)}" dur="${D}s" begin="${b}s" repeatCount="indefinite"/></rect>${m}</g>`;}
+  return `<defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${liq(X0)}" stop-opacity=".5"/><stop offset="1" stop-color="${liq(X1)}" stop-opacity=".5"/></linearGradient></defs>
+   <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.min(12,h/3)}" fill="url(#${id})" stroke="${FINK}" stroke-width="3"/>${sl}${tag}`;}
+
+/* ---- đồ thị Levenspiel có tô diện tích động ---- */
+function levG(A,W,H,L,Rr,T,Bt){const pw=W-L-Rr,ph=H-T-Bt;
+  return {pw,ph,X:x=>L+(x-A.x0)/(A.x1-A.x0)*pw,Y:y=>H-Bt-Math.min(y,A.y1)/A.y1*ph};}
+const crv=(f,a,b,X,Y,n=90)=>Array.from({length:n+1},(_,k)=>{const x=a+(b-a)*k/n;return [X(x),Y(f(x))];});
+function shp(f,sh,X,Y){if(sh.k==='R')return `M${X(sh.a)},${Y(0)} V${Y(f(sh.h))} H${X(sh.b)} V${Y(0)} Z`;
+  return `M${X(sh.a)},${Y(0)} `+crv(f,sh.a,sh.b,X,Y,60).map(q=>'L'+q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')+` L${X(sh.b)},${Y(0)} Z`;}
+const fpat=(id,c,ang=45)=>`<pattern id="${id}" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(${ang})"><rect width="9" height="9" fill="${c}" fill-opacity=".16"/><line x1="0" y1="0" x2="0" y2="9" stroke="${c}" stroke-width="2.4"/></pattern>`;
+const ANG={b:45,o:-45,r:-45,g:0,p:90,y:45};
+const PLOT={W:520,H:330,L:64,Rr:18,T:22,Bt:46};
+function frame(o){const {W,H,L,Rr,T,Bt}=PLOT,A={x0:0,x1:o.x1||1,y1:o.y1},{X,Y,pw}=levG(A,W,H,L,Rr,T,Bt),id='L'+(++FUID);
+  let s=(o.yt||[]).map(y=>`<line x1="${L}" x2="${W-Rr}" y1="${Y(y)}" y2="${Y(y)}" stroke="#E3E8F0"/>${stx(L-8,Y(y)+6,fmt(y,o.yf||0),{a:'end',fs:16,fw:600,sw:0})}`).join('');
+  s+=(o.xt||[0,.2,.4,.6,.8,1]).map(x=>stx(X(x),H-16,fmt(x,o.xf??1),{fs:16,fw:600,sw:0})).join('');
+  return {X,Y,pw,id,s,L,W,H,T,Bt,Rr};}
+function lev(o,anim){const F=frame(o),{X,Y,pw,id,L,W,H,T,Bt,Rr}=F,cv=o.curves,sh=anim?(o.sh||[]):[],st=o.step||1.7;
+  let s=`<svg class="fsv" viewBox="0 0 ${W} ${H}" role="img" aria-label="Đồ thị Levenspiel"><defs>`+Object.entries(FCOL).map(([k,c])=>fpat(id+k,c,ANG[k])).join('');
+  sh.forEach((q,j)=>{s+=`<clipPath id="${id}c${j}"><rect x="${L}" y="0" width="0" height="${H}"><animate attributeName="width" from="0" to="${pw}" dur="1.3s" begin="${(0.4+j*st).toFixed(1)}s" fill="freeze"/></rect></clipPath>`;});
+  s+='</defs>'+F.s;
+  let labs='';sh.forEach((q,j)=>{const f=cv[q.ci||0].f,c=FCOL[q.c||'b'];
+    s+=`<g clip-path="url(#${id}c${j})"><path d="${shp(f,q,X,Y)}" fill="url(#${id}${q.c||'b'})" stroke="${c}" stroke-width="${q.dash?3.5:2.5}" ${q.dash?'stroke-dasharray="9 6"':''}/></g>`;
+    if(q.lab)labs+=fadeIn(stx(X(q.lx),Y(q.ly),q.lab,{c,fs:q.fs||18}),(1.5+j*st).toFixed(1),.4);});
+  s+=fax(W,H,L,Rr,T,Bt,2.5);
+  cv.forEach(it=>{const p=crv(it.f,it.xmin||0,it.xmax,X,Y,160),col=it.c?FCOL[it.c]:FINK;
+    s+=`<polyline points="${p.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="none" stroke="${col}" stroke-width="4" stroke-linejoin="round"/>`;
+    if(it.lab){const e=p[p.length-1];s+=stx(e[0]-8,Math.max(T+16,e[1]+(it.ldy||0)),it.lab,{a:'end',fs:17,c:col});}});
+  (o.pts||[]).forEach(x=>{s+=`<circle cx="${X(x).toFixed(1)}" cy="${Y(cv[0].f(x)).toFixed(1)}" r="6" fill="#fff" stroke="${FINK}" stroke-width="3"/>`;});
+  (anim&&o.guide||[]).forEach(g=>{s+=`<path d="M${X(g)},${Y(0)} V${Y(cv[0].f(g))} H${L}" fill="none" stroke="#7C3AED" stroke-width="2.2" stroke-dasharray="7 5"/>`;});
+  s+=labs+stx(o.ylx||L+8,T+10,o.yl||INVR,{a:'start',fs:18})+stx(W-Rr,H-Bt-10,o.xl||XA,{a:'end',fs:18});
+  (anim&&o.leg||[]).forEach(([c,t],k)=>{const y=T+30+k*27,x=o.legx||L+40;
+    s+=fadeIn(`<rect x="${x}" y="${y}" width="26" height="16" fill="url(#${id}${c})" stroke="${FCOL[c]}" stroke-width="2.5"/>${stx(x+34,y+14,t,{a:'start',fs:17,c:FCOL[c]})}`,(1.5+k*st).toFixed(1),.4);});
+  return s+'</svg>';}
+
+/* ---- đồ thị “biến hình”: số liệu thô → dạng tuyến tính, vẽ đường thẳng, tam giác hệ số góc ----
+   o = {raw:{xl,yl,pts,curves:[{f,x0,x1,c,lab}],hline:{y,lab}}, lin:{xl,yl,f:(x,y)=>[X,Y],ext:[x0,x1],zero:true},
+        slope:'nhãn hệ số góc', icpt:'nhãn tung độ gốc', xint:'nhãn hoành độ gốc', stamp:'THẲNG ✔'} */
+const BOX={x0:70,x1:500,y0:30,y1:280};
+function scl(pts,ext,zx,zy,box=BOX,pad=.06){let xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  if(ext)xs=xs.concat(ext.x||[]),ys=ys.concat(ext.y||[]);if(zx)xs.push(0);if(zy)ys.push(0);
+  let a=Math.min(...xs),b=Math.max(...xs),c=Math.min(...ys),d=Math.max(...ys);const dx=(b-a)||1,dy=(d-c)||1;a-=dx*pad;b+=dx*pad;c-=dy*pad;d+=dy*pad;
+  return {X:x=>box.x0+(x-a)/(b-a)*(box.x1-box.x0),Y:y=>box.y1-(y-c)/(d-c)*(box.y1-box.y0),a,b,c,d};}
+function axesAt(S,box,sw=2.5){const ax=(S.c<0&&S.d>0)?S.Y(0):box.y1,ay=(S.a<0&&S.b>0)?S.X(0):box.x0;
+  return `<line x1="${box.x0-6}" y1="${ax}" x2="${box.x1+12}" y2="${ax}" stroke="#13213A" stroke-width="${sw}"/><path d="M${box.x1+14},${ax} l-10,-6 v12z" fill="#13213A"/>
+   <line x1="${ay}" y1="${box.y1+6}" x2="${ay}" y2="${box.y0-12}" stroke="#13213A" stroke-width="${sw}"/><path d="M${ay},${box.y0-14} l-6,10 h12z" fill="#13213A"/>`;}
+function fit(P){const n=P.length,mx=P.reduce((a,p)=>a+p[0],0)/n,my=P.reduce((a,p)=>a+p[1],0)/n;
+  const m=P.reduce((a,p)=>a+(p[0]-mx)*(p[1]-my),0)/P.reduce((a,p)=>a+(p[0]-mx)**2,0);return {m,b:my-m*mx};}
+function morph(o,anim,box=BOX){const R=o.raw,Lc=o.lin,W=520,H=330;
+  const P=R.pts,Q=P.map(p=>Lc.f(p[0],p[1])),F=fit(Q);
+  const ex=Lc.ext||[Math.min(...Q.map(q=>q[0])),Math.max(...Q.map(q=>q[0]))];
+  const Sr=scl(P,R.hline?{y:[R.hline.y]}:null,true,R.zy!==false,box),Sl=scl(Q,{x:ex,y:ex.map(x=>F.m*x+F.b)},Lc.zx,Lc.zy,box);
+  let s=`<svg class="fsv" viewBox="0 0 ${W} ${H}" role="img" aria-label="Biến số liệu thành đường thẳng">`;
+  const rawAx=axesAt(Sr,box)+stx(box.x0+6,box.y0-14,R.yl,{a:'start',fs:18})+stx(box.x1+12,box.y1-10,R.xl,{a:'end',fs:18});
+  let rc=(R.curves||[]).map(c=>{const pts=Array.from({length:81},(_,k)=>{const x=c.x0+(c.x1-c.x0)*k/80;return [Sr.X(x),Sr.Y(c.f(x))];});
+    return `<path d="${poly(pts)}" fill="none" stroke="${c.c||'#94A3B8'}" stroke-width="3.5" ${c.dash?'stroke-dasharray="8 6"':''}/>`+(c.lab?stx(pts[c.lp??80][0]+(c.dx||-6),pts[c.lp??80][1]+(c.dy||-10),c.lab,{a:c.a||'end',fs:17,c:c.c||'#64748B'}):'');}).join('');
+  if(R.hline)rc+=`<line x1="${box.x0}" x2="${box.x1}" y1="${Sr.Y(R.hline.y)}" y2="${Sr.Y(R.hline.y)}" stroke="#94A3B8" stroke-width="2" stroke-dasharray="7 6"/>`+stx(box.x1,Sr.Y(R.hline.y)-8,R.hline.lab,{a:'end',fs:16,c:'#64748B'});
+  if(!anim){if(o.over)rc+=o.over;s+=rawAx+rc+P.map(p=>`<circle cx="${Sr.X(p[0]).toFixed(1)}" cy="${Sr.Y(p[1]).toFixed(1)}" r="6.5" fill="#fff" stroke="${FCOL.b}" stroke-width="3"/>`).join('');return s+'</svg>';}
+  const linAx=axesAt(Sl,box)+stx(box.x0+6,box.y0-14,Lc.yl,{a:'start',fs:18,c:FCOL.p})+stx(box.x1+12,(Sl.c<0&&Sl.d>0?Sl.Y(0):box.y1)+28,Lc.xl,{a:'end',fs:18,c:FCOL.p});
+  s+=fadeOut(rawAx+rc,.7,.5)+fadeIn(linAx,1.6,.6);
+  const t0=.9,t1=2.2;
+  s+=P.map((p,k)=>{const q=Q[k],x0=Sr.X(p[0]).toFixed(1),y0=Sr.Y(p[1]).toFixed(1),x1=Sl.X(q[0]).toFixed(1),y1=Sl.Y(q[1]).toFixed(1);
+    return `<circle cx="${x0}" cy="${y0}" r="0" fill="#fff" stroke="${FCOL.b}" stroke-width="3"><animate attributeName="r" from="0" to="6.5" dur=".25s" begin="${(k*.06).toFixed(2)}s" fill="freeze"/>
+     <animate attributeName="cx" from="${x0}" to="${x1}" dur="${t1-t0}s" begin="${t0}s" fill="freeze" calcMode="spline" keySplines=".5 0 .3 1" keyTimes="0;1"/>
+     <animate attributeName="cy" from="${y0}" to="${y1}" dur="${t1-t0}s" begin="${t0}s" fill="freeze" calcMode="spline" keySplines=".5 0 .3 1" keyTimes="0;1"/>
+     <animate attributeName="stroke" from="${FCOL.b}" to="${FCOL.p}" dur=".4s" begin="${t1}s" fill="freeze"/></circle>`;}).join('');
+  const xa=ex[0],xb=ex[1],L1=[Sl.X(xa),Sl.Y(F.m*xa+F.b)],L2=[Sl.X(xb),Sl.Y(F.m*xb+F.b)];
+  s+=draw1(`M${L1[0].toFixed(1)},${L1[1].toFixed(1)} L${L2[0].toFixed(1)},${L2[1].toFixed(1)}`,FCOL.r,4,.9,2.4);
+  if(o.slope){const u=o.su!=null?xa+(xb-xa)*o.su:Q.length>3?Q[Math.floor(Q.length*.35)][0]:(xa+xb)/2,v=u+(xb-xa)*.28,A=[Sl.X(u),Sl.Y(F.m*u+F.b)],B=[Sl.X(v),Sl.Y(F.m*v+F.b)],up=F.m>0;
+    const tri=`<path d="M${A[0].toFixed(1)},${A[1].toFixed(1)} H${B[0].toFixed(1)} V${B[1].toFixed(1)}" fill="none" stroke="${FCOL.g}" stroke-width="3" stroke-dasharray="6 4"/>`
+      +stx(B[0]+8,(A[1]+B[1])/2+6,o.slope,{a:'start',fs:18,c:FCOL.g});
+    s+=fadeIn(tri,3.3,.5);}
+  if(o.icpt){const y=Sl.Y(F.b),x=(Sl.a<0&&Sl.b>0)?Sl.X(0):box.x0;s+=fadeIn(`<circle cx="${x}" cy="${y}" r="7.5" fill="${FCOL.o}" stroke="#fff" stroke-width="2"/>`+stx(x+12,y+(F.m>0?22:-12),o.icpt,{a:'start',fs:17,c:FCOL.o}),3.9,.5);}
+  if(o.xint){const xi=-F.b/F.m,x=Sl.X(xi),y=(Sl.c<0&&Sl.d>0)?Sl.Y(0):box.y1;s+=fadeIn(`<circle cx="${x}" cy="${y}" r="7.5" fill="${FCOL.y}" stroke="#fff" stroke-width="2"/>`+stx(x,y+28,o.xint,{fs:17,c:'#8A6500'}),4.4,.5);}
+  if(o.stamp!==false)s+=stamp(box.x1-70,box.y0+14,o.stamp||'THẲNG ✔',FCOL.g,4.6);
+  if(o.over)s+=o.over;
+  return s+'</svg>';}
+
+/* ---- sơ đồ phản ứng: hằng số k ghi trên (dưới) mũi tên ---- */
+function rxn(type,cx,cy){const SC={A:FCOL.b,R:FCOL.o,S:FCOL.g},kk=i=>`${iv('k')}${sb(i)}`;
+  const sp=(n,x,y)=>`<circle cx="${x}" cy="${y}" r="16" fill="${SC[n]}"/>${stx(x,y+6,n,{fs:18,c:'#fff',sw:0})}`;
+  const ar=(x1,y1,x2,y2,lab,dy)=>{const a=Math.atan2(y2-y1,x2-x1),h=10;
+    return `<line x1="${x1}" y1="${y1}" x2="${(x2-Math.cos(a)*h).toFixed(1)}" y2="${(y2-Math.sin(a)*h).toFixed(1)}" stroke="${FINK}" stroke-width="2.6"/><path d="M${x2},${y2} l${(-h*Math.cos(a)+h*.5*Math.sin(a)).toFixed(1)},${(-h*Math.sin(a)-h*.5*Math.cos(a)).toFixed(1)} l${(-h*Math.sin(a)).toFixed(1)},${(h*Math.cos(a)).toFixed(1)}z" fill="${FINK}"/>`
+      +stx((x1+x2)/2,(y1+y2)/2+dy,lab,{fs:18,c:FCOL.p});};
+  let s='',w=0;
+  if(type==='ser'){w=250;s=sp('A',cx-100,cy)+ar(cx-82,cy,cx-18,cy,kk(1),-9)+sp('R',cx,cy)+ar(cx+18,cy,cx+82,cy,kk(2),-9)+sp('S',cx+100,cy);}
+  if(type==='rev'){w=170;s=sp('A',cx-60,cy)+sp('R',cx+60,cy)
+    +`<line x1="${cx-42}" y1="${cy-5}" x2="${cx+34}" y2="${cy-5}" stroke="${FINK}" stroke-width="2.6"/><path d="M${cx+42},${cy-5} l-11,-6 v6z" fill="${FINK}"/>`+stx(cx,cy-13,kk(1),{fs:18,c:FCOL.p})
+    +`<line x1="${cx+42}" y1="${cy+5}" x2="${cx-34}" y2="${cy+5}" stroke="${FINK}" stroke-width="2.6"/><path d="M${cx-42},${cy+5} l11,6 v-6z" fill="${FINK}"/>`+stx(cx,cy+27,kk(2),{fs:18,c:FCOL.p});}
+  if(type==='par'){w=180;s=sp('A',cx-60,cy)+ar(cx-44,cy-7,cx+40,cy-24,kk(1),-12)+ar(cx-44,cy+7,cx+40,cy+24,kk(2),24)+sp('R',cx+58,cy-27)+sp('S',cx+58,cy+27);}
+  const hh=type==='ser'?44:type==='rev'?62:86;
+  return `<g><rect x="${cx-w/2}" y="${cy-hh/2}" width="${w}" height="${hh}" rx="14" fill="#fff" stroke="#DDD6FE" stroke-width="2.5"/>${s}</g>`;}
+
+/* ---- bảng ba phép thử: chỉ một đồ thị thẳng ---- */
+function tri3(o,anim){const W=520,H=330;let s=`<svg class="fsv" viewBox="0 0 ${W} ${H}" role="img" aria-label="Ba cách vẽ">`;
+  o.panels.forEach((p,k)=>{const bx={x0:22+k*168,x1:22+k*168+138,y0:80,y1:250},Q=o.pts.map(q=>p.f(q[0],q[1])),S=scl(Q,null,false,false,bx,.1),b=(.5+k*1.3).toFixed(1);
+    let g=`<rect x="${bx.x0-14}" y="${bx.y0-44}" width="${bx.x1-bx.x0+28}" height="${bx.y1-bx.y0+92}" rx="14" fill="#F8FAFF" stroke="#DCE3EE" stroke-width="2"/>`
+      +stx((bx.x0+bx.x1)/2,bx.y0-18,p.yl,{fs:18})+`<line x1="${bx.x0}" y1="${bx.y1}" x2="${bx.x1}" y2="${bx.y1}" stroke="${FINK}" stroke-width="2"/><line x1="${bx.x0}" y1="${bx.y1}" x2="${bx.x0}" y2="${bx.y0}" stroke="${FINK}" stroke-width="2"/>`
+      +stx(bx.x1,bx.y1+22,iv('t'),{a:'end',fs:17});
+    if(anim){g+=Q.map((q,j)=>`<circle cx="${S.X(q[0]).toFixed(1)}" cy="${S.Y(q[1]).toFixed(1)}" r="0" fill="#fff" stroke="${FCOL.b}" stroke-width="2.5"><animate attributeName="r" from="0" to="5" dur=".2s" begin="${(+b+j*.06).toFixed(2)}s" fill="freeze"/></circle>`).join('');
+      const F=fit(Q),a=Q[0][0],z=Q[Q.length-1][0];g+=draw1(`M${S.X(a).toFixed(1)},${S.Y(F.m*a+F.b).toFixed(1)} L${S.X(z).toFixed(1)},${S.Y(F.m*z+F.b).toFixed(1)}`,p.ok?FCOL.g:'#CBD5E1',3,.6,(+b+.6).toFixed(1),p.ok?'':'stroke-dasharray="6 6"');
+      g+=stamp((bx.x0+bx.x1)/2,bx.y1+48,p.ok?'THẲNG ✔':'CONG ✘',p.ok?FCOL.g:FCOL.r,(+b+1).toFixed(1))+stx((bx.x0+bx.x1)/2,bx.y0-34,'',{});
+      g=fadeIn(stx((bx.x0+bx.x1)/2,22,p.n,{fs:18,c:p.ok?FCOL.g:'#64748B'}),b,.3)+g;}
+    else g+=stx((bx.x0+bx.x1)/2,22,p.n,{fs:18,c:'#64748B'});
+    s+=g;});
+  return s+'</svg>';}
+
+/* ---- đồ thị nồng độ theo thời gian (phản ứng phức tạp) ---- */
+function ctPlot(o,anim){const W=520,H=330,box=o.box||{x0:64,x1:o.w||500,y0:34,y1:280},S={X:t=>box.x0+t/o.tmax*(box.x1-box.x0),Y:c=>box.y1-c/(o.cmax||1.05)*(box.y1-box.y0)};
+  let s=`<line x1="${box.x0}" y1="${box.y1}" x2="${box.x1+10}" y2="${box.y1}" stroke="#13213A" stroke-width="2.5"/><path d="M${box.x1+12},${box.y1} l-10,-6 v12z" fill="#13213A"/>
+    <line x1="${box.x0}" y1="${box.y1}" x2="${box.x0}" y2="${box.y0-10}" stroke="#13213A" stroke-width="2.5"/><path d="M${box.x0},${box.y0-12} l-6,10 h12z" fill="#13213A"/>
+    ${stx(box.x0+8,box.y0-4,o.yl||`${iv('C')}/${CAo}`,{a:'start',fs:17})}${stx(box.x1+10,box.y1-10,iv('t'),{a:'end',fs:18})}`;
+  (o.hl||[]).forEach(h=>{s+=`<line x1="${box.x0}" x2="${box.x1}" y1="${S.Y(h.y)}" y2="${S.Y(h.y)}" stroke="${h.c||'#94A3B8'}" stroke-width="2" stroke-dasharray="7 6"/>`+stx(box.x1,S.Y(h.y)+(h.dy||-8),h.lab,{a:'end',fs:15,c:h.c||'#64748B'});});
+  o.cv.forEach((c,k)=>{const pts=Array.from({length:121},(_,j)=>{const t=o.tmax*j/120;return [S.X(t),S.Y(c.f(t))];}),d=poly(pts),b=(.3+k*.5).toFixed(1);
+    s+=anim?draw1(d,FCOL[c.c],4.5,2.2,b):`<path d="${d}" fill="none" stroke="${FCOL[c.c]}" stroke-width="4.5"/>`;
+    const e=pts[c.lp??120];s+=(anim?fadeIn(stx(e[0]+(c.dx||-4),e[1]+(c.dy||-10),c.lab,{a:c.a||'end',fs:18,c:FCOL[c.c]}),(+b+1.6).toFixed(1),.4):stx(e[0]+(c.dx||-4),e[1]+(c.dy||-10),c.lab,{a:c.a||'end',fs:18,c:FCOL[c.c]}));
+    if(anim&&c.dot)s+=`<circle r="7" fill="${FCOL[c.c]}" stroke="#fff" stroke-width="2"><animateMotion dur="5s" begin="${(+b+2.4).toFixed(1)}s" repeatCount="indefinite" path="${d}"/></circle>`;});
+  return {s,S,box};}
+
+/* ---------- âm thanh lật thẻ: tiếng “phạch” + chuông khi ra mặt sau ---------- */
+const sCard=back=>{tone(240,.16,'sine',.07,0,950);tone(150,.1,'triangle',.05,.01,380);
+  if(back)[880,1175,1568].forEach((f,k)=>tone(f,.2,'triangle',.07,.15+k*.07));else tone(700,.12,'triangle',.05,.13,480);};
+const sSwish=()=>{tone(620,.12,'sine',.05,0,240);tone(330,.08,'triangle',.03,.03,200);};
+
+/* ---------- giao diện thẻ ---------- */
+function build(FG,FC,home,ch){
+/* lời giải thích thu âm: audio/c<ch>-<số thẻ 2 chữ số>.mp3 — thẻ nào chưa có file thì nút tự ẩn */
+const AU={el:null,i:-1,ok:{}},auSrc=i=>`audio/c${ch}-${String(i+1).padStart(2,'0')}.mp3`;
+function auStop(){if(AU.el){AU.el.pause();AU.el=null;}AU.i=-1;const b=$('[data-fcau]');if(b)b.textContent='🔊 Nghe giải thích';}
+function auProbe(i){const show=()=>{const b=$('[data-fcau]');if(b&&S.fc.i===i)b.hidden=false;};if(!ch)return;if(AU.ok[i]===true)return show();if(AU.ok[i]===false)return;
+  fetch(auSrc(i),{method:'HEAD'}).then(r=>{AU.ok[i]=r.ok;if(r.ok)show();}).catch(()=>{AU.ok[i]=false;});}
+function auPlay(){const i=S.fc.i,b=$('[data-fcau]');if(AU.el&&AU.i===i){auStop();return;}auStop();AU.el=new Audio(auSrc(i));AU.i=i;
+  AU.el.addEventListener('ended',auStop);AU.el.play().catch(auStop);if(b)b.textContent='⏸ Dừng nghe';}
+FC.forEach(c=>{if(!c.fig)return;const f=c.fig;c.fig=a=>f(a).replace(/X_A(\d?)/g,(_,d)=>`${iv('X')}${sb('A'+d)}`).replace(/kτ/g,`${iv('k')}${TAU}`);});
+function fcList(){const g=S.fc.g;return FC.map((_,i)=>i).filter(i=>g==='all'||FC[i].g===g);}
+function vFC(){S.fc??={i:0,side:0,k:0,g:'all',mk:{}};if(S.fc.g!=='all'&&!FG[S.fc.g])S.fc.g='all';if(!FC[S.fc.i])S.fc.i=0;S.fc.mk??={};const F=S.fc,L=fcList();if(!L.includes(F.i))F.i=L[0];
+  const i=F.i,c=FC[i],pos=L.indexOf(i),[ge,gn,gc]=FG[c.g];if(AU.i!==i||!F.side)auStop();
+  const ok=Object.values(F.mk).filter(v=>v>0).length,no=Object.values(F.mk).filter(v=>v<0).length;
+  const chips=[['all','Tất cả',FC.length],...Object.entries(FG).map(([k,v])=>[k,v[0]+' '+v[1],FC.filter(x=>x.g===k).length])]
+    .map(([k,n,m])=>`<button class="fchipb" data-fcg="${k}" aria-pressed="${F.g===k}">${n} <small>${m}</small></button>`).join('');
+  const dots=L.map(j=>`<button class="fdot${j===i?' on':''}${F.mk[j]>0?' ok':F.mk[j]<0?' no':''}" data-fcj="${j}" aria-label="Thẻ ${L.indexOf(j)+1}" style="--gc:${FG[FC[j].g][2]}">${L.indexOf(j)+1}</button>`).join('');
+  const front=`<div class="fcf"><div><span class="fchip">${ge} ${gn}</span><p class="fcq">${c.q}</p>
+     <p class="hint">${NHA?'Tự trả lời trong đầu (hoặc ra giấy), rồi bấm <b>Lật thẻ</b> (phím cách) để kiểm tra.':'Gọi sinh viên trả lời, rồi bấm <b>Lật thẻ</b> (phím cách).'}</p></div>
+     ${c.fig?`<div class="fcfig nolab">${c.fig(false)}</div>`:''}</div>`;
+  let d=.25;const nx=()=>(d+=.4).toFixed(2);
+  const ax=c.ax?`<div class="fax">${c.ax.map(([h,v],k)=>`<span style="animation-delay:${nx()}s"><small>${h}</small><i class="fv">${v}</i></span>`).join('')}</div>`:'';
+  const tb=c.table?`<div class="tblw"><table class="tbl ftab"><thead><tr>${c.table[0].map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${c.table.slice(1).map(r=>`<tr>${r.map((x,k)=>k?`<td>${x}</td>`:`<th>${x}</th>`).join('')}</tr>`).join('')}</tbody></table></div>`:'';
+  const back=`<div class="fcb${c.fig?'':' wide'}">${c.fig?`<div class="fcfig">${c.fig(true)}</div>`:''}
+     <div class="fcx"><p class="fcq sm">${c.q}</p>${c.key?`<div class="fkey">💡 ${c.key}</div>`:''}${ax}${tb}
+     ${c.eq?`<div class="fq" style="animation-delay:${nx()}s">${c.eq}</div>`:''}
+     ${c.pts?`<ul>${c.pts.map(p=>`<li style="animation-delay:${nx()}s">${p}</li>`).join('')}</ul>`:''}</div></div>`;
+  $('#stage').innerHTML=`<div class="rhead"><span class="rnum" style="background:linear-gradient(120deg,${gc},#7C3AED)">🃏 Thẻ ghi nhớ</span><h1 style="color:${gc}">${c.t}</h1>
+    <span class="qcount" style="color:${gc}">Thẻ ${pos+1}/${L.length}</span><span class="prog"><i style="width:${Math.round(100*(pos+1)/L.length)}%;background:${gc}"></i></span>
+    <span class="rule">${F.side?'Mặt sau':'Mặt trước'} · ✔ ${ok} thẻ đã hiểu · ✘ ${no} thẻ chưa chắc</span></div>
+    <div class="fcg">${chips}</div>
+    <div class="fcard ${F.side?'isb':'isf'}" style="--gc:${gc}">${F.side?back:front}</div>
+    <div class="fdots">${dots}</div>`;
+  $('#ctrl').innerHTML=`<button class="btn" data-fcn="-1" ${pos?'':'disabled'}>‹ Thẻ trước</button>
+    <button class="btn gold" data-fcflip="1">${F.side?'↺ Xem mặt trước':'↻ Lật thẻ'}</button>
+    ${F.side&&c.fig?`<button class="btn" data-fcre="1">⟳ Chạy lại hình</button>`:''}${F.side?`<button class="btn au" data-fcau="1" hidden>${AU.i===i?'⏸ Dừng nghe':'🔊 Nghe giải thích'}</button>`:''}${callBtn()}<span class="sp"></span>
+    ${F.side?`<button class="btn" data-fcm="1" style="${F.mk[i]>0?'background:var(--ok-bg);border-color:var(--ok)':''}">✔ Đã hiểu</button><button class="btn" data-fcm="-1" style="${F.mk[i]<0?'background:var(--bad-bg);border-color:var(--bad)':''}">✘ Chưa chắc</button>`:''}
+    <button class="btn pri" data-fcn="1" ${pos<L.length-1?'':'disabled'}>Thẻ sau ›</button>`;
+  if(F.side)auProbe(i);}
+function fcGo(j){S.fc.i=j;S.fc.side=0;S.fc.k=0;save();render();}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||S.view!=='the')return;const d=b.dataset;
+  if(d.fcg){S.fc.g=d.fcg;S.fc.side=0;save();render();return;}
+  if(d.fcj!==undefined)return fcGo(+d.fcj);
+  if(d.fcn){const L=fcList(),p=L.indexOf(S.fc.i)+(+d.fcn);if(p>=0&&p<L.length){sSwish();fcGo(L[p]);}return;}
+  if(d.fcflip){S.fc.side=S.fc.side?0:1;save();sCard(S.fc.side);render();return;}
+  if(d.fcre){render();return;}
+  if(d.fcau)return auPlay();
+  if(d.fcm){const v=+d.fcm;S.fc.mk[S.fc.i]=S.fc.mk[S.fc.i]===v?0:v;save();v>0?sGood():tone(330,.15,'triangle',.08);
+    const L=fcList(),p=L.indexOf(S.fc.i);if(v>0&&p<L.length-1)setTimeout(()=>fcGo(L[p+1]),700);else render();}});
+addEventListener('hashchange',()=>{if(S.view!=='the')auStop();});document.addEventListener('click',e=>{if(e.target.closest('[data-go]'))auStop();},true);
+addEventListener('keydown',e=>{if(S.view!=='the'||e.target.closest('input,textarea')||!$('#call').hidden)return;const k=e.key;
+  if(k===' '){e.preventDefault();e.stopImmediatePropagation();$('[data-fcflip]')?.click();}
+  else if(k==='ArrowRight'||k==='ArrowLeft'){e.preventDefault();e.stopImmediatePropagation();$(`[data-fcn="${k==='ArrowRight'?1:-1}"]`)?.click();}},true);
+{const _h=vHome;vHome=function(){_h();$('.rounds')?.insertAdjacentHTML('afterbegin',`<button class="rnd" data-go="the" style="--rc:#0EA5A0;--rc2:#7C3AED"><span class="n">🃏</span>
+  <span><b>Thẻ ghi nhớ</b><br><span>${FC.length} thẻ có hình động: ${home}</span></span><span class="pts">Ôn tập · không tính điểm</span></button>`);};}
+return {vFC,n:FC.length};}
+return {build,rxn,fpat,crv,FCOL,FINK,sb,sp,iv,CA,CAo,XA,TAU,VO,RA,INVR,stx,draw,draw1,fadeIn,fadeOut,stamp,liq,arr,flow,fmt,poly,fax,tank,tube,levG,frame,lev,morph,tri3,ctPlot,scl,fit};
+})();
+
+/* ---- Thẻ ghi nhớ chương 2: tuyến tính hóa số liệu động học ---- */
+const FC2=(()=>{const {build,rxn,FCOL,FINK,sb,sp,iv,CA,CAo,RA,stx,draw1,fadeIn,stamp,poly,morph,tri3,ctPlot,scl,fit}=FCX;
+const CB=`${iv('C')}${sb('B')}`,CR=`${iv('C')}${sb('R')}`,CS=`${iv('C')}${sb('S')}`,CAe=`${iv('C')}${sb('Ae')}`,t=iv('t'),T=iv('T'),k=iv('k');
+const rng=(a,b,h)=>{const o=[];for(let x=a;x<=b+1e-9;x+=h)o.push(+x.toFixed(6));return o;};
+const svg=s=>`<svg class="fsv" viewBox="0 0 520 330" role="img" aria-label="Hình minh họa">${s}</svg>`;
+
+/* song song A → R (k1 = 0,2), A → S (k2 = 0,1) */
+function figPar(anim){const k1=.2,k2=.1,K=k1+k2,cA=t=>Math.exp(-K*t),cR=t=>k1/K*(1-cA(t)),cS=t=>k2/K*(1-cA(t));
+  const L=ctPlot({tmax:14,w:240,box:{x0:46,x1:236,y0:96,y1:280},cv:[{f:cA,c:'b',lab:'A',lp:110,dy:-8},{f:cR,c:'o',lab:'R',lp:120,dy:-8},{f:cS,c:'g',lab:'S',lp:120,dy:-8}]},anim);
+  let s=rxn('par',150,46)+L.s;const bx={x0:300,x1:490,y0:96,y1:280},P=[.4,.9,1.5,2.2,3,4,5.2,7,10].map(t=>[cS(t),cR(t)]),S=scl(P,null,true,true,bx,.08);
+  s+=`<line x1="${bx.x0}" y1="${bx.y1}" x2="${bx.x1+8}" y2="${bx.y1}" stroke="#13213A" stroke-width="2.5"/><line x1="${bx.x0}" y1="${bx.y1}" x2="${bx.x0}" y2="${bx.y0-10}" stroke="#13213A" stroke-width="2.5"/>`
+    +stx(bx.x0+8,bx.y0-4,CR,{a:'start',fs:18,c:FCOL.o})+stx(bx.x1+8,bx.y1-10,CS,{a:'end',fs:18,c:FCOL.g});
+  if(anim){s+=P.map((p,j)=>`<circle cx="${S.X(p[0]).toFixed(1)}" cy="${S.Y(p[1]).toFixed(1)}" r="0" fill="#fff" stroke="${FCOL.p}" stroke-width="3"><animate attributeName="r" from="0" to="6" dur=".25s" begin="${(1.6+j*.12).toFixed(2)}s" fill="freeze"/></circle>`).join('');
+    s+=draw1(`M${S.X(0)},${S.Y(0)} L${S.X(P[P.length-1][0]*1.04).toFixed(1)},${S.Y(P[P.length-1][1]*1.04).toFixed(1)}`,FCOL.r,4,.8,3.2);
+    s+=fadeIn(stx(S.X(.12),S.Y(.08),`góc = ${k}${sb('1')}/${k}${sb('2')} = 2`,{a:'start',fs:18,c:FCOL.r}),4)+stamp(395,300,'THẲNG ✔',FCOL.g,4.4);}
+  return svg(s);}
+/* nối tiếp A → R → S (k1 = 0,2; k2 = 0,1) */
+function figSer(anim){const k1=.2,k2=.1,cA=t=>Math.exp(-k1*t),cR=t=>k1/(k2-k1)*(Math.exp(-k1*t)-Math.exp(-k2*t)),cS=t=>1-cA(t)-cR(t);
+  const L=ctPlot({tmax:30,box:{x0:64,x1:500,y0:92,y1:280},cv:[{f:cA,c:'b',lab:'A',lp:20,dx:8,dy:-6,a:'start'},{f:cR,c:'o',lab:'R',lp:110,dy:-10,dot:1},{f:cS,c:'g',lab:'S',lp:118,dy:-10}]},anim),S=L.S,tm=Math.log(k2/k1)/(k2-k1),cm=cR(tm);
+  let s=rxn('ser',290,34)+L.s;
+  const pk=`<path d="M${S.X(tm)},${L.box.y1} V${S.Y(cm)} H${L.box.x0}" fill="none" stroke="${FCOL.p}" stroke-width="2.5" stroke-dasharray="7 5"/><circle cx="${S.X(tm)}" cy="${S.Y(cm)}" r="9" fill="${FCOL.y}" stroke="#fff" stroke-width="3"/>`
+    +stx(S.X(tm),L.box.y1+26,`${t}${sb('max')}`,{fs:18,c:FCOL.p})+stx(L.box.x0-6,S.Y(cm)+6,`${iv('C')}${sb('R,max')}`,{a:'end',fs:16,c:FCOL.p})+stx(S.X(tm)+14,S.Y(cm)-14,'cực đại',{a:'start',fs:17,c:'#8A6500'});
+  s+=anim?fadeIn(pk,3.2,.5):'';
+  return svg(s);}
+/* Michaelis – Menten: tốc độ bão hòa + hình hoạt họa E + A → R */
+function figMM(anim){const V=1,M=1,r=c=>V*c/(M+c),box={x0:64,x1:500,y0:40,y1:280},X=c=>box.x0+c/10*(box.x1-box.x0),Y=v=>box.y1-v/1.15*(box.y1-box.y0);
+  let s=`<line x1="${box.x0}" y1="${box.y1}" x2="${box.x1+10}" y2="${box.y1}" stroke="#13213A" stroke-width="2.5"/><path d="M${box.x1+12},${box.y1} l-10,-6 v12z" fill="#13213A"/>
+   <line x1="${box.x0}" y1="${box.y1}" x2="${box.x0}" y2="${box.y0-12}" stroke="#13213A" stroke-width="2.5"/><path d="M${box.x0},${box.y0-14} l-6,10 h12z" fill="#13213A"/>`
+   +stx(box.x0+8,box.y0-8,RA,{a:'start',fs:18})+stx(box.x1+10,box.y1-10,CA,{a:'end',fs:18});
+  const d=poly(Array.from({length:101},(_,j)=>{const c=10*j/100;return [X(c),Y(r(c))];}));
+  s+=anim?draw1(d,FCOL.b,4.5,2,.3):`<path d="${d}" fill="none" stroke="${FCOL.b}" stroke-width="4.5"/>`;
+  const vm=`<line x1="${box.x0}" x2="${box.x1}" y1="${Y(V)}" y2="${Y(V)}" stroke="${FCOL.r}" stroke-width="2.5" stroke-dasharray="9 6"/>`+stx(box.x1,Y(V)-10,`${iv('V')}${sb('max')} = ${k}${iv('C')}${sb('Eo')}`,{a:'end',fs:18,c:FCOL.r});
+  const hm=`<path d="M${box.x0},${Y(V/2)} H${X(M)} V${box.y1}" fill="none" stroke="${FCOL.p}" stroke-width="2.5" stroke-dasharray="6 5"/><circle cx="${X(M)}" cy="${Y(V/2)}" r="8" fill="${FCOL.y}" stroke="#fff" stroke-width="2.5"/>`
+    +stx(X(M)+14,Y(V/2)+24,`${iv('V')}${sb('max')}/2`,{a:'start',fs:16,c:FCOL.p})+stx(X(M),box.y1+24,`${CA} = ${iv('M')}`,{fs:17,c:FCOL.p});
+  /* hoạt họa enzyme */
+  const ex=380,ey=222;let cart=`<rect x="${ex-100}" y="${ey-42}" width="210" height="84" rx="14" fill="#F8FAFF" stroke="#DCE3EE" stroke-width="2"/>
+   <g transform="translate(${ex},${ey})"><path d="M0,0 L22,-14 A26,26 0 1,0 22,14 Z" fill="${FCOL.b}"><animateTransform attributeName="transform" type="rotate" values="0;0;14;0;0" keyTimes="0;.4;.5;.6;1" dur="2.4s" repeatCount="indefinite"/></path>
+   ${stx(-6,8,'E',{fs:18,c:'#fff',sw:0})}</g>
+   <circle r="8" fill="${FCOL.o}" stroke="#fff" stroke-width="2"><animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;.45;1" calcMode="linear" path="M${ex-90},${ey} L${ex+16},${ey}"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.45;.46;1" dur="2.4s" repeatCount="indefinite"/></circle>
+   <circle r="8" fill="${FCOL.g}" stroke="#fff" stroke-width="2"><animateMotion dur="2.4s" repeatCount="indefinite" keyPoints="0;0;1" keyTimes="0;.55;1" calcMode="linear" path="M${ex+16},${ey} L${ex+100},${ey-20}"/><animate attributeName="opacity" values="0;0;1;1" keyTimes="0;.54;.55;1" dur="2.4s" repeatCount="indefinite"/></circle>
+   ${stx(ex-84,ey-24,'A',{fs:16,c:FCOL.o})}${stx(ex+96,ey-28,'R',{fs:16,c:FCOL.g})}${stx(ex,ey+38,'E + A ⇄ X → R + E',{fs:15})}`;
+  s+=anim?fadeIn(vm,2.4)+fadeIn(hm,3.2)+fadeIn(cart,.2):cart;
+  return svg(s);}
+
+const FG={tt:['📏','Tuyến tính hóa số liệu','#0EA5A0'],pt:['🧩','Phản ứng phức tạp, enzyme','#E0457B']};
+const D1=rng(0,30,3).map(t=>[t,Math.exp(-.1*t)]);
+const FC=[
+ {g:'tt',t:'Ba phép thử: đồ thị nào thẳng?',fig:a=>tri3({pts:D1,panels:[{n:'Bậc 0',yl:CA,f:(t,c)=>[t,c]},{n:'Bậc 1',yl:`ln ${CA}`,f:(t,c)=>[t,Math.log(c)],ok:1},{n:'Bậc 2',yl:`1/${CA}`,f:(t,c)=>[t,1/c]}]},a),
+  q:R`Có \(C_\mathrm{A}\) theo \(t\) của <b>một</b> thí nghiệm. Vẽ thế nào để biết bậc phản ứng?`,
+  key:'Đồ thị nào <b>thẳng</b> → đúng bậc đó',
+  ax:[['Bậc 0',R`\(C_\mathrm{A}\)–\(t\) · góc \(-k\)`],['Bậc 1',R`\(\ln C_\mathrm{A}\)–\(t\) · góc \(-k\)`],['Bậc 2',R`\(1/C_\mathrm{A}\)–\(t\) · góc \(+k\)`]],
+  pts:['Ở đây <b>ln C<sub>A</sub>–t</b> thẳng → <b>bậc 1</b>','Hệ số góc cho <b>k</b>']},
+ {g:'tt',t:'Bậc n bất kỳ (n ≠ 1)',fig:a=>morph({raw:{xl:t,yl:CA,pts:rng(0,40,4).map(t=>[t,(1+.1*t)**-2])},lin:{xl:t,yl:`${CA}${sp('1−n')}`,f:(t,c)=>[t,c**-.5],zx:1},slope:`(n − 1)${k}`,icpt:`${CAo}${sp('1−n')}`},a),
+  q:R`Đường \(C_\mathrm{A}\)–\(t\) cong, không phải bậc 0, 1, 2. Làm sao tìm \(n\) và \(k\)?`,
+  key:'Thử <b>n</b> đến khi \\(C_\\mathrm{A}^{1-n}\\)–\\(t\\) <b>thẳng</b>',
+  ax:[['Trục tung',R`\(C_\mathrm{A}^{\,1-n}\)`],['Trục hoành',R`\(t\)`],['Hệ số góc',R`\((n-1)k\)`]],
+  pts:['Ví dụ này: <b>n = 1,5</b>'],
+  eq:R`\(C_\mathrm{A}^{\,1-n}-C_\mathrm{Ao}^{\,1-n}=(n-1)kt\)`},
+ {g:'tt',t:'Bậc 2: A + B, nạp khác nhau',fig:a=>morph({raw:{xl:t,yl:iv('C'),pts:rng(0,30,3).map(t=>[t,1/(2*Math.exp(.1*t)-1)]),curves:[{f:t=>1/(2*Math.exp(.1*t)-1)+1,x0:0,x1:30,c:FCOL.o,dash:1,lab:CB,lp:70},{f:t=>1/(2*Math.exp(.1*t)-1),x0:0,x1:30,c:FCOL.b,lab:CA,lp:12,dx:10,dy:-4,a:'start'}]},
+   lin:{xl:t,yl:`ln(${CB}${CAo}/${iv('C')}${sb('Bo')}${CA})`,f:(t,c)=>[t,Math.log((c+1)/(2*c))],zx:1,zy:1},slope:`(${iv('C')}${sb('Bo')} − ${CAo})${k}`},a),
+  q:R`A + B → sp, \(C_\mathrm{Bo} \neq C_\mathrm{Ao}\). Vẽ gì theo \(t\) để có đường thẳng?`,
+  key:'\\(\\ln\\dfrac{C_\\mathrm{B}C_\\mathrm{Ao}}{C_\\mathrm{Bo}C_\\mathrm{A}}\\)–\\(t\\) <b>thẳng</b>',
+  ax:[['Hệ số góc',R`\((C_\mathrm{Bo}-C_\mathrm{Ao})k\)`],['Đi qua','gốc tọa độ']],
+  pts:['B dư nhiều (<b>M ≫ 1</b>) → <b>giả bậc 1</b>']},
+ {g:'tt',t:'Phương pháp vi phân: log – log',fig:a=>morph({raw:{xl:CA,yl:RA,pts:rng(.2,1,.1).map(c=>[c,.2*c*c]),curves:[{f:c=>.2*c*c,x0:0,x1:1.05,c:'#94A3B8'}]},lin:{xl:`ln ${CA}`,yl:`ln ${RA}`,f:(c,r)=>[Math.log(c),Math.log(r)],ext:[-1.7,.1]},slope:iv('n'),icpt:`ln ${k}`},a),
+  q:R`Có các cặp \((-r_\mathrm{A})\) – \(C_\mathrm{A}\). Vẽ thế nào để đọc được bậc \(n\)?`,
+  key:'Hệ số góc = <b>n</b> · tung độ gốc = <b>ln k</b>',
+  ax:[['Trục tung',R`\(\ln(-r_\mathrm{A})\)`],['Trục hoành',R`\(\ln C_\mathrm{A}\)`]],
+  pts:['Ví dụ: góc = <b>2</b> → bậc 2'],
+  eq:R`\(\ln(-r_\mathrm{A}) = \ln k + n\ln C_\mathrm{A}\)`},
+ {g:'tt',t:'Thời gian bán hủy',fig:a=>morph({raw:{xl:CAo,yl:`${t}${sb('1/2')}`,pts:rng(.5,4,.5).map(c=>[c,2/c]),curves:[{f:c=>2/c,x0:.45,x1:4.2,c:'#94A3B8'}]},lin:{xl:`ln ${CAo}`,yl:`ln ${t}${sb('1/2')}`,f:(c,h)=>[Math.log(c),Math.log(h)]},slope:'1 − n',su:.12},a),
+  q:R`Nhiều thí nghiệm với \(C_\mathrm{Ao}\) khác nhau, đo \(t_{1/2}\). Tìm bậc \(n\) thế nào?`,
+  key:'\\(\\ln t_{1/2}\\)–\\(\\ln C_\\mathrm{Ao}\\): góc = <b>1 − n</b>',
+  pts:['Góc = −1 → <b>n = 2</b>','Bậc 1: đường <b>nằm ngang</b> (t½ không phụ thuộc C<sub>Ao</sub>)'],
+  eq:R`\(t_{1/2}=\dfrac{2^{\,n-1}-1}{(n-1)kC_\mathrm{Ao}^{\,n-1}}\)`},
+ {g:'tt',t:'Arrhenius: k theo nhiệt độ',fig:a=>morph({raw:{xl:T,yl:k,pts:rng(300,360,10).map(T=>[T,Math.exp(-6014*(1/T-1/300))]),curves:[{f:T=>Math.exp(-6014*(1/T-1/300)),x0:298,x1:362,c:'#94A3B8'}]},lin:{xl:`1/${T}`,yl:`ln ${k}`,f:(T,k)=>[1/T,Math.log(k)]},slope:`−${iv('E')}${sb('a')}/${iv('R')}`},a),
+  q:R`Có \(k\) ở nhiều nhiệt độ. Vẽ gì để tìm \(E_\mathrm{a}\)?`,
+  key:'\\(\\ln k\\)–\\(1/T\\): góc = <b>\\(-E_\\mathrm{a}/R\\)</b>',
+  pts:['T phải tính bằng <b>K</b>','Góc càng dốc → <b>E<sub>a</sub> càng lớn</b> → k nhạy với T'],
+  eq:R`\(\ln k = \ln k_\mathrm{o} - \dfrac{E_\mathrm{a}}{RT}\)`},
+
+ {g:'pt',t:'Thuận nghịch bậc 1: A ⇄ R',fig:a=>morph({raw:{xl:t,yl:iv('C'),pts:rng(0,12,1.5).map(t=>[t,1/3+2/3*Math.exp(-.3*t)]),hline:{y:1/3,lab:`${CAe}`},
+   curves:[{f:t=>2/3-2/3*Math.exp(-.3*t),x0:0,x1:12.5,c:FCOL.o,dash:1,lab:CR,lp:60},{f:t=>1/3+2/3*Math.exp(-.3*t),x0:0,x1:12.5,c:FCOL.b,lab:CA,lp:6,dx:12,a:'start'}]},over:rxn('rev',260,76),
+   lin:{xl:t,yl:`ln[(${CAo} − ${CAe})/(${CA} − ${CAe})]`,f:(t,c)=>[t,Math.log((2/3)/(c-1/3))],zx:1,zy:1},slope:`${k}${sb('1')} + ${k}${sb('2')}`},a),
+  q:R`\(\mathrm{A}\ \underset{k_2}{\overset{k_1}{\rightleftharpoons}}\ \mathrm{R}\): \(C_\mathrm{A}\) không về 0 mà dừng ở \(C_\mathrm{Ae}\). Vẽ gì để có đường thẳng?`,
+  key:'Đo khoảng cách <b>tới cân bằng</b>: góc = <b>k₁ + k₂</b>',
+  ax:[['Trục tung',R`\(\ln\dfrac{C_\mathrm{Ao}-C_\mathrm{Ae}}{C_\mathrm{A}-C_\mathrm{Ae}}\)`],['Tách k₁, k₂',R`\(K_C = k_1/k_2\)`]],
+  pts:['Quên trừ C<sub>Ae</sub> → đồ thị <b>cong</b>']},
+ {g:'pt',t:'Song song: A → R, A → S',fig:a=>figPar(a),
+  q:R`\(\mathrm{A}\xrightarrow{\ k_1\ }\mathrm{R}\) và \(\mathrm{A}\xrightarrow{\ k_2\ }\mathrm{S}\), cùng bậc 1. Làm sao tìm riêng \(k_1\), \(k_2\)?`,
+  key:'\\(C_\\mathrm{R}\\)–\\(C_\\mathrm{S}\\) thẳng: góc = <b>k₁/k₂</b>',
+  ax:[['Tổng',R`\(\ln\dfrac{C_\mathrm{Ao}}{C_\mathrm{A}} = (k_1+k_2)t\)`],['Tỉ số',R`\(\dfrac{C_\mathrm{R}}{C_\mathrm{S}} = \dfrac{k_1}{k_2}\)`]],
+  pts:['Hai phương trình → <b>giải ra k₁, k₂</b>','R, S tăng <b>cùng tỉ lệ</b> suốt quá trình']},
+ {g:'pt',t:'Nối tiếp: A → R → S',fig:a=>figSer(a),
+  q:R`\(\mathrm{A}\xrightarrow{\ k_1\ }\mathrm{R}\xrightarrow{\ k_2\ }\mathrm{S}\) (\(k_1 = 0{,}2\); \(k_2 = 0{,}1\ \mathrm{min^{-1}}\)). \(C_\mathrm{R}\) thay đổi thế nào? Khi nào lớn nhất?`,
+  key:'R <b>tăng rồi giảm</b>: cực đại tại \\(t_\\mathrm{max}\\)',
+  ax:[[R`\(t_\mathrm{max}\)`,R`\(\dfrac{\ln(k_2/k_1)}{k_2-k_1} = 6{,}93\) min`],[R`\(C_{\mathrm{R,max}}/C_\mathrm{Ao}\)`,R`\(\left(\dfrac{k_1}{k_2}\right)^{k_2/(k_2-k_1)} = 0{,}5\)`]],
+  pts:[R`\(\ln(C_\mathrm{Ao}/C_\mathrm{A})\)–\(t\): góc = <b>\(k_1\)</b>`,'Muốn thu R: <b>dừng ở t<sub>max</sub></b>']},
+ {g:'pt',t:'Enzyme: Michaelis – Menten',fig:a=>figMM(a),
+  q:R`Tốc độ phản ứng enzyme thay đổi thế nào khi tăng nồng độ cơ chất \(C_\mathrm{A}\)?`,
+  key:'Tốc độ <b>bão hòa</b> ở \\(V_\\mathrm{max}\\); nửa \\(V_\\mathrm{max}\\) tại \\(C_\\mathrm{A} = M\\)',
+  ax:[[R`\(C_\mathrm{A} \ll M\)`,'≈ bậc 1'],[R`\(C_\mathrm{A} \gg M\)`,'≈ bậc 0']],
+  pts:['<b>M</b>: hằng số Michaelis (cùng đơn vị nồng độ)','Enzyme bận hết → thêm A <b>không tăng</b> tốc độ'],
+  eq:R`\((-r_\mathrm{A}) = \dfrac{kC_\mathrm{A}C_\mathrm{Eo}}{M + C_\mathrm{A}}\)`},
+ {g:'pt',t:'Enzyme: đồ thị nghịch đảo',fig:a=>morph({raw:{xl:CA,yl:RA,pts:[.5,1,1.5,2,3,4,6,8].map(c=>[c,2*c/(1.5+c)]),curves:[{f:c=>2*c/(1.5+c),x0:0,x1:8.4,c:'#94A3B8'}]},
+   lin:{xl:`1/${CA}`,yl:`1/${RA}`,f:(c,r)=>[1/c,1/r],ext:[-.667,2.05],zx:1,zy:1},slope:`${iv('M')}/${iv('V')}${sb('max')}`,icpt:`1/${iv('V')}${sb('max')}`,xint:`−1/${iv('M')}`},a),
+  q:R`Có các cặp \((-r_\mathrm{A})\) – \(C_\mathrm{A}\) dạng bão hòa. Biến đổi thế nào để đọc \(V_\mathrm{max}\) và \(M\)?`,
+  key:'Nghịch đảo hai vế → <b>đường thẳng</b>',
+  ax:[['Hệ số góc',R`\(M/V_\mathrm{max}\)`],['Tung độ gốc',R`\(1/V_\mathrm{max}\)`],['Hoành độ gốc',R`\(-1/M\)`]],
+  eq:R`\(\dfrac{1}{(-r_\mathrm{A})} = \dfrac{M}{V_\mathrm{max}}\cdot\dfrac{1}{C_\mathrm{A}} + \dfrac{1}{V_\mathrm{max}}\)`},
+ {g:'pt',t:'Enzyme trong bình gián đoạn (VD 2.7)',fig:a=>morph({raw:{xl:`${t} (h)`,yl:`${CA} (mM)`,pts:[[1,.84],[2,.68],[3,.53],[4,.38],[5,.27],[6,.16],[7,.09],[8,.04],[9,.018],[10,.006],[11,.0025]]},
+   lin:{xl:`${t}/(${CAo} − ${CA})`,yl:`ln(${CAo}/${CA})/(${CAo} − ${CA})`,f:(t,c)=>[t/(1-c),Math.log(1/c)/(1-c)],ext:[0,11.6],zx:1,zy:1},slope:'≈ 1,01',icpt:'≈ −5,10'},a),
+  q:R`Sucrose thủy phân nhờ enzyme, chỉ có \(C_\mathrm{A}\) theo \(t\) (VD 2.7). Kiểm tra Michaelis – Menten bằng cách nào?`,
+  key:'Thẳng → <b>đúng M–M</b>: góc \\(kC_\\mathrm{Eo}/M\\), tung độ gốc \\(-1/M\\)',
+  ax:[[R`\(M\)`,'0,197 mM'],[R`\(k\)`,R`\(19{,}7\ \mathrm{h^{-1}}\)`]],
+  pts:['Đường thẳng <b>R² = 0,998</b>'],
+  eq:R`\(\dfrac{\ln(C_\mathrm{Ao}/C_\mathrm{A})}{C_\mathrm{Ao}-C_\mathrm{A}} = \dfrac{kC_\mathrm{Eo}}{M}\cdot\dfrac{t}{C_\mathrm{Ao}-C_\mathrm{A}} - \dfrac{1}{M}\)`}
+];
+return build(FG,FC,'tuyến tính hóa phương trình bậc n, Arrhenius, phản ứng thuận nghịch – song song – nối tiếp, enzyme',2);
+})();
+
 /* ================= LÀM BÀI Ở NHÀ → Google Sheet ================= */
 const hash=t=>{let h=5381;for(const c of t)h=(h*33+c.codePointAt(0))>>>0;return h.toString(36).toUpperCase().padStart(7,'0').slice(-6);};
 function vLogin(){$('#tabs').innerHTML='';$('#board').innerHTML='';$('#ctrl').innerHTML='';
@@ -1090,4 +1593,36 @@ tReset(TDEF[CR()]||0);render();if(NHA)flush();
 
 </script>
 
-</body></html>
+<script>/* MOB-KTPU v2 */(()=>{
+ const mq=matchMedia('(max-width:700px)'),touch=matchMedia('(pointer:coarse)');
+ const SH=[['‹ Thẻ trước','‹ Trước'],['Thẻ sau ›','Sau ›'],['⟳ Chạy lại hình','⟳ Hình'],['🔊 Nghe giải thích','🔊 Nghe'],
+   ['🎲 Gọi sinh viên','🎲 Gọi SV'],['↶ Hoàn tác','↶'],['⏱ Bắt đầu giờ','⏱'],['⏸ Tạm dừng','⏸'],['↺ Xem mặt trước','↺ Mặt trước'],
+   ['‹ Câu trước','‹ Trước'],['Câu tiếp ›','Tiếp ›'],['Xóa thứ tự đang bấm','Xóa thứ tự'],['✔ Đã hiểu','✔ Hiểu'],['✘ Chưa chắc','✘ Chưa']];
+ const FULL=new Map(SH.map(([a,b])=>[b,a])),SHORT=new Map(SH);
+ function relabel(root){(root||document).querySelectorAll('.ctrl .btn').forEach(b=>{if(b.children.length)return;
+   const t=b.textContent.trim();if(mq.matches&&SHORT.has(t)){b.title=t;b.textContent=SHORT.get(t);}
+   else if(!mq.matches&&FULL.has(t)){b.textContent=FULL.get(t);}});}
+ function keyHints(root){if(!touch.matches)return;const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT);let n;const L=[];
+   while(n=w.nextNode())if(/\(phím [^)]*\)|\(hoặc phím [^)]*\)/.test(n.nodeValue))L.push(n);
+   L.forEach(n=>{n.nodeValue=n.nodeValue.replace(/\s*\(phím cách\)/g,' (hoặc chạm vào thẻ)').replace(/\s*\((hoặc )?phím [^)]*\)/g,'');});}
+ function track(){const t=document.getElementById('tabs');if(!t||t.querySelector('.mtrack'))return;
+   const bs=[...t.children].filter(b=>b.matches('button[data-go]')&&!/^(home|hd|the)$/.test(b.dataset.go));if(!bs.length)return;
+   [...t.children].forEach(b=>{if(b.matches('button')&&/^(home|hd|the)$/.test(b.dataset.go)&&!b.querySelector('.mi')){
+     const m=b.textContent.trim().match(/^(\S+)\s+(.*)$/);if(m)b.innerHTML=`<b class="mi">${m[1]}</b><span>${m[2]}</span>`;b.title=b.textContent;}});
+   const w=document.createElement('span');w.className='mtrack';w.innerHTML='<span class="mlab">🎮<br>Vòng</span>';bs[0].before(w);bs.forEach(b=>w.append(b));}
+ function centerTab(){const t0=document.getElementById('tabs');if(!t0||!mq.matches)return;const t=t0.querySelector('.mtrack')||t0;const b=t.querySelector('[aria-current]');if(!b)return;
+   const tr=t.getBoundingClientRect(),br=b.getBoundingClientRect();const x=t.scrollLeft+(br.left-tr.left)-(tr.width-br.width)/2;
+   t.scrollTo({left:Math.max(0,x),behavior:'smooth'});}
+ let q=0;function run(){if(q)return;q=requestAnimationFrame(()=>{q=0;track();relabel();keyHints();centerTab();});}
+ new MutationObserver(run).observe(document.body,{childList:true,subtree:true});
+ mq.addEventListener?.('change',run);run();
+ // chạm dòng luật chơi để mở/thu
+ document.addEventListener('click',e=>{const r=e.target.closest('.rhead .rule');if(r&&mq.matches)r.classList.toggle('mob-open');});
+ // thẻ ghi nhớ: chạm mặt trước để lật, vuốt trái/phải để đổi thẻ
+ let sx=0,sy=0,st=0;
+ document.addEventListener('touchstart',e=>{const c=e.target.closest('.fcard');if(!c)return;const p=e.touches[0];sx=p.clientX;sy=p.clientY;st=Date.now();},{passive:true});
+ document.addEventListener('touchend',e=>{const c=e.target.closest('.fcard');if(!c||!st)return;const p=e.changedTouches[0],dx=p.clientX-sx,dy=p.clientY-sy;st=0;
+   if(Math.abs(dx)>60&&Math.abs(dx)>1.6*Math.abs(dy)){document.querySelector(`[data-fcn="${dx<0?1:-1}"]`)?.click();}},{passive:true});
+ document.addEventListener('click',e=>{const c=e.target.closest('.fcard.isf');if(!c||e.target.closest('button,a,input'))return;
+   document.querySelector('[data-fcflip]')?.click();});
+})();</script></body></html>
